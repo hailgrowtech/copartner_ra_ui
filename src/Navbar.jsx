@@ -1,20 +1,37 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import styles from "./style";
 import { searchIcon, logo, notification, dummyUser } from "./assets";
 
 const Navbar = () => {
   const [activeTab, setActiveTab] = useState("copartner");
+  const [isScrolled, setIsScrolled] = useState(false);
 
   const handleTabClick = (tab) => {
     setActiveTab(tab);
   };
 
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollTop = window.scrollY || document.documentElement.scrollTop;
+
+      if (scrollTop > 0) {
+        setIsScrolled(true);
+      } else {
+        setIsScrolled(false);
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll);
+
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
   return (
-    <div className="flex items-center md:py-[1rem]">
+    <div className={`fixed flex items-center md:py-[1rem] ${isScrolled ? styles.transparentNavbar : styles.scrolledNavbar}`}>
       <nav className="flex">
-        <Link to="/">
-        <img src={logo} className="flex justify-center items-center w-[193px] h-[39px] ml-[-4rem] mt-2" />
-        </Link>
+        {/* <Link to="/">
+        <img src={logo} className="flex justify-center items-center w-[203px] h-[39px] ml-[-4rem] mt-2" />
+        </Link> */}
 
         <div className="flex w-[1194px] justify-evenly ml-[8rem]">
           <div className="w-[265px] h-[50px] rounded-[24px] overflow-hidden flex">
