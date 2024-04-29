@@ -3,8 +3,8 @@ import { Link, useLocation } from "react-router-dom";
 import { sideBar } from "./constants";
 import { logo } from "./assets";
 
-const Sidebar = () => {
-  const [activeTab, setActiveTab] = useState("dashboard");
+const Sidebar = ({activeTab, setActiveTab}) => {
+  // const [activeTab, setActiveTab] = useState("dashboard");
   const location = useLocation();
 
   useEffect(() => {
@@ -44,20 +44,23 @@ const Sidebar = () => {
             key={side.id}
             onClick={() => handleClick(side.title)}
             className={`flex w-[260px] h-[74px] rounded-[16px] text-white flex-row 
-            cursor-pointer ml-[-4rem] ${activeTab === side.title ? "bg-gray-600" : ""}
+            cursor-pointer ml-[-4rem] ${activeTab === side.title ? "tab-btn" : "text-[#8B8C91]"}
             `}
           >
             <div className="flex flex-row justify-center gap-4 items-center ml-[4rem]">
               <img
-                src={side.icon}
+                src={activeTab === side.title ? side.activeIcon : side.inactiveIcon}
                 alt={side.title}
                 className="w-[24px] h-[24px]"
+                style={{ filter: activeTab === side.title ? "[#fff000]" : "[#fff000]" }}
               />
               <span className="font-[400] text-[16px]">{side.title}</span>
             </div>
           </Link>
         ))}
       </div>
+
+      <button className="w-[110px] h-[30px] bg-white text-black rounded-[5px] mt-[4rem]">Logout</button>
     </div>
   );
 };

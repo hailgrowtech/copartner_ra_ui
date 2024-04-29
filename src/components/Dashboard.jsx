@@ -5,7 +5,7 @@ import { graph, graph1 } from "../assets";
 const Dashboard = () => {
   return (
     <div className="pb-[5rem] px-[10rem] py-[6rem]">
-      <div className="flex items-center">
+      <div className="flex w-[1180px] items-center">
         <span className="w-[176px] h-[27px] font-inter text-[22px] font-[600] leading-[27px] text-white">
           User Analysis
         </span>
@@ -89,7 +89,7 @@ const Dashboard = () => {
           Subscription : Services
         </span>
 
-        <div className="w-[1082px] h-[460px] bg_cards p-4 pl-8 rounded-[24px]">
+        <div className="w-[1142px] h-[460px] bg_cards p-4 rounded-[24px]">
           {expertise_data.map((expert) => (
             <div className="flex flex-col">
               <div className="flex flex-row">

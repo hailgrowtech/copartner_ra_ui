@@ -1,11 +1,15 @@
 import availableIcon from './availableIcon.png';
 import chatIcon from './chatsIcon.png';
-import dashboardIcon from './DashboardIcon.png';
+import dashboardIconactive from './DashboardIcon.png';
+import dashboardIconInactive from './dashboardIconInactive.png';
 import logo from './copartner.png';
 import dummyUser from './dummyUser.png'
-import walletIcon from './walletIcon.png';
-import settingIcon from './settingIcon.png';
-import subscriptionIcon from './subsciptionIcon.png';
+import walletIconInactive from './walletIcon.png';
+import walletIconactive from './walletIconactive.png';
+import settingIconInactive from './settingIcon.png';
+import settingIconactive from './settingIconactive.png';
+import subscriptionIconactive from './subsciptionIcon.png';
+import subscriptionIconInactive from './subscriptionIconinactive.png';
 import webinarIcon from './webinarIcon.png';
 import marketingIcon from './marketingIcon.png';
 import searchIcon from './searchIcon.png';
@@ -16,18 +20,27 @@ import graph1 from './graph2.png';
 import userImg from './userImg.png';
 import userBck from './userBck (2).png';
 import arrow from './arrow.png';
-import stars from './stars.png'
+import stars from './stars.png';
+import backside from './backsideImg.png';
+import edit from './edit.png';
+import deleteIcon from './delete.png';
+import filter from './filter.png';
+import invoiceImg from './invoiceImg.png';
+import mail from './mail.png';
+import phone from './phone.png';
+import sebi from './sebi.png';
 
 export {
     availableIcon,
     chatIcon,
     logo,
-    dashboardIcon,
-    walletIcon,
+    dashboardIconactive,
+    walletIconInactive,
     searchIcon,
-    settingIcon,
+    settingIconInactive,
     dummyUser,
-    subscriptionIcon,
+    subscriptionIconactive,
+    subscriptionIconInactive,
     webinarIcon,
     marketingIcon,
     notification, 
@@ -37,5 +50,15 @@ export {
     userImg,
     userBck, 
     arrow,
-    stars
+    stars,
+    backside,
+    edit, 
+    deleteIcon,
+    dashboardIconInactive,
+    settingIconactive,
+    walletIconactive, 
+    filter,
+    invoiceImg,
+    mail,
+    phone, sebi,
 }

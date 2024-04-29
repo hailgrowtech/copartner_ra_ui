@@ -81,19 +81,41 @@
   mask-image: linear-gradient(rgba(0, 0, 0, 1) 70%, transparent);
 }
 
-.background-image {
-  width: 100%;
-  max-height: 200px;
-  object-fit: cover;
-  position: absolute;
-  top: 0;
-  left: 0;
-  z-index: 1;
-  background: linear-gradient(94.34deg, #ffffff 0%, #9bd0f5 100%),
-    linear-gradient(0deg, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0));
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+.expertise-Bg {
+  background-image: url('./assets/backsideImg.png'), url('./assets/backsideImg.png');
+  background-repeat: no-repeat, no-repeat;
+  background-position: 25rem -20rem, -20rem 75rem;
+  background-size: auto, 45rem;
+}
+
+.background-img-div {
+  background-image: url("./assets/backsideImg.png");
+  background-position: bottom left;
+  background-repeat: no-repeat;
+}
+
+.tab-btn{
+  background-image: linear-gradient(
+    to right,
+    rgba(255, 255, 255, 0),
+    rgba(231, 231, 231, 0.197)
+  )
+}
+.tab-btn:hover {
+  /* Add the hover effect */
+  background-image: linear-gradient(
+    to right,
+    rgba(255, 255, 255, 0),
+    rgba(231, 231, 231, 0.197)
+  );
+}
+.btn-active {
+  /* Add the active button styling */
+  background-image: linear-gradient(
+    to right,
+    rgba(255, 255, 255, 0),
+    rgba(231, 231, 231, 0.197)
+  );
 }
 
 .bg-blue-gradient {

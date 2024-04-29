@@ -1,9 +1,11 @@
 import Dashboard from "./Dashboard";
 import Subscription from "./Subscription";
-import Webinar from "./Webinar";
+import Wallet from "./Wallet";
+import Setting from "./Setting";
 
 export {
     Dashboard,
     Subscription,
-    Webinar,
+    Wallet,
+    Setting,
 }

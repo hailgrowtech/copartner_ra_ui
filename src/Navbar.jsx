@@ -2,12 +2,13 @@ import React, { useState, useEffect } from "react";
 import styles from "./style";
 import { searchIcon, logo, notification, dummyUser } from "./assets";
 
-const Navbar = () => {
-  const [activeTab, setActiveTab] = useState("copartner");
+const Navbar = ({ activeTab }) => {
+  console.log(activeTab);
+  const [showTab, setShowTab] = useState("copartner");
   const [isScrolled, setIsScrolled] = useState(false);
 
   const handleTabClick = (tab) => {
-    setActiveTab(tab);
+    setShowTab(tab);
   };
 
   useEffect(() => {
@@ -26,18 +27,44 @@ const Navbar = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  return (
-    <div className={`fixed flex items-center md:py-[1rem] ${isScrolled ? styles.transparentNavbar : styles.scrolledNavbar}`}>
-      <nav className="flex">
-        {/* <Link to="/">
-        <img src={logo} className="flex justify-center items-center w-[203px] h-[39px] ml-[-4rem] mt-2" />
-        </Link> */}
+  const isDashboard = activeTab === "Dashboard";
 
-        <div className="flex w-[1194px] justify-evenly ml-[8rem]">
+  return (
+    <div
+      className={`fixed flex justify-center items-center md:py-[1rem] w-full ${
+        isScrolled ? styles.transparentNavbar : styles.scrolledNavbar
+      }`}
+    >
+      <nav className="flex ml-[4rem]">
+        <div className="flex gap-4 ml-[24rem]">
+          {/* {isDashboard && (
+            <div className="w-[265px] h-[50px] rounded-[24px] overflow-hidden flex">
+              <button
+                className={`w-1/2 py-2 font-inter font-[600] text-[16px] leading-[19px] text-center ${
+                  showTab === "copartner"
+                    ? "bg-gray-200 text-[#282F3E]"
+                    : "bg-btn text-gray-500"
+                }`}
+                onClick={() => handleTabClick("copartner")}
+              >
+                Copartner
+              </button>
+              <button
+                className={`w-1/2 py-2 font-inter font-[600] text-[16px] leading-[19px] text-center ${
+                  showTab === "personal"
+                    ? "bg-gray-200 text-[#282F3E]"
+                    : "bg-btn text-gray-500"
+                }`}
+                onClick={() => handleTabClick("personal")}
+              >
+                Personal
+              </button>
+            </div>
+          )} */}
           <div className="w-[265px] h-[50px] rounded-[24px] overflow-hidden flex">
             <button
               className={`w-1/2 py-2 font-inter font-[600] text-[16px] leading-[19px] text-center ${
-                activeTab === "copartner"
+                showTab === "copartner"
                   ? "bg-gray-200 text-[#282F3E]"
                   : "bg-btn text-gray-500"
               }`}
@@ -47,7 +74,7 @@ const Navbar = () => {
             </button>
             <button
               className={`w-1/2 py-2 font-inter font-[600] text-[16px] leading-[19px] text-center ${
-                activeTab === "personal"
+                showTab === "personal"
                   ? "bg-gray-200 text-[#282F3E]"
                   : "bg-btn text-gray-500"
               }`}

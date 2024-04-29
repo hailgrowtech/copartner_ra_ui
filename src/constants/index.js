@@ -1,62 +1,72 @@
 import {
-  dashboardIcon,
-  subscriptionIcon,
+  dashboardIconactive,
+  dashboardIconInactive,
+  subscriptionIconactive,
+  subscriptionIconInactive,
   webinarIcon,
   availableIcon,
-  walletIcon,
+  walletIconInactive,
+  walletIconactive,
   chatIcon,
   marketingIcon,
-  settingIcon, telegramIcon,
+  settingIconactive,
+  settingIconInactive, telegramIcon,
   userImg, userBck,
-  arrow, stars
+  arrow, stars,
+  edit, deleteIcon,
+  invoiceImg,
 } from "../assets";
 
 export const sideBar = [
   {
     id: 'dashboard',
-    icon: dashboardIcon,
+    activeIcon: dashboardIconactive,
+    inactiveIcon: dashboardIconInactive,
     title: "Dashboard",
     path: '/', 
   },
   {
     id: 'subscription',
-    icon: subscriptionIcon,
+    activeIcon: subscriptionIconactive,
+    inactiveIcon: subscriptionIconInactive,
     title: "Subscription",
     path: '/subscription'
   },
-  {
-    id: 'webinar',
-    icon: webinarIcon,
-    title: "Webinar",
-    path: '/webinar'
-  },
-  {
-    id: 'availability',
-    icon: availableIcon,
-    title: "Availability",
-    path: '/availability'
-  },
+  // {
+  //   id: 'webinar',
+  //   icon: webinarIcon,
+  //   title: "Webinar",
+  //   path: '/webinar'
+  // },
+  // {
+  //   id: 'availability',
+  //   icon: availableIcon,
+  //   title: "Availability",
+  //   path: '/availability'
+  // },
   {
     id: 'wallet',
-    icon: walletIcon,
+    activeIcon: walletIconactive,
+    inactiveIcon: walletIconInactive,
     title: "Wallet",
     path: '/wallet'
   },
-  {
-    id: 'chats',
-    icon: chatIcon,
-    title: "Chats",
-    path: '/chats'
-  },
-  {
-    id: 'marketing',
-    icon: marketingIcon,
-    title: "Marketing",
-    path: '/market'
-  },
+  // {
+  //   id: 'chats',
+  //   icon: chatIcon,
+  //   title: "Chats",
+  //   path: '/chats'
+  // },
+  // {
+  //   id: 'marketing',
+  //   icon: marketingIcon,
+  //   title: "Marketing",
+  //   path: '/market'
+  // },
   {
     id: 'setting',
-    icon: settingIcon,
+    activeIcon: settingIconactive,
+    inactiveIcon: settingIconInactive,
     title: "Setting",
     path: '/setting'
   },
@@ -139,3 +149,83 @@ export const expertise_data = [
     valueActiveUser: '60/1000',
   },
 ]
+
+export const subscriptionData = [
+  {
+    date: "26/01/2024",
+    subType: 'Futures & Options',
+    plan: "Basic",
+    duration: "1 month",
+    amount: "₹1,999 ",
+    activeUser: '2000',
+    activeEdit: edit,
+    activeDel: deleteIcon
+  },
+  {
+    date: "26/01/2024",
+    subType: 'Futures & Options',
+    plan: "Standard",
+    duration: "3 month",
+    amount: "₹5,999 ",
+    activeUser: '5000',
+    activeEdit: edit,
+    activeDel: deleteIcon
+  },
+]
+
+export const walletData = [
+  {
+    transcationId: "#12324654685",
+    date: "26/01/2024",
+    subscription: "Service",
+    planName: 'Futures & Option',
+    name: "Rohit",
+    amount: "₹1,999 ",
+    invoice: invoiceImg,
+  },
+  {
+    transcationId: "#12324654685",
+    date: "26/01/2024",
+    subscription: "Course",
+    planName: 'Futures & Option',
+    name: "Varun",
+    amount: "₹1,999 ",
+    invoice: invoiceImg,
+  },
+  {
+    transcationId: "#12324654685",
+    date: "26/01/2024",
+    subscription: "Webinar",
+    planName: 'Private Call',
+    name: "Amit",
+    amount: "₹1,999 ",
+    invoice: invoiceImg,
+  },
+  {
+    transcationId: "#12324654685",
+    date: "26/01/2024",
+    subscription: "Private Call",
+    planName: 'Futures & Option',
+    name: "Shivam",
+    amount: "₹1,999 ",
+    invoice: invoiceImg,
+  },
+  {
+    transcationId: "#12324654685",
+    date: "26/01/2024",
+    subscription: "Service",
+    planName: 'Private Call',
+    name: "Vinit",
+    amount: "₹1,999 ",
+    invoice: invoiceImg,
+  },
+  {
+    transcationId: "#12324654685",
+    date: "26/01/2024",
+    subscription: "Service",
+    planName: 'Futures & Option',
+    name: "Priyank",
+    amount: "₹1,999 ",
+    invoice: invoiceImg,
+  },
+];
