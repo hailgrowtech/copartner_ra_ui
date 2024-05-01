@@ -1,10 +1,21 @@
-import React from "react";
+import React, { useState } from "react";
 import { filter, graph, graph1 } from "../assets";
 import { walletData } from "../constants";
+import WalletWithdrawal from "./WalletWithdrawal";
 
 const Wallet = () => {
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+
+  const openDialog = () => {
+    setIsDialogOpen(true);
+  };
+
+  const closeDialog = () => {
+    setIsDialogOpen(false);
+  };
+
   return (
-    <div className="pb-[5rem] px-[10rem] py-[6rem] bg-gradient min-h-screen">
+    <div className="pb-[5rem] xl:px-[18rem] md:px-[10rem] py-[6rem] bg-gradient min-h-screen">
       <div className="w-[1130px] flex justify-between">
         <span className="w-[176px] h-[27px] font-inter text-[22px] font-[600] leading-[27px] text-[#ffffff]">
           Wallet
@@ -14,9 +25,15 @@ const Wallet = () => {
             Withdrawal Balance :{" "}
             <span className="text-white opacity-[40%]">₹30,000</span>
           </span>
-          <button className="w-[147px] h-[40px] rounded-[10px] border text-black bg-[#ffffff] font-[600] font-inter text-[12px]">
+          <button onClick={openDialog} className="w-[147px] h-[40px] rounded-[10px] border text-black bg-[#ffffff] font-[600] font-inter text-[12px]">
             Withdrawal
           </button>
+          {isDialogOpen && (
+          <WalletWithdrawal
+            isDialogOpen={isDialogOpen}
+            closeDialog={closeDialog}
+          />
+        )}
         </div>
       </div>
 

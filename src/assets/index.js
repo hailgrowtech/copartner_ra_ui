@@ -29,6 +29,15 @@ import invoiceImg from './invoiceImg.png';
 import mail from './mail.png';
 import phone from './phone.png';
 import sebi from './sebi.png';
+import addDoc from './addDoc.png';
+import dropdown from './dropDownIcon.png';
+import closeIcon from './closeIcon.png';
+import hdfc from './hdfc.png';
+import icici from './icici.png';
+import kotak from './kotak.png';
+import paytm from './paytm.png';
+import googlepay from './googlePay.png';
+import phonepe from './phonepe.png';
 
 export {
     availableIcon,
@@ -61,4 +70,9 @@ export {
     invoiceImg,
     mail,
     phone, sebi,
+    addDoc,
+    dropdown,
+    closeIcon,
+    hdfc, kotak, icici,
+    paytm, googlepay, phonepe,
 }

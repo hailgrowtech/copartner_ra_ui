@@ -1,10 +1,14 @@
 import React from "react";
 import { expertise_data } from "../constants";
-import { edit, mail, phone, sebi } from "../assets";
+import { edit, mail, phone, sebi, addDoc } from "../assets";
+
+const handleFileChange = (event) => {
+  const file = event.target.files[0];
+};
 
 const Setting = () => {
   return (
-    <div className="min-h-screen pb-[5rem] px-[10rem] py-[6rem]">
+    <div className="min-h-screen pb-[5rem] xl:px-[18rem] md:px-[10rem] py-[6rem]">
       <div className="w-[1142px] h-[460px] bg_cards p-4 rounded-[24px]">
         {expertise_data.map((expert, index) => (
           <div className="flex flex-col" key={index}>
@@ -164,15 +168,158 @@ const Setting = () => {
                   </span>
                 </div>
                 <div className="w-[93px] h-[32p] rounded-[36px] border border-[#fffff] flex justify-center items-center">
-                    <button className="flex flex-row items-center gap-2 justify-center items-center">
+                  <button className="flex flex-row items-center gap-2 justify-center items-center">
                     <img src={edit} alt="Edit" className="w-[16px] h-[16px]" />
-                    <span className="text-white font-[400] text-[15px] leading-[28px]">Edit</span>
-                    </button>
+                    <span className="text-white font-[400] text-[15px] leading-[28px]">
+                      Edit
+                    </span>
+                  </button>
                 </div>
               </div>
             </div>
           </div>
         ))}
+      </div>
+
+      <div className="w-[1140px] h-[430px] px-4 p-8 border-2 border-[#202F49] rounded-[30px] rounded-[30px] flex gap-4 flex-col mt-[4rem]">
+        <div className="flex flex-row justify-between">
+          <span className="text-white font-inter font-[600] text-[22px] leading-[26px]">
+            About
+          </span>
+          <div className="w-[93px] h-[32p] rounded-[36px] border border-[#fffff] flex justify-center items-center">
+            <button className="flex flex-row items-center gap-2 justify-center items-center">
+              <img src={edit} alt="Edit" className="w-[16px] h-[16px]" />
+              <span className="text-white font-[400] text-[15px] leading-[28px]">
+                Edit
+              </span>
+            </button>
+          </div>
+        </div>
+        <div className="text-white opacity-[50%] flex flex-col">
+          <span>
+            Lorem ipsum dolor sit amet consectetur. Et fames faucibus sed
+            porttitor. In amet at et sit donec. Eleifend dui rhoncus sit non
+            nunc vitae faucibus lectus molestie. Rhoncus mattis commodo ac
+            lectus at egestas ipsum mi volutpat. Orci nisi vestibulum eu orci.
+            Elit orci pellentesque ornare suscipit. Et quis placerat etiam nunc
+            sed risus erat volutpat.
+          </span>
+          <br />
+          <span>
+            Lorem ipsum dolor sit amet consectetur. Nibh lectus aliquam sagittis
+            nisl faucibus. Sed adipiscing condimentum volutpat cursus in risus
+            sed sit. Ipsum aliquam urna porttitor eu. Volutpat ac sit at semper
+            tortor vulputate. Purus pulvinar vestibulum cras odio. Congue amet
+            sagittis dui pellentesque consectetur pellentesque et fermentum.
+            Arcu elementum tempor nulla quis aenean fusce ut vulputate. A quam
+            vitae magna pellentesque. Ut volutpat adipiscing purus faucibus duis
+            orci. Accumsan venenatis eu vitae interdum dolor. Nunc at nibh
+            habitant condimentum vitae. Semper luctus vulputate lacinia sit diam
+            tellus id vitae. Morbi aliquet bibendum scelerisque vestibulum
+            aliquet venenatis eu et. Proin bibendum eget lectus consequat id
+            vitae. Eu hendrerit lobortis turpis quam ornare egestas tincidunt
+            donec nulla. Justo nisi ac diam mauris cursus turpis lacus.
+            Vulputate cras sem nec id eget. Cras lectus vestibulum dictum enim.
+            Mauris ultrices etiam ac facilisis malesuada. Odio accumsan
+            fringilla malesuada faucibus fusce pellentesque. Non nunc cursus
+            nisl odio. Pellentesque laoreet molestie proin tincidunt cursus.
+            Integer non odio turpis ac sem aliquam in ante congue. Erat pharetra
+            sed semper duis duis penatibus. Ut congue interdum cras convallis eu
+            nibh quis. Arcu at accumsan neque ultricies tellus massa leo nulla
+            sed.
+          </span>
+        </div>
+      </div>
+
+      <div className="w-[1140px] h-[352px] px-4 p-8 border-2 border-[#202F49] rounded-[30px] rounded-[30px] flex gap-4 flex-col mt-[4rem]">
+        <div className="flex flex-row justify-between">
+          <span className="text-white font-inter font-[600] text-[22px] leading-[26px]">
+            Documents
+          </span>
+          <div className="w-[93px] h-[32p] rounded-[36px] border border-[#fffff] flex justify-center items-center">
+            <button className="flex flex-row items-center gap-2 justify-center items-center">
+              <img src={edit} alt="Edit" className="w-[16px] h-[16px]" />
+              <span className="text-white font-[400] text-[15px] leading-[28px]">
+                Edit
+              </span>
+            </button>
+          </div>
+        </div>
+
+        <label
+          htmlFor="fileInput"
+          className="relative w-[236px] h-[238px] border-2 border-dotted border-[#ffffff] cursor-pointer"
+        >
+          <input
+            id="fileInput"
+            type="file"
+            className="absolute inset-0 opacity-0 w-full h-full"
+            onChange={handleFileChange}
+          />
+
+          <img
+            src={addDoc}
+            alt="Add_Doc"
+            className="w-[95px] h-[95px] ml-16 mt-[2rem]"
+          />
+          <span className="absolute bottom-4 left-0 right-0 text-center w-full font-inter font-[400] text-[13px] leading-[16px] text-white opacity-[50%] mb-[2rem]">
+            Upload Documents
+          </span>
+        </label>
+      </div>
+
+      <div className="w-[1140px] h-[397px] px-4 p-8 border-2 border-[#202F49] rounded-[30px] rounded-[30px] flex gap-4 flex-col mt-[4rem]">
+        <div className="flex flex-row justify-between">
+          <span className="text-white font-inter font-[600] text-[22px] leading-[26px]">
+            Bank Details
+          </span>
+          <div className="w-[93px] h-[32p] rounded-[36px] border border-[#fffff] flex justify-center items-center">
+            <button className="flex flex-row items-center gap-2 justify-center items-center">
+              <img src={edit} alt="Edit" className="w-[16px] h-[16px]" />
+              <span className="text-white font-[400] text-[15px] leading-[28px]">
+                Edit
+              </span>
+            </button>
+          </div>
+        </div>
+
+        <div className="flex flex-col gap-8">
+          <div className="flex gap-12 flex-row mt-2">
+            <div className="flex flex-row items-center w-[245px] h-[50px]">
+              <span className="text-white opacity-[50%] font-inter font-[500] text-[16px] leading-[28px] w-[140px] h-[28px]">
+                Bank Name:
+              </span>
+              <span className="bg-[#202F49] w-[180px] h-[50px] rounded-[30px] text-white font-[500] text-[16px] leading-[28px] p-2 text-center">
+                HDFC Bank
+              </span>
+            </div>
+            <div className="flex flex-row items-center w-[331px] h-[50px]">
+              <span className="text-white opacity-[50%] font-inter font-[500] text-[16px] leading-[28px] w-[147px] h-[28px]">
+                Account Number:
+              </span>
+              <span className="bg-[#202F49] w-[180px] h-[50px] rounded-[30px] text-white font-[500] text-[16px] leading-[28px] p-2 text-center">
+                987612541000
+              </span>
+            </div>
+            <div className="flex flex-row items-center w-[330px] h-[50px]">
+              <span className="text-white opacity-[50%] font-inter font-[500] text-[16px] leading-[28px] w-[100px] h-[28px]">
+                IFSC Code:
+              </span>
+              <span className="bg-[#202F49] w-[258px] h-[50px] rounded-[30px] text-white font-[500] text-[16px] leading-[28px] p-2 text-center">
+                XYZ12100SXI0
+              </span>
+            </div>
+          </div>
+          <div className="flex items-center justify-between">
+            <div className="flex flex-row items-center w-[372px] h-[50px]">
+                <span className="text-white opacity-[50%] w-[182px] h-[28px] font-[600] text-[16px] leading-[28px]">Account Holder Name:</span>
+                <span className="bg-[#202F49] w-[180px] h-[50px] rounded-[30px] text-white font-[500] text-[16px] leading-[28px] p-2 text-center">
+                Arun Kumar
+                </span>
+            </div>
+            <button className="w-[98px] h-[38px] border-2 text-white opacity-[50%] rounded-[20px] border-dotted">+Add</button>
+          </div>
+        </div>
       </div>
     </div>
   );

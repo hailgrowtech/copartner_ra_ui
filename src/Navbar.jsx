@@ -31,12 +31,12 @@ const Navbar = ({ activeTab }) => {
 
   return (
     <div
-      className={`fixed flex justify-center items-center md:py-[1rem] w-full ${
+      className={`fixed flex justify-center items-center md:py-[1rem] w-full z-[9] ${
         isScrolled ? styles.transparentNavbar : styles.scrolledNavbar
       }`}
     >
-      <nav className="flex ml-[4rem]">
-        <div className="flex gap-4 ml-[24rem]">
+      <nav className="flex w-[600px]">
+        <div className="flex gap-4">
           {/* {isDashboard && (
             <div className="w-[265px] h-[50px] rounded-[24px] overflow-hidden flex">
               <button
@@ -84,7 +84,7 @@ const Navbar = ({ activeTab }) => {
             </button>
           </div>
 
-          <div className="flex gap-[2rem]">
+          <div className="flex w-[540px] ml-[4rem] gap-[2rem]">
             <div className="relative">
               <img
                 src={searchIcon}

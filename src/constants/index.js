@@ -15,6 +15,8 @@ import {
   arrow, stars,
   edit, deleteIcon,
   invoiceImg,
+  hdfc, kotak, icici,
+  googlepay, paytm, phonepe,
 } from "../assets";
 
 export const sideBar = [
@@ -146,7 +148,7 @@ export const expertise_data = [
     price: '₹2,999',
     access: '1 Month Access',
     activeUser: 'Active User:',
-    valueActiveUser: '60/1000',
+    valueActiveUser: '60/100',
   },
 ]
 
@@ -229,3 +231,30 @@ export const walletData = [
     invoice: invoiceImg,
   },
 ];
+
+export const withdrawalBank = [
+  {
+    id: 1,
+    bankImg: hdfc,
+    bankName: 'HDFC Bank',
+    accNum: '431200109911',
+    upiImg: paytm,
+    upiId: 'ArunKumar@paytm.ybl'
+  },
+  {
+    id: 2,
+    bankImg: icici,
+    bankName: 'ICICI Bank',
+    accNum: '431200109911',
+    upiImg: googlepay,
+    upiId: 'ArunKumar@google.ybl'
+  },
+  {
+    id: 1,
+    bankImg: kotak,
+    bankName: 'Kotak Bank',
+    accNum: '431200109911',
+    upiImg: phonepe,
+    upiId: 'ArunKumar@phonepe.ybl'
+  },
+]

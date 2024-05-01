@@ -1,21 +1,49 @@
-import React from "react";
+import React, { useState } from "react";
 import { subscriptionData } from "../constants";
+import SubscriptionDialog from "./SubsciptionDialog";
+import { dropdown } from "../assets";
+import SubscriptionEditService from "./SubscriptionEditService";
 
 const Subscription = () => {
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
+
+  const openDialog = () => {
+    setIsDialogOpen(true);
+  };
+
+  const openEditDialog = () => {
+    setIsEditDialogOpen(true);
+  };
+
+  const closeDialog = () => {
+    setIsDialogOpen(false);
+    setIsEditDialogOpen(false); 
+  };
+
   return (
-    <div className="pb-[5rem] px-[10rem] py-[6rem] bg-gradient min-h-screen">
+    <div className="pb-[5rem] xl:px-[18rem] md:px-[10rem] py-[6rem] bg-gradient min-h-screen">
       <div className="w-[1130px] flex justify-between">
         <span className="w-[176px] h-[27px] font-inter text-[22px] font-[600] leading-[27px] text-white">
           Service
         </span>
-        <button className="w-[100px] h-[40px] rounded-[10px] border text-white font-[600] font-inter text-[12px]">
+        <button
+          onClick={openDialog}
+          className="w-[100px] h-[40px] rounded-[10px] border text-white font-[600] font-inter text-[12px]"
+        >
           +Add
         </button>
+        {isDialogOpen && (
+          <SubscriptionDialog
+            isDialogOpen={isDialogOpen}
+            closeDialog={closeDialog}
+          />
+        )}
       </div>
 
       <div className="flex mt-[3rem]">
-        <table className="w-[1130px] h-[230px] border border-[#29303F] rounded-[30px]">
-          <thead className="text-[#BABABA] bg-gradient font-inter font-[600] text-[14px] leading-[20px] h-[51px]">
+        <table className="w-[1130px] h-[230px] bg-[#29303F] rounded-[30px]">
+          <thead className="text-[#BABABA] font-inter font-[600] text-[14px] leading-[20px] h-[51px]">
             <tr>
               <th className="text-center">DATE</th>
               <th className="text-center">SERVICE TYPE</th>
@@ -31,7 +59,7 @@ const Subscription = () => {
               return (
                 <tr
                   key={index}
-                  className={index % 2 === 0 ? "bg-[#29303F]" : "bg-gradient"}
+                  className={index % 2 === 0 ? "bg-[#1E1E22]" : ""}
                 >
                   <td className="font-[500] text-center text-[16px] leading-[18px]">
                     {row.date}
@@ -53,18 +81,25 @@ const Subscription = () => {
                   </td>
                   <td className="flex flex-row items-center justify-center gap-2 py-[2rem]">
                     <button>
-                    <img
-                      src={row.activeEdit}
-                      alt=""
-                      className="w-[21px] h-[21px] mx-auto"
-                    />
+                      <img
+                        src={row.activeEdit}
+                        onClick={openEditDialog}
+                        alt=""
+                        className="w-[21px] h-[21px] mx-auto"
+                      />
                     </button>
+                    {isEditDialogOpen && (
+                      <SubscriptionEditService
+                        isEditDialogOpen={isEditDialogOpen}
+                        closeDialog={closeDialog}
+                      />
+                    )}
                     <button>
-                    <img
-                      src={row.activeDel}
-                      alt=""
-                      className="w-[21px] h-[21px] mx-auto"
-                    />
+                      <img
+                        src={row.activeDel}
+                        alt=""
+                        className="w-[21px] h-[21px] mx-auto"
+                      />
                     </button>
                   </td>
                 </tr>

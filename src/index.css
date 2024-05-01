@@ -27,6 +27,60 @@
   scroll-behavior: smooth;
 }
 
+#subscriptionType:focus {
+  outline: none;
+  border-color: #40495C;
+  box-shadow: 0 0 0 2px rgba(64, 73, 92, 0.5);
+}
+
+#planType:focus {
+  outline: none;
+  border-color: #40495C;
+  box-shadow: 0 0 0 2px rgba(64, 73, 92, 0.5);
+}
+
+#durationType:focus {
+  outline: none;
+  border-color: #40495C;
+  box-shadow: 0 0 0 2px rgba(64, 73, 92, 0.5);
+}
+
+#default-input:focus {
+  outline: none;
+  border-color: #40495C;
+  box-shadow: 0 0 0 2px rgba(64, 73, 92, 0.5);
+}
+
+#default-input::placeholder {
+  color: white;
+}
+
+#wallet_withdrawal:focus {
+  outline: none;
+  border-color: #40495C;
+  box-shadow: 0 0 0 2px rgba(64, 73, 92, 0.5);
+}
+
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+input[type="number"] {
+    -moz-appearance: textfield;
+}
+
+#des-input:focus {
+  outline: none;
+  border-color: #40495C;
+  box-shadow: 0 0 0 2px rgba(64, 73, 92, 0.5);
+}
+
+#keyPointsType::placeholder {
+  color: white;
+}
+
 .subheading-gradient {
   background: linear-gradient(to bottom right, #ffffff 0%, #757575 100%);
   -webkit-background-clip: text;
@@ -46,6 +100,14 @@
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
+}
+
+.text-new {
+  background: linear-gradient(135deg, #FFFFFF 0%, #71717A 100%),
+              linear-gradient(0deg, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0));
+  -webkit-background-clip: text;
+  background-clip: text; /* Apply background-clip to the gradient */
+  -webkit-text-fill-color: transparent;
 }
 
 .text-gradient-2 {

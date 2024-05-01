@@ -30,7 +30,7 @@ const Sidebar = ({activeTab, setActiveTab}) => {
   };
 
   return (
-    <div className="fixed bg-gradient w-[210px] h-[100%] ml-[-4rem] mt-[2rem]">
+    <div className="fixed bg-gradient w-[210px] h-[100%] ml-[-4rem] mt-[2rem] z-[999]">
       <Link to="/">
         <img
           src={logo}
@@ -44,7 +44,7 @@ const Sidebar = ({activeTab, setActiveTab}) => {
             key={side.id}
             onClick={() => handleClick(side.title)}
             className={`flex w-[260px] h-[74px] rounded-[16px] text-white flex-row 
-            cursor-pointer ml-[-4rem] ${activeTab === side.title ? "tab-btn" : "text-[#8B8C91]"}
+            cursor-pointer ml-[-4rem] ${activeTab === side.title ? "tab-btn text-[#fff]" : "text-white opacity-[50%]"}
             `}
           >
             <div className="flex flex-row justify-center gap-4 items-center ml-[4rem]">

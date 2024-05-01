@@ -1,10 +1,10 @@
 import React from "react";
 import { userAnalysis, expertise_data } from "../constants";
-import { graph, graph1 } from "../assets";
+import { graph, graph1,edit } from "../assets";
 
 const Dashboard = () => {
   return (
-    <div className="pb-[5rem] px-[10rem] py-[6rem]">
+    <div className="pb-[5rem] xl:px-[18rem] md:px-[10rem] py-[6rem]">
       <div className="flex w-[1180px] items-center">
         <span className="w-[176px] h-[27px] font-inter text-[22px] font-[600] leading-[27px] text-white">
           User Analysis
@@ -89,7 +89,7 @@ const Dashboard = () => {
           Subscription : Services
         </span>
 
-        <div className="w-[1142px] h-[460px] bg_cards p-4 rounded-[24px]">
+        <div className="w-[1142px] h-[480px] bg_cards p-4 rounded-[24px]">
           {expertise_data.map((expert) => (
             <div className="flex flex-col">
               <div className="flex flex-row">
@@ -124,6 +124,9 @@ const Dashboard = () => {
                   <span className="text-white w-[187px] h-[22px] font-inter font-[500] text-[14px] leading-[22px]">
                     {expert.content}
                   </span>
+                  <span className="text-white w-[187px] h-[22px] font-inter font-[500] text-[16px] leading-[22px]">
+                    <span className="text-white opacity-[50%]">Active User:</span> 100
+                  </span>
                   <button className="w-[373px] h-[31px] flex items-center justify-center rounded-[21.5px] border-[1.5px] border-[#4e4e4ecc] mt-2 md:mt-0">
                     <button className="flex justify-center items-center gap-2">
                       <img
@@ -156,15 +159,23 @@ const Dashboard = () => {
                   />
                 </div>
 
-                <div className="flex flex-col">
+                <div className="flex flex-col justify-between">
                   <div className="flex flex-row gap-2 w-[70px] h-[32px]">
                     <img src={expert.ratingIcon} alt={expert.rating} className="w-[25px] h-[25px]" />
                     <span className="w-[38px] h-[32px] font-[600] text-[25px] leading-[31px] text-[#E1E1E3]">{expert.rating}</span>
                   </div>
+                  <div className="w-[93px] h-[32p] rounded-[36px] border border-[#fffff] flex justify-center items-center">
+                  <button className="flex flex-row items-center gap-2 justify-center items-center">
+                    <img src={edit} alt="Edit" className="w-[16px] h-[16px]" />
+                    <span className="text-white font-[400] text-[15px] leading-[28px]">
+                      Edit
+                    </span>
+                  </button>
+                </div>
                 </div>
               </div>
 
-              <div className="flex flex-row gap-[3rem] px-[2rem] mt-[2rem]">
+              <div className="flex flex-row gap-[4rem] px-[2rem] mt-[2rem]">
                 <div className="w-[165px] flex flex-col">
                   <span className="text-gradient-2 w-[89px] h-[32px] font-inter font-[700] text-[23px]">
                     Monthly
