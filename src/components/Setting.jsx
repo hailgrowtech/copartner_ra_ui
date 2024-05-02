@@ -1,12 +1,51 @@
-import React from "react";
-import { expertise_data } from "../constants";
+import React, { useState } from "react";
+import { expertise_data, withdrawalBank } from "../constants";
 import { edit, mail, phone, sebi, addDoc } from "../assets";
+import ProfileEdit from "./ProfileEdit";
+import BankEditDialog from "./BankEditDialog";
+import AddBankDialog from "./AddBankDialog";
+import AddUpiDialog from "./AddUpiDialog";
+import UpiEditDialog from "./UpiEditDialog";
 
 const handleFileChange = (event) => {
   const file = event.target.files[0];
 };
 
 const Setting = () => {
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [isEditBankOpen, setIsEditBankOpen] = useState(false);
+  const [isEditUpiOpen, setIsEditUpiOpen] = useState(false);
+  const [isAddBankOpen, setIsAddBankOpen] = useState(false);
+  const [isAddUpiOpen, setIsAddUpiOpen] = useState(false);
+
+  const openDialog = () => {
+    setIsDialogOpen(true);
+  };
+
+  const openEditBankDialog = () => {
+    setIsEditBankOpen(true);
+  }
+
+  const openEditUpiDialog = () => {
+    setIsEditUpiOpen(true);
+  }
+
+  const openAddBankDialog = () => {
+    setIsAddBankOpen(true);
+  }
+
+  const openUpiDialog = () => {
+    setIsAddUpiOpen(true);
+  }
+
+  const closeDialog = () => {
+    setIsDialogOpen(false);
+    setIsEditBankOpen(false);
+    setIsEditUpiOpen(false);
+    setIsAddBankOpen(false);
+    setIsAddUpiOpen(false);
+  };
+
   return (
     <div className="min-h-screen pb-[5rem] xl:px-[18rem] md:px-[10rem] py-[6rem]">
       <div className="w-[1142px] h-[460px] bg_cards p-4 rounded-[24px]">
@@ -168,12 +207,21 @@ const Setting = () => {
                   </span>
                 </div>
                 <div className="w-[93px] h-[32p] rounded-[36px] border border-[#fffff] flex justify-center items-center">
-                  <button className="flex flex-row items-center gap-2 justify-center items-center">
+                  <button
+                    onClick={openDialog}
+                    className="flex flex-row items-center gap-2 justify-center items-center"
+                  >
                     <img src={edit} alt="Edit" className="w-[16px] h-[16px]" />
                     <span className="text-white font-[400] text-[15px] leading-[28px]">
                       Edit
                     </span>
                   </button>
+                  {isDialogOpen && (
+                    <ProfileEdit
+                      isDialogOpen={isDialogOpen}
+                      closeDialog={closeDialog}
+                    />
+                  )}
                 </div>
               </div>
             </div>
@@ -273,52 +321,89 @@ const Setting = () => {
           <span className="text-white font-inter font-[600] text-[22px] leading-[26px]">
             Bank Details
           </span>
-          <div className="w-[93px] h-[32p] rounded-[36px] border border-[#fffff] flex justify-center items-center">
-            <button className="flex flex-row items-center gap-2 justify-center items-center">
-              <img src={edit} alt="Edit" className="w-[16px] h-[16px]" />
+          <div className="w-[128px] h-[32p] rounded-[10px] border-2 border-dotted border-[#ffffff] flex justify-center items-center">
+            <button onClick={openAddBankDialog} className="flex flex-row items-center gap-2 justify-center items-center">
               <span className="text-white font-[400] text-[15px] leading-[28px]">
-                Edit
+                +Add Bank
               </span>
             </button>
+            {
+              isAddBankOpen && (
+                <AddBankDialog isAddBankOpen={isAddBankOpen} onClose={closeDialog} />
+              )
+            }
           </div>
         </div>
 
-        <div className="flex flex-col gap-8">
-          <div className="flex gap-12 flex-row mt-2">
-            <div className="flex flex-row items-center w-[245px] h-[50px]">
-              <span className="text-white opacity-[50%] font-inter font-[500] text-[16px] leading-[28px] w-[140px] h-[28px]">
-                Bank Name:
-              </span>
-              <span className="bg-[#202F49] w-[180px] h-[50px] rounded-[30px] text-white font-[500] text-[16px] leading-[28px] p-2 text-center">
-                HDFC Bank
-              </span>
-            </div>
-            <div className="flex flex-row items-center w-[331px] h-[50px]">
-              <span className="text-white opacity-[50%] font-inter font-[500] text-[16px] leading-[28px] w-[147px] h-[28px]">
-                Account Number:
-              </span>
-              <span className="bg-[#202F49] w-[180px] h-[50px] rounded-[30px] text-white font-[500] text-[16px] leading-[28px] p-2 text-center">
-                987612541000
-              </span>
-            </div>
-            <div className="flex flex-row items-center w-[330px] h-[50px]">
-              <span className="text-white opacity-[50%] font-inter font-[500] text-[16px] leading-[28px] w-[100px] h-[28px]">
-                IFSC Code:
-              </span>
-              <span className="bg-[#202F49] w-[258px] h-[50px] rounded-[30px] text-white font-[500] text-[16px] leading-[28px] p-2 text-center">
-                XYZ12100SXI0
-              </span>
-            </div>
-          </div>
-          <div className="flex items-center justify-between">
-            <div className="flex flex-row items-center w-[372px] h-[50px]">
-                <span className="text-white opacity-[50%] w-[182px] h-[28px] font-[600] text-[16px] leading-[28px]">Account Holder Name:</span>
-                <span className="bg-[#202F49] w-[180px] h-[50px] rounded-[30px] text-white font-[500] text-[16px] leading-[28px] p-2 text-center">
-                Arun Kumar
-                </span>
-            </div>
-            <button className="w-[98px] h-[38px] border-2 text-white opacity-[50%] rounded-[20px] border-dotted">+Add</button>
-          </div>
+        <div className="flex flex-row items-center mt-4 justify-between">
+          {withdrawalBank.slice(0, 1).map((wallet) => {
+            return (
+              <button
+                onClick={openEditBankDialog}
+                key={wallet.id}
+                className="w-[310px] h-[76px] rounded-[16px] border border-[#40495C] bg-[#282F3E] p-2"
+              >
+                <div className="flex flex-row items-center gap-2">
+                  <img src={wallet.bankImg} className="w-[74px] h-[59px]" />
+                  <div className="flex flex-col gap-2">
+                    <span className="font-[500] text-[18px] leading-[21px] text-white">
+                      {wallet.bankName}
+                    </span>
+                    <span className="font-[400] text-[14px] leading-[16px] text-white opacity-[50%]">
+                      {wallet.accNum}
+                    </span>
+                  </div>
+                </div>
+              </button>
+            );
+          })}
+          {isEditBankOpen && (
+            <BankEditDialog
+              isEditBankOpen={isEditBankOpen}
+              closeDialog={closeDialog}
+            />
+          )}
+        </div>
+
+        <hr className="bg-white opacity-[50%] mt-6" />
+
+        <div className="flex flex-row items-center mt-6 justify-between">
+          <span className="h-[27px] text-white text-[20px] font-inter font-[500] leading-[16px]">
+            UPI Details
+          </span>
+          <button onClick={openUpiDialog} className="w-[97px] h-[40px] border-2 border-dotted border-[#ffffff] rounded-[10px] border text-white font-[600] font-inter text-[12px]">
+            +Add UPI
+          </button>
+          {isAddUpiOpen && (
+            <AddUpiDialog
+              isOpen={isAddUpiOpen}
+              onClose={closeDialog}
+            />
+          )}
+        </div>
+
+        <div className="flex flex-row items-center mt-2 justify-between">
+          {withdrawalBank.slice(0, 1).map((wallet) => {
+            return (
+              <button onClick={openEditUpiDialog}
+                key={wallet.id}
+                className="w-[310px] h-[40px] rounded-[8px] border border-[#40495C] bg-[#282F3E]"
+              >
+                <div className="flex flex-row items-center gap-2 p-1">
+                  <img src={wallet.upiImg} className="w-[32px] h-[28px]" />
+                  <span className="font-[500] text-[18px] leading-[21px] text-white">
+                    {wallet.upiId}
+                  </span>
+                </div>
+              </button>
+            );
+          })}
+          {isEditUpiOpen && (
+            <UpiEditDialog
+              isOpen={isEditUpiOpen}
+              onClose={closeDialog}
+            />
+          )}
         </div>
       </div>
     </div>

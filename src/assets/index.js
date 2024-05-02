@@ -38,6 +38,7 @@ import kotak from './kotak.png';
 import paytm from './paytm.png';
 import googlepay from './googlePay.png';
 import phonepe from './phonepe.png';
+import arrowRight from './arrowRight.png';
 
 export {
     availableIcon,
@@ -75,4 +76,5 @@ export {
     closeIcon,
     hdfc, kotak, icici,
     paytm, googlepay, phonepe,
+    arrowRight,
 }

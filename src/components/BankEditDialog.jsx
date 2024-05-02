@@ -1,73 +1,70 @@
 import React from "react";
 import { closeIcon } from "../assets";
 
-const AddBankDialog = ({ isOpen, onClose, isAddBankOpen }) => {
-  // if (!isOpen) return null;
-  // if (!isAddBankOpen return null);
-
+const BankEditDialog = ({ closeDialog }) => {
   return (
     <div className="fixed inset-0 z-[999] flex items-center py-[8rem] justify-center">
       <div className="fixed inset-0 z-[999] flex items-center py-[8rem] justify-center bg-black bg-opacity-[40%]">
-        <div className="bg-[#2E374B] rounded-lg w-[1084px] h-[90%] overflow-auto p-8">
+        <div className="bg-[#2E374B] rounded-lg w-[1084px] h-[460px] overflow-auto p-8">
           <div className="flex items-center justify-between">
             <h2 className="h-[52px] font-inter font-[700] text-[30px] leading-[51px] text-new">
-              Add Bank Details
+              Edit Bank Details
             </h2>
-            <button onClick={onClose}>
+            <button onClick={closeDialog}>
               <img
                 src={closeIcon}
                 alt="Close_Icon"
-                className="w-[45px] h-[45px]"
+                className="w-[35px] h-[35px]"
               />
             </button>
           </div>
 
-          <div className="flex flex-row justify-between mt-8">
+          <div className="flex justify-between mt-8">
             <div className="relative">
-              <div class="mb-0">
+              <div className="mb-0">
                 <label
                   className="flex items-center justify-center bg-[#282F3E] text-white opacity-[50%]
-                  w-[132px] h-[26px] rounded-[8px] font-[400] text-[14px] leading-[16px] text-center"
+                  w-[140px] h-[26px] rounded-[8px] font-[400] text-[14px] leading-[16px] text-center"
                 >
-                  Account Number
+                  Acoount Number
                 </label>
                 <input
-                  type="link"
+                  type="number"
+                  id="default-input"
+                  placeholder="Enter Acoount Number Here"
+                  className="w-[480px] py-2 px-4 rounded-md text-white border border-[#40495C] bg-[#282F3E]"
+                />
+              </div>
+            </div>
+            <div className="relative">
+              <div className="mb-0">
+                <label
+                  className="flex items-center justify-center bg-[#282F3E] text-white opacity-[50%]
+                  w-[200px] h-[26px] rounded-[8px] font-[400] text-[14px] leading-[16px] text-center"
+                >
+                  Confirm Acoount Number
+                </label>
+                <input
+                  type="text"
                   id="default-input"
                   placeholder="Enter Account Number Here"
                   className="w-[480px] py-2 px-4 rounded-md text-white border border-[#40495C] bg-[#282F3E]"
                 />
               </div>
             </div>
-            <div className="relative">
-              <div class="mb-0">
-                <label
-                  className="flex items-center justify-center bg-[#282F3E] text-white opacity-[50%]
-                  w-[189px] h-[26px] rounded-[8px] font-[400] text-[14px] leading-[16px] text-center"
-                >
-                  Confirm Account Number
-                </label>
-                <input
-                  type="link"
-                  id="default-input"
-                  placeholder="Enter again Account Number Here"
-                  className="w-[480px] py-2 px-4 rounded-md text-white border border-[#40495C] bg-[#282F3E]"
-                />
-              </div>
-            </div>
           </div>
 
-          <div className="flex flex-row justify-between mt-8">
+          <div className="flex justify-between mt-8">
             <div className="relative">
-              <div class="mb-0">
+              <div className="mb-0">
                 <label
                   className="flex items-center justify-center bg-[#282F3E] text-white opacity-[50%]
-                  w-[91px] h-[26px] rounded-[8px] font-[400] text-[14px] leading-[16px] text-center"
+                  w-[90px] h-[26px] rounded-[8px] font-[400] text-[14px] leading-[16px] text-center"
                 >
                   IFSC Code
                 </label>
                 <input
-                  type="link"
+                  type="number"
                   id="default-input"
                   placeholder="Enter IFSC Code Here"
                   className="w-[480px] py-2 px-4 rounded-md text-white border border-[#40495C] bg-[#282F3E]"
@@ -75,43 +72,46 @@ const AddBankDialog = ({ isOpen, onClose, isAddBankOpen }) => {
               </div>
             </div>
             <div className="relative">
-              <div class="mb-0">
+              <div className="mb-0">
                 <label
                   className="flex items-center justify-center bg-[#282F3E] text-white opacity-[50%]
-                  w-[91px] h-[26px] rounded-[8px] font-[400] text-[14px] leading-[16px] text-center"
+                  w-[100px] h-[26px] rounded-[8px] font-[400] text-[14px] leading-[16px] text-center"
                 >
                   Bank Name
                 </label>
                 <input
-                  type="link"
+                  type="text"
                   id="default-input"
-                  placeholder="Enter Bank Name"
+                  placeholder="Enter Bank Here"
                   className="w-[480px] py-2 px-4 rounded-md text-white border border-[#40495C] bg-[#282F3E]"
                 />
               </div>
             </div>
           </div>
 
-          <div className="relative mt-8">
-              <div class="mb-0">
-                <label
-                  className="flex items-center justify-center bg-[#282F3E] text-white opacity-[50%]
-                  w-[166px] h-[26px] rounded-[8px] font-[400] text-[14px] leading-[16px] text-center"
-                >
-                  Account Holder Name
-                </label>
-                <input
-                  type="link"
-                  id="default-input"
-                  placeholder="Enter Name"
-                  className="w-[480px] py-2 px-4 rounded-md text-white border border-[#40495C] bg-[#282F3E]"
-                />
-              </div>
+          <div className="relative">
+            <div className="mt-6">
+              <label
+                className="flex items-center justify-center bg-[#282F3E] text-white opacity-[50%]
+                  w-[160px] h-[26px] rounded-[8px] font-[400] text-[14px] leading-[16px] text-center"
+              >
+                Account Holder Name
+              </label>
+              <input
+                type="text"
+                id="default-input"
+                placeholder="Enter Name"
+                className="w-[480px] py-2 px-4 rounded-md text-white border border-[#40495C] bg-[#282F3E]"
+              />
             </div>
+          </div>
 
-          <div className="flex justify-center items-center mt-6">
-            <button className="bg-white rounded-[10px] w-[147px] h-[40px]">
-              Add
+          <div className="flex gap-6 justify-end items-center mt-6">
+            <button className="bg-white rounded-[10px] w-[117px] h-[40px]">
+              Edit
+            </button>
+            <button className="bg-blue-500 text-white rounded-[10px] w-[117px] h-[40px]">
+              Delete
             </button>
           </div>
         </div>
@@ -120,4 +120,4 @@ const AddBankDialog = ({ isOpen, onClose, isAddBankOpen }) => {
   );
 };
 
-export default AddBankDialog;
+export default BankEditDialog;

@@ -62,7 +62,7 @@ const WalletWithdrawal = ({ closeDialog }) => {
               return (
                 <div
                   key={wallet.id}
-                  className="w-[310px] h-[76px] rounded-[16px] border border-[#40495C] bg-[#282F3E] p-2"
+                  className={`w-[310px] h-[76px] rounded-[16px] border border-[#40495C] p-2 ${wallet.bankName === 'HDFC Bank' ? 'bg-[#282F3E]' : 'bg-transparent'}`}
                 >
                   <div className="flex flex-row items-center gap-2">
                     <img src={wallet.bankImg} className="w-[74px] h-[59px]" />

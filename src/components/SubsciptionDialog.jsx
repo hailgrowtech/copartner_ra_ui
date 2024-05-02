@@ -271,7 +271,7 @@ const SubscriptionDialog = ({ closeDialog }) => {
                 </div>
               </div>
               <div className="relative">
-                <div class="mb-0">
+                <div className="mb-0">
                   <label
                     className="flex items-center justify-center bg-[#282F3E] text-white opacity-[50%]
                   w-[70px] h-[26px] rounded-[8px] font-[400] text-[14px] leading-[16px] text-center"
@@ -367,7 +367,7 @@ const SubscriptionDialog = ({ closeDialog }) => {
             </div>
 
             <div className="relative">
-              <div class="mb-0">
+              <div className="mb-0">
                 <label
                   className="flex items-center justify-center bg-[#282F3E] text-white opacity-[50%]
                   w-[232px] h-[26px] rounded-[8px] font-[400] text-[14px] leading-[16px] text-center"
