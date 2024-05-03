@@ -36,8 +36,11 @@ const UpiEditDialog = ({ isOpen, onClose }) => {
               </div>
             </div>
 
-          <div className="flex justify-center items-center mt-6">
-            <button className="bg-white rounded-[10px] w-[147px] h-[40px]">
+          <div className="flex justify-center gap-4 items-center mt-6">
+            <button className="bg-red-600 text-white rounded-[10px] w-[147px] h-[40px]">
+              Delete
+            </button>
+            <button className="bg-blue-500 text-white rounded-[10px] w-[147px] h-[40px]">
               Edit
             </button>
           </div>
@@ -47,4 +50,4 @@ const UpiEditDialog = ({ isOpen, onClose }) => {
   )
 }
 
-export default UpiEditDialog 
+export default UpiEditDialog;

@@ -1,10 +1,12 @@
 import React, { useState } from "react";
 import { filter, graph, graph1 } from "../assets";
-import { walletData } from "../constants";
+import { transcationData, withdrawalData } from "../constants";
 import WalletWithdrawal from "./WalletWithdrawal";
+import EarningAnalysis from "./EarningAnalysis";
 
 const Wallet = () => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [showTransactions, setShowTransactions] = useState(true);
 
   const openDialog = () => {
     setIsDialogOpen(true);
@@ -25,26 +27,22 @@ const Wallet = () => {
             Withdrawal Balance :{" "}
             <span className="text-white opacity-[40%]">₹30,000</span>
           </span>
-          <button onClick={openDialog} className="w-[147px] h-[40px] rounded-[10px] border text-black bg-[#ffffff] font-[600] font-inter text-[12px]">
+          <button
+            onClick={openDialog}
+            className="w-[147px] h-[40px] rounded-[10px] border text-black bg-[#ffffff] font-[600] font-inter text-[12px]"
+          >
             Withdrawal
           </button>
           {isDialogOpen && (
-          <WalletWithdrawal
-            isDialogOpen={isDialogOpen}
-            closeDialog={closeDialog}
-          />
-        )}
+            <WalletWithdrawal
+              isDialogOpen={isDialogOpen}
+              closeDialog={closeDialog}
+            />
+          )}
         </div>
       </div>
 
-      <div className="w-[1184px] h-[297px] flex flex-row">
-        <img
-          src={graph}
-          alt=""
-          className="w-[454px] h-[297px] overflow-hidden contain"
-        />
-        <img src={graph1} alt="" className="w-[605px] h-[297px]" />
-      </div>
+      <EarningAnalysis />
 
       <div className="flex flex-col gap-6">
         <div className="flex flex-row items-center justify-between">
@@ -53,10 +51,16 @@ const Wallet = () => {
               Transaction History
             </span>
             <div className="flex flex-row gap-4">
-              <button className="w-[95px] h-[40px] rounded-[10px] border text-black bg-[#ffffff] font-[600] font-inter text-[12px]">
+              <button
+                onClick={() => setShowTransactions(true)}
+                className="w-[95px] h-[40px] rounded-[10px] border text-black bg-[#ffffff] font-[600] font-inter text-[12px]"
+              >
                 Transaction
               </button>
-              <button className="w-[100px] h-[40px] rounded-[10px] border text-white font-[600] font-inter text-[12px]">
+              <button
+                onClick={() => setShowTransactions(false)}
+                className="w-[100px] h-[40px] rounded-[10px] border text-white font-[600] font-inter text-[12px]"
+              >
                 Withdrawal
               </button>
             </div>
@@ -74,20 +78,21 @@ const Wallet = () => {
           </div>
         </div>
 
-        <table className="w-[1130px] h-[497px] px-[1rem] bg-[#29303F] rounded-[30px]">
-          <thead className="text-dimWhite w-[1084px] h-[51px]">
-            <tr>
-              <th className="text-center">Transaction ID</th>
-              <th className="text-center">Date</th>
-              <th className="text-center">Subscription</th>
-              <th className="text-center">Plan Name</th>
-              <th className="text-center">Name</th>
-              <th className="text-center">Amount</th>
-              <th className="text-center">Invoice</th>
-            </tr>
-          </thead>
-          <tbody className="text-lightWhite w-[1084px] h-[81px]">
-            {walletData.map((row, index) => {
+        {showTransactions ? (
+          <table className="w-[1130px] h-[497px] px-[1rem] bg-[#29303F] rounded-[30px]">
+            <thead className="text-dimWhite w-[1084px] h-[51px]">
+              <tr>
+                <th className="text-center">Transaction ID</th>
+                <th className="text-center">Date</th>
+                <th className="text-center">Subscription</th>
+                <th className="text-center">Plan Name</th>
+                <th className="text-center">Name</th>
+                <th className="text-center">Amount</th>
+                <th className="text-center">Invoice</th>
+              </tr>
+            </thead>
+            <tbody className="text-lightWhite w-[1084px] h-[81px]">
+            {transcationData.map((row, index) => {
               return (
                 <tr
                   key={index}
@@ -122,7 +127,54 @@ const Wallet = () => {
               );
             })}
           </tbody>
-        </table>
+          </table>
+        ) : (
+          <table className="w-[1130px] h-[497px] px-[1rem] bg-[#29303F] rounded-[30px]">
+            <thead className="text-dimWhite w-[1084px] h-[51px]">
+            <tr>
+              <th className="text-center">Transaction ID</th>
+              <th className="text-center">Date</th>
+              <th className="text-center">Bank</th>
+              <th className="text-center">Account Number</th>
+              <th className="text-center">Amount</th>
+              <th className="text-center">Invoice</th>
+            </tr>
+          </thead>
+          <tbody className="text-lightWhite w-[1084px] h-[81px]">
+            {withdrawalData.map((row, index) => {
+              return (
+                <tr
+                  key={index}
+                  className={index % 2 === 0 ? "bg-[#1E1E22]" : ""}
+                >
+                  <td className="text-center font-[500] text-[16px] leading-[18px]">
+                    {row.transcationId}
+                  </td>
+                  <td className="text-center font-[500] text-[16px] leading-[18px]">
+                    {row.date}
+                  </td>
+                  <td className="text-center w-[143px] h-[36px] font-[500] text-[16px] leading-[18px]">
+                    {row.withdrawal}
+                  </td>
+                  <td className="text-center w-[143px] h-[36px] font-[500] text-[16px] leading-[18px]">
+                    {row.accNum}
+                  </td>
+                  <td className="text-center w-[105px] h-[18px] font-[500] text-[16px] leading-[18px]">
+                    {row.amount}
+                  </td>
+                  <td className="py-2">
+                    <img
+                      src={row.invoice}
+                      alt=""
+                      className="w-[21px] h-[21px] text-white mx-auto"
+                    />
+                  </td>
+                </tr>
+              );
+            })}
+          </tbody>
+          </table>
+        )}
       </div>
     </div>
   );

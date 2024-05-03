@@ -107,11 +107,11 @@ const BankEditDialog = ({ closeDialog }) => {
           </div>
 
           <div className="flex gap-6 justify-end items-center mt-6">
-            <button className="bg-white rounded-[10px] w-[117px] h-[40px]">
-              Edit
+            <button className="bg-red-600 text-white rounded-[10px] w-[117px] h-[40px]">
+              Delete
             </button>
             <button className="bg-blue-500 text-white rounded-[10px] w-[117px] h-[40px]">
-              Delete
+            Edit
             </button>
           </div>
         </div>

@@ -1,6 +1,10 @@
 import React from "react";
 import { userAnalysis, expertise_data } from "../constants";
-import { graph, graph1,edit } from "../assets";
+import { edit } from "../assets";
+import BarGraph from "../graphs/BarGraph";
+import EarningAnalysis from "./EarningAnalysis";
+
+const yTicks = [0, 100, 200, 300, 400, 500];
 
 const Dashboard = () => {
   return (
@@ -22,67 +26,59 @@ const Dashboard = () => {
         </div>
       </div>
 
-      <div className="flex flex-row mt-8 gap-6 py-8">
-        {userAnalysis.map((user) => (
-          <div
-            className="flex flex-col justify-between w-[268px] h-[269px] rounded-[25px] bg_cards p-4"
-            key={user.id}
-          >
-            <div className="flex flex-row justify-between">
-              <div className="flex flex-col gap-2">
-                <img
-                  src={user.telegramIcon}
-                  alt={user.telegram}
-                  className="w-[54px] h-[54px]"
-                />
-                <span className="text-white">{user.telegram}</span>
-              </div>
-              <span className="text-[#E4E4E7] font-[400] font-inter text-[14px] leading-[16px] opacity-[40%]">
-                {user.joined}
-              </span>
-            </div>
-
-            <div className="flex flex-col gap-[1rem] mb-[2rem]">
-              <div className="flex flex-row justify-between w-[232px] h-[20px]">
-                <span className="text-[#E4E4E7] opacity-[40%]">
-                  {user.totalVisit}
-                </span>
-                <span className="text-[#E4E4E7] opacity-[40%]">
-                  {user.totalVisitIs}
-                </span>
-              </div>
-              <div className="flex flex-row justify-between w-[232px] h-[20px]">
-                <span className="text-[#E4E4E7] opacity-[40%]">
-                  {user.user}
-                </span>
-                <span className="text-[#25A2DE]">{user.totalUser}</span>
-              </div>
-              <div className="flex flex-row justify-between w-[232px] h-[20px]">
-                <span className="text-[#E4E4E7] opacity-[40%]">
-                  {user.noInterested}
-                </span>
-                <span className="text-[#D0667A]">{user.noInterestedIs}</span>
-              </div>
-            </div>
-          </div>
-        ))}
-      </div>
-
-      <div className="flex flex-col py-8">
-        <div className="flex gap-[18rem]">
-          <span className="w-[174px] h-[27px] text-[22px] font-inter font-[600] leading-[27px] text-white">
-            Earning analysis
-          </span>
-          <span className="w-[248px] h-[27px] text-[22px] font-inter font-[600] leading-[27px] text-white">
-            Earning Analysis Graph
-          </span>
+      <div className="flex px-[4rem] flex-row py-8">
+        <div className="flex-1">
+          <BarGraph />
         </div>
 
-        <div className="w-[1184px] h-[297px] flex flex-row">
-          <img src={graph} alt="" className="w-[854px] h-[397px]" />
-          <img src={graph1} alt="" className="w-[905px] h-[397px]" />
+        <div className="flex flex-col gap-4">
+          {userAnalysis.map((user) => (
+            <div
+              className="flex flex-col justify-between w-[288px] h-[298px] rounded-[25px] bg_cards p-4"
+              key={user.id}
+            >
+              <div className="flex flex-row justify-between">
+                <div className="flex flex-col gap-2">
+                  <img
+                    src={user.telegramIcon}
+                    alt={user.telegram}
+                    className="w-[65px] h-[65px]"
+                  />
+                  <span className="text-white">{user.telegram}</span>
+                </div>
+                <span className="text-[#E4E4E7] font-[400] font-inter text-[16px] leading-[16px] opacity-[40%]">
+                  {user.joined}
+                </span>
+              </div>
+
+              <div className="flex flex-col gap-[1rem] mb-[2rem]">
+                <div className="flex flex-row justify-between w-[232px] h-[40px]">
+                  <span className="text-[#E4E4E7] opacity-[40%]">
+                    {user.totalVisit}
+                  </span>
+                  <span className="text-[#E4E4E7] opacity-[40%]">
+                    {user.totalVisitIs}
+                  </span>
+                </div>
+                <div className="flex flex-row justify-between w-[232px] h-[20px]">
+                  <span className="text-[#E4E4E7] opacity-[40%]">
+                    {user.user}
+                  </span>
+                  <span className="text-[#25A2DE]">{user.totalUser}</span>
+                </div>
+                <div className="flex flex-row justify-between w-[232px] h-[20px]">
+                  <span className="text-[#E4E4E7] opacity-[40%]">
+                    {user.noInterested}
+                  </span>
+                  <span className="text-[#D0667A]">{user.noInterestedIs}</span>
+                </div>
+              </div>
+            </div>
+          ))}
         </div>
       </div>
+
+      <EarningAnalysis />
 
       <div className="py-12 flex flex-col gap-4">
         <span className="font-inter font-[600] text-[22px] leading-[27px] w-[246px] h-[27px] text-white">
@@ -125,7 +121,10 @@ const Dashboard = () => {
                     {expert.content}
                   </span>
                   <span className="text-white w-[187px] h-[22px] font-inter font-[500] text-[16px] leading-[22px]">
-                    <span className="text-white opacity-[50%]">Active User:</span> 100
+                    <span className="text-white opacity-[50%]">
+                      Active User:
+                    </span>{" "}
+                    100
                   </span>
                   <button className="w-[373px] h-[31px] flex items-center justify-center rounded-[21.5px] border-[1.5px] border-[#4e4e4ecc] mt-2 md:mt-0">
                     <button className="flex justify-center items-center gap-2">
@@ -161,17 +160,27 @@ const Dashboard = () => {
 
                 <div className="flex flex-col justify-between">
                   <div className="flex flex-row gap-2 w-[70px] h-[32px]">
-                    <img src={expert.ratingIcon} alt={expert.rating} className="w-[25px] h-[25px]" />
-                    <span className="w-[38px] h-[32px] font-[600] text-[25px] leading-[31px] text-[#E1E1E3]">{expert.rating}</span>
+                    <img
+                      src={expert.ratingIcon}
+                      alt={expert.rating}
+                      className="w-[25px] h-[25px]"
+                    />
+                    <span className="w-[38px] h-[32px] font-[600] text-[25px] leading-[31px] text-[#E1E1E3]">
+                      {expert.rating}
+                    </span>
                   </div>
                   <div className="w-[93px] h-[32p] rounded-[36px] border border-[#fffff] flex justify-center items-center">
-                  <button className="flex flex-row items-center gap-2 justify-center items-center">
-                    <img src={edit} alt="Edit" className="w-[16px] h-[16px]" />
-                    <span className="text-white font-[400] text-[15px] leading-[28px]">
-                      Edit
-                    </span>
-                  </button>
-                </div>
+                    <button className="flex flex-row items-center gap-2 justify-center items-center">
+                      <img
+                        src={edit}
+                        alt="Edit"
+                        className="w-[16px] h-[16px]"
+                      />
+                      <span className="text-white font-[400] text-[15px] leading-[28px]">
+                        Edit
+                      </span>
+                    </button>
+                  </div>
                 </div>
               </div>
 

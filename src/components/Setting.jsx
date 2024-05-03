@@ -18,25 +18,42 @@ const Setting = () => {
   const [isAddBankOpen, setIsAddBankOpen] = useState(false);
   const [isAddUpiOpen, setIsAddUpiOpen] = useState(false);
 
+  const [isEditing, setIsEditing] = useState(false);
+  const [aboutText, setAboutText] = useState(
+    "Lorem ipsum dolor sit amet consectetur. Et fames faucibus sed porttitor. In amet at et sit donec. Eleifend dui rhoncus sit non nunc vitae faucibus lectus molestie. Rhoncus mattis commodo ac lectus at egestas ipsum mi volutpat. Orci nisi vestibulum eu orci. Elit orci pellentesque ornare suscipit. Et quis placerat etiam nunc sed risus erat volutpat."
+  );
+
+  const handleEditClick = () => {
+    setIsEditing(true);
+  };
+
+  const handleSaveClick = () => {
+    setIsEditing(false);
+  };
+
+  const handleInputChange = (event) => {
+    setAboutText(event.target.value);
+  };
+
   const openDialog = () => {
     setIsDialogOpen(true);
   };
 
   const openEditBankDialog = () => {
     setIsEditBankOpen(true);
-  }
+  };
 
   const openEditUpiDialog = () => {
     setIsEditUpiOpen(true);
-  }
+  };
 
   const openAddBankDialog = () => {
     setIsAddBankOpen(true);
-  }
+  };
 
   const openUpiDialog = () => {
     setIsAddUpiOpen(true);
-  }
+  };
 
   const closeDialog = () => {
     setIsDialogOpen(false);
@@ -47,7 +64,7 @@ const Setting = () => {
   };
 
   return (
-    <div className="min-h-screen pb-[5rem] xl:px-[18rem] md:px-[10rem] py-[6rem]">
+    <div className="min-h-screen pb-[5rem] xl:px-[18rem] md:px-[10rem] py-[6rem]"> 
       <div className="w-[1142px] h-[460px] bg_cards p-4 rounded-[24px]">
         {expertise_data.map((expert, index) => (
           <div className="flex flex-col" key={index}>
@@ -234,48 +251,36 @@ const Setting = () => {
           <span className="text-white font-inter font-[600] text-[22px] leading-[26px]">
             About
           </span>
-          <div className="w-[93px] h-[32p] rounded-[36px] border border-[#fffff] flex justify-center items-center">
-            <button className="flex flex-row items-center gap-2 justify-center items-center">
-              <img src={edit} alt="Edit" className="w-[16px] h-[16px]" />
-              <span className="text-white font-[400] text-[15px] leading-[28px]">
-                Edit
-              </span>
-            </button>
+          <div className="w-[93px] h-[32px] rounded-[36px] bg-gradient flex justify-center items-center">
+            {isEditing ? (
+              <button
+                className="flex flex-row items-center gap-2 justify-center items-center w-[93px] rounded-[36px] h-[32px] bg-blue-600"
+                onClick={handleSaveClick}
+              >
+                <button className="text-white">Save</button>
+              </button>
+            ) : (
+              <button
+                className="flex flex-row items-center w-[93px] h-[32px] rounded-[36px] border border-white gap-2 justify-center items-center"
+                onClick={handleEditClick}
+              >
+                <img src={edit} alt="Edit" className="w-[16px] h-[16px]" />
+                <button className="text-white">Edit</button>
+              </button>
+            )}
           </div>
         </div>
         <div className="text-white opacity-[50%] flex flex-col">
-          <span>
-            Lorem ipsum dolor sit amet consectetur. Et fames faucibus sed
-            porttitor. In amet at et sit donec. Eleifend dui rhoncus sit non
-            nunc vitae faucibus lectus molestie. Rhoncus mattis commodo ac
-            lectus at egestas ipsum mi volutpat. Orci nisi vestibulum eu orci.
-            Elit orci pellentesque ornare suscipit. Et quis placerat etiam nunc
-            sed risus erat volutpat.
-          </span>
-          <br />
-          <span>
-            Lorem ipsum dolor sit amet consectetur. Nibh lectus aliquam sagittis
-            nisl faucibus. Sed adipiscing condimentum volutpat cursus in risus
-            sed sit. Ipsum aliquam urna porttitor eu. Volutpat ac sit at semper
-            tortor vulputate. Purus pulvinar vestibulum cras odio. Congue amet
-            sagittis dui pellentesque consectetur pellentesque et fermentum.
-            Arcu elementum tempor nulla quis aenean fusce ut vulputate. A quam
-            vitae magna pellentesque. Ut volutpat adipiscing purus faucibus duis
-            orci. Accumsan venenatis eu vitae interdum dolor. Nunc at nibh
-            habitant condimentum vitae. Semper luctus vulputate lacinia sit diam
-            tellus id vitae. Morbi aliquet bibendum scelerisque vestibulum
-            aliquet venenatis eu et. Proin bibendum eget lectus consequat id
-            vitae. Eu hendrerit lobortis turpis quam ornare egestas tincidunt
-            donec nulla. Justo nisi ac diam mauris cursus turpis lacus.
-            Vulputate cras sem nec id eget. Cras lectus vestibulum dictum enim.
-            Mauris ultrices etiam ac facilisis malesuada. Odio accumsan
-            fringilla malesuada faucibus fusce pellentesque. Non nunc cursus
-            nisl odio. Pellentesque laoreet molestie proin tincidunt cursus.
-            Integer non odio turpis ac sem aliquam in ante congue. Erat pharetra
-            sed semper duis duis penatibus. Ut congue interdum cras convallis eu
-            nibh quis. Arcu at accumsan neque ultricies tellus massa leo nulla
-            sed.
-          </span>
+          {isEditing ? (
+            <textarea
+              value={aboutText}
+              onChange={handleInputChange}
+              className="bg-transparent border-none resize-y outline-none text-white"
+              style={{ height: "320px" }}
+            />
+          ) : (
+            <span>{aboutText}</span>
+          )}
         </div>
       </div>
 
@@ -322,16 +327,20 @@ const Setting = () => {
             Bank Details
           </span>
           <div className="w-[128px] h-[32p] rounded-[10px] border-2 border-dotted border-[#ffffff] flex justify-center items-center">
-            <button onClick={openAddBankDialog} className="flex flex-row items-center gap-2 justify-center items-center">
+            <button
+              onClick={openAddBankDialog}
+              className="flex flex-row items-center gap-2 justify-center items-center"
+            >
               <span className="text-white font-[400] text-[15px] leading-[28px]">
                 +Add Bank
               </span>
             </button>
-            {
-              isAddBankOpen && (
-                <AddBankDialog isAddBankOpen={isAddBankOpen} onClose={closeDialog} />
-              )
-            }
+            {isAddBankOpen && (
+              <AddBankDialog
+                isAddBankOpen={isAddBankOpen}
+                onClose={closeDialog}
+              />
+            )}
           </div>
         </div>
 
@@ -371,21 +380,24 @@ const Setting = () => {
           <span className="h-[27px] text-white text-[20px] font-inter font-[500] leading-[16px]">
             UPI Details
           </span>
-          <button onClick={openUpiDialog} className="w-[97px] h-[40px] border-2 border-dotted border-[#ffffff] rounded-[10px] border text-white font-[600] font-inter text-[12px]">
-            +Add UPI
+          <button
+            onClick={openUpiDialog}
+            className="w-[128px] h-[32p] border-2 border-dotted border-[#ffffff] rounded-[10px] border text-white font-[600] font-inter text-[12px]"
+          >
+            <span className="text-white font-[400] text-[15px] leading-[28px]">
+                +Add UPI
+              </span>
           </button>
           {isAddUpiOpen && (
-            <AddUpiDialog
-              isOpen={isAddUpiOpen}
-              onClose={closeDialog}
-            />
+            <AddUpiDialog isOpen={isAddUpiOpen} onClose={closeDialog} />
           )}
         </div>
 
         <div className="flex flex-row items-center mt-2 justify-between">
           {withdrawalBank.slice(0, 1).map((wallet) => {
             return (
-              <button onClick={openEditUpiDialog}
+              <button
+                onClick={openEditUpiDialog}
                 key={wallet.id}
                 className="w-[310px] h-[40px] rounded-[8px] border border-[#40495C] bg-[#282F3E]"
               >
@@ -399,10 +411,7 @@ const Setting = () => {
             );
           })}
           {isEditUpiOpen && (
-            <UpiEditDialog
-              isOpen={isEditUpiOpen}
-              onClose={closeDialog}
-            />
+            <UpiEditDialog isOpen={isEditUpiOpen} onClose={closeDialog} />
           )}
         </div>
       </div>

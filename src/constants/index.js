@@ -88,42 +88,6 @@ export const userAnalysis = [
     noInterested: 'Not Interested',
     noInterestedIs: '60'
   },
-  {
-    id: 2,
-    telegramIcon: telegramIcon,
-    joined: 'Yesterday',
-    telegram: 'Telegram',
-    totalVisit: 'Total Visit',
-    totalVisitIs: '400',
-    user: 'User',
-    totalUser: '+140',
-    noInterested: 'Not Interested',
-    noInterestedIs: '90'
-  },
-  {
-    id: 3,
-    telegramIcon: telegramIcon,
-    joined: 'Yesterday',
-    telegram: 'Telegram',
-    totalVisit: 'Total Visit',
-    totalVisitIs: '280',
-    user: 'User',
-    totalUser: '+170',
-    noInterested: 'Not Interested',
-    noInterestedIs: '45'
-  },
-  {
-    id: 4,
-    telegramIcon: telegramIcon,
-    joined: 'Yesterday',
-    telegram: 'Telegram',
-    totalVisit: 'Total Visit',
-    totalVisitIs: '580',
-    user: 'User',
-    totalUser: '+330',
-    noInterested: 'Not Interested',
-    noInterestedIs: '150'
-  },
 ]
 
 export const expertise_data = [
@@ -175,7 +139,7 @@ export const subscriptionData = [
   },
 ]
 
-export const walletData = [
+export const transcationData = [
   {
     transcationId: "#12324654685",
     date: "26/01/2024",
@@ -227,6 +191,57 @@ export const walletData = [
     subscription: "Service",
     planName: 'Futures & Option',
     name: "Priyank",
+    amount: "₹1,999 ",
+    invoice: invoiceImg,
+  },
+];
+
+export const withdrawalData = [
+  {
+    transcationId: "#12324654685",
+    date: "26/01/2024",
+    withdrawal: "HDFC Bank",
+    accNum: '00121456110089',
+    amount: "₹1,999 ",
+    invoice: invoiceImg,
+  },
+  {
+    transcationId: "#12324654685",
+    date: "26/01/2024",
+    withdrawal: "UPI ID",
+    accNum: '00121456110089',
+    amount: "₹1,999 ",
+    invoice: invoiceImg,
+  },
+  {
+    transcationId: "#12324654685",
+    date: "26/01/2024",
+    withdrawal: "HDFC Bank",
+    accNum: '00121456110089',
+    amount: "₹1,999 ",
+    invoice: invoiceImg,
+  },
+  {
+    transcationId: "#12324654685",
+    date: "26/01/2024",
+    withdrawal: "Kotak Bank",
+    accNum: '00121456110089',
+    amount: "₹1,999 ",
+    invoice: invoiceImg,
+  },
+  {
+    transcationId: "#12324654685",
+    date: "26/01/2024",
+    withdrawal: "ICICI Bank",
+    accNum: '00121456110089',
+    amount: "₹1,999 ",
+    invoice: invoiceImg,
+  },
+  {
+    transcationId: "#12324654685",
+    date: "26/01/2024",
+    withdrawal: "UPI ID",
+    accNum: '00121456110089',
     amount: "₹1,999 ",
     invoice: invoiceImg,
   },
