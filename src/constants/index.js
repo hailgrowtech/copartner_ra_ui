@@ -83,7 +83,7 @@ export const userAnalysis = [
     telegram: 'Telegram',
     totalVisit: 'Total Visit',
     totalVisitIs: '100',
-    user: 'User',
+    user: 'Paid User',
     totalUser: '+40',
     noInterested: 'Not Interested',
     noInterestedIs: '60'
@@ -204,6 +204,7 @@ export const withdrawalData = [
     accNum: '00121456110089',
     amount: "₹1,999 ",
     invoice: invoiceImg,
+    status: 'Pending'
   },
   {
     transcationId: "#12324654685",
@@ -212,6 +213,7 @@ export const withdrawalData = [
     accNum: '00121456110089',
     amount: "₹1,999 ",
     invoice: invoiceImg,
+    status: 'Reject'
   },
   {
     transcationId: "#12324654685",
@@ -220,6 +222,7 @@ export const withdrawalData = [
     accNum: '00121456110089',
     amount: "₹1,999 ",
     invoice: invoiceImg,
+    status: 'Reject'
   },
   {
     transcationId: "#12324654685",
@@ -228,6 +231,7 @@ export const withdrawalData = [
     accNum: '00121456110089',
     amount: "₹1,999 ",
     invoice: invoiceImg,
+    status: 'Pending'
   },
   {
     transcationId: "#12324654685",
@@ -236,6 +240,7 @@ export const withdrawalData = [
     accNum: '00121456110089',
     amount: "₹1,999 ",
     invoice: invoiceImg,
+    status: 'Pending'
   },
   {
     transcationId: "#12324654685",
@@ -244,6 +249,7 @@ export const withdrawalData = [
     accNum: '00121456110089',
     amount: "₹1,999 ",
     invoice: invoiceImg,
+    status: 'Reject'
   },
 ];
 
@@ -265,7 +271,7 @@ export const withdrawalBank = [
     upiId: 'ArunKumar@google.ybl'
   },
   {
-    id: 1,
+    id: 3,
     bankImg: kotak,
     bankName: 'Kotak Bank',
     accNum: '431200109911',

@@ -30,7 +30,7 @@ const Sidebar = ({activeTab, setActiveTab}) => {
   };
 
   return (
-    <div className="fixed bg-gradient w-[210px] h-[100%] ml-[-4rem] mt-[2rem] z-[999]">
+    <div className="fixed bg-gradient md:w-[210px] h-[100%] ml-[-4rem] py-[2rem] mb-[1rem] z-[999]">
       <Link to="/">
         <img
           src={logo}

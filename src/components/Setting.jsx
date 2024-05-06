@@ -64,8 +64,8 @@ const Setting = () => {
   };
 
   return (
-    <div className="min-h-screen pb-[5rem] xl:px-[18rem] md:px-[10rem] py-[6rem]"> 
-      <div className="w-[1142px] h-[460px] bg_cards p-4 rounded-[24px]">
+    <div className="pb-[5rem] xl:pl-[12rem] md:pl-[10rem] py-[6rem] bg-gradient min-h-screen"> 
+      <div className="xl:w-[1520px] md:w-[1120px] h-[460px] bg_cards p-4 rounded-[24px]">
         {expertise_data.map((expert, index) => (
           <div className="flex flex-col" key={index}>
             <div className="flex flex-row">
@@ -246,7 +246,7 @@ const Setting = () => {
         ))}
       </div>
 
-      <div className="w-[1140px] h-[430px] px-4 p-8 border-2 border-[#202F49] rounded-[30px] rounded-[30px] flex gap-4 flex-col mt-[4rem]">
+      <div className="xl:w-[1520px] md:w-[1120px] h-[430px] px-4 p-8 border-2 border-[#202F49] rounded-[30px] rounded-[30px] flex gap-4 flex-col mt-[4rem]">
         <div className="flex flex-row justify-between">
           <span className="text-white font-inter font-[600] text-[22px] leading-[26px]">
             About
@@ -284,7 +284,7 @@ const Setting = () => {
         </div>
       </div>
 
-      <div className="w-[1140px] h-[352px] px-4 p-8 border-2 border-[#202F49] rounded-[30px] rounded-[30px] flex gap-4 flex-col mt-[4rem]">
+      <div className="xl:w-[1520px] md:w-[1120px] h-[352px] px-4 p-8 border-2 border-[#202F49] rounded-[30px] rounded-[30px] flex gap-4 flex-col mt-[4rem]">
         <div className="flex flex-row justify-between">
           <span className="text-white font-inter font-[600] text-[22px] leading-[26px]">
             Documents
@@ -321,7 +321,7 @@ const Setting = () => {
         </label>
       </div>
 
-      <div className="w-[1140px] h-[397px] px-4 p-8 border-2 border-[#202F49] rounded-[30px] rounded-[30px] flex gap-4 flex-col mt-[4rem]">
+      <div className="xl:w-[1520px] md:w-[1120px] h-[397px] px-4 p-8 border-2 border-[#202F49] rounded-[30px] rounded-[30px] flex gap-4 flex-col mt-[4rem]">
         <div className="flex flex-row justify-between">
           <span className="text-white font-inter font-[600] text-[22px] leading-[26px]">
             Bank Details

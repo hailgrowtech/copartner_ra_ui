@@ -8,12 +8,13 @@ const yTicks = [0, 100, 200, 300, 400, 500];
 
 const Dashboard = () => {
   return (
-    <div className="pb-[5rem] xl:px-[18rem] md:px-[10rem] py-[6rem]">
-      <div className="flex w-[1180px] items-center">
+    <div className="pb-[5rem] xl:pl-[12rem] md:pl-[10rem] py-[6rem]">
+      <div className="flex xl:w-[1580px] md:w-[1180px] items-center">
+        <div className="flex items-center">
         <span className="w-[176px] h-[27px] font-inter text-[22px] font-[600] leading-[27px] text-white">
           User Analysis
         </span>
-        <div className="flex ml-[38rem] gap-[2rem]">
+        <div className="flex gap-[2rem] xl:ml-[62rem] md:ml-[37rem]">
           <button className="w-[85px] h-[40px] rounded-[10px] bg-white text-black font-[600] font-inter text-[12px]">
             Weekly
           </button>
@@ -23,6 +24,7 @@ const Dashboard = () => {
           <button className="w-[100px] h-[40px] rounded-[10px] border text-white font-[600] font-inter text-[12px]">
             Custom
           </button>
+        </div>
         </div>
       </div>
 
@@ -85,7 +87,7 @@ const Dashboard = () => {
           Subscription : Services
         </span>
 
-        <div className="w-[1142px] h-[480px] bg_cards p-4 rounded-[24px]">
+        <div className="xl:w-[1530px] md:w-[1122px] h-[480px] bg_cards p-4 rounded-[24px]">
           {expertise_data.map((expert) => (
             <div className="flex flex-col">
               <div className="flex flex-row">

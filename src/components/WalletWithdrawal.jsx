@@ -32,7 +32,7 @@ const WalletWithdrawal = ({ closeDialog }) => {
   return (
     <div className="fixed inset-0 z-[999] flex items-center py-[8rem] justify-center">
       <div className="fixed inset-0 z-[999] flex items-center py-[8rem] justify-center bg-black bg-opacity-[40%]">
-        <div className="bg-[#2E374B] rounded-lg w-[1084px] h-full overflow-auto p-8">
+        <div className="bg-[#2E374B] rounded-lg w-[1084px] xl:h-[550px] md:h-full overflow-auto p-8">
           <div className="flex items-center justify-between">
             <h2 className="h-[52px] font-inter font-[700] text-[30px] leading-[51px] text-new">
               Withdrawal
@@ -62,7 +62,7 @@ const WalletWithdrawal = ({ closeDialog }) => {
               return (
                 <div
                   key={wallet.id}
-                  className={`w-[310px] h-[76px] rounded-[16px] border border-[#40495C] p-2 ${wallet.bankName === 'HDFC Bank' ? 'bg-[#282F3E]' : 'bg-transparent'}`}
+                  className={`w-[310px] h-[76px] rounded-[16px] border border-[#40495C] p-2 ${wallet.id === 1 ? 'bg-[#282F3E]' : 'bg-transparent'}`}
                 >
                   <div className="flex flex-row items-center gap-2">
                     <img src={wallet.bankImg} className="w-[74px] h-[59px]" />
@@ -97,7 +97,7 @@ const WalletWithdrawal = ({ closeDialog }) => {
               return (
                 <div
                   key={wallet.id}
-                  className="w-[310px] h-[40px] rounded-[8px] border border-[#40495C] bg-[#282F3E]"
+                  className={`w-[310px] h-[40px] rounded-[8px] border border-[#40495C] bg-transparent`}
                 >
                   <div className="flex flex-row items-center gap-2 p-1">
                     <img src={wallet.upiImg} className="w-[32px] h-[28px]" />

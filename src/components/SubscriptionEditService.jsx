@@ -133,7 +133,6 @@ const SubscriptionEditService = ({ closeDialog }) => {
                   <div className="relative">
                     <input
                       id="subscriptionType"
-                      type="text"
                       value={subscriptionType}
                       readOnly
                       onClick={toggleSubscriptionDropdown}
@@ -183,7 +182,6 @@ const SubscriptionEditService = ({ closeDialog }) => {
                   <div className="relative">
                     <input
                       id="planType"
-                      type="text"
                       value={planType}
                       readOnly
                       onClick={togglePlanDropdown}
@@ -242,7 +240,6 @@ const SubscriptionEditService = ({ closeDialog }) => {
                   <div className="relative">
                     <input
                       id="durationType"
-                      type="text"
                       value={durationType}
                       readOnly
                       onClick={toggleDurationDropdown}
@@ -295,7 +292,7 @@ const SubscriptionEditService = ({ closeDialog }) => {
                     Amount
                   </label>
                   <input
-                    type="text"
+                    type="number"
                     id="default-input"
                     placeholder="₹1,999"
                     className="w-[482px] px-4 py-2 rounded-md text-white border border-[#40495C] bg-[#282F3E]"

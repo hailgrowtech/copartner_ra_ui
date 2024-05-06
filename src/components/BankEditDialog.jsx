@@ -45,7 +45,7 @@ const BankEditDialog = ({ closeDialog }) => {
                   Confirm Acoount Number
                 </label>
                 <input
-                  type="text"
+                  type="number"
                   id="default-input"
                   placeholder="Enter Account Number Here"
                   className="w-[480px] py-2 px-4 rounded-md text-white border border-[#40495C] bg-[#282F3E]"
@@ -64,7 +64,7 @@ const BankEditDialog = ({ closeDialog }) => {
                   IFSC Code
                 </label>
                 <input
-                  type="number"
+                  type="text"
                   id="default-input"
                   placeholder="Enter IFSC Code Here"
                   className="w-[480px] py-2 px-4 rounded-md text-white border border-[#40495C] bg-[#282F3E]"
@@ -107,11 +107,8 @@ const BankEditDialog = ({ closeDialog }) => {
           </div>
 
           <div className="flex gap-6 justify-end items-center mt-6">
-            <button className="bg-red-600 text-white rounded-[10px] w-[117px] h-[40px]">
+            <button className="bg-red-500 text-white rounded-[10px] w-[117px] h-[40px]">
               Delete
-            </button>
-            <button className="bg-blue-500 text-white rounded-[10px] w-[117px] h-[40px]">
-            Edit
             </button>
           </div>
         </div>

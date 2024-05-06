@@ -117,7 +117,6 @@ const SubscriptionDialog = ({ closeDialog }) => {
                   <div className="relative">
                     <input
                       id="subscriptionType"
-                      type="text"
                       value={subscriptionType}
                       readOnly
                       onClick={toggleSubscriptionDropdown}
@@ -167,7 +166,6 @@ const SubscriptionDialog = ({ closeDialog }) => {
                   <div className="relative">
                     <input
                       id="planType"
-                      type="text"
                       value={planType}
                       readOnly
                       onClick={togglePlanDropdown}
@@ -226,7 +224,6 @@ const SubscriptionDialog = ({ closeDialog }) => {
                   <div className="relative">
                     <input
                       id="durationType"
-                      type="text"
                       value={durationType}
                       readOnly
                       onClick={toggleDurationDropdown}
@@ -279,7 +276,7 @@ const SubscriptionDialog = ({ closeDialog }) => {
                     Amount
                   </label>
                   <input
-                    type="text"
+                    type="number"
                     id="default-input"
                     className="w-[482px] px-4 py-2 rounded-md text-white border border-[#40495C] bg-[#282F3E]"
                   />
@@ -299,7 +296,6 @@ const SubscriptionDialog = ({ closeDialog }) => {
                 <div className="relative">
                   <input
                     id="keyPointsType"
-                    type="text"
                     placeholder="Select your Key Points"
                     value={selectedItems.join(", ")}
                     readOnly
@@ -393,7 +389,7 @@ const SubscriptionDialog = ({ closeDialog }) => {
               <textarea
                 id="des-input"
                 rows="4"
-                class="block p-2 rounded-md text-white border border-[#40495C] bg-[#282F3E] w-full"
+                className="block p-2 rounded-md text-white border border-[#40495C] bg-[#282F3E] w-full"
                 placeholder="Write something here"
               ></textarea>
             </div>

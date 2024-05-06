@@ -5,7 +5,7 @@ const UpiEditDialog = ({ isOpen, onClose }) => {
   return (
     <div className="fixed inset-0 z-[999] flex items-center py-[8rem] justify-center">
       <div className="fixed inset-0 z-[999] flex items-center py-[8rem] justify-center bg-black bg-opacity-[40%]">
-        <div className="bg-[#2E374B] rounded-lg w-[1084px] h-[50%] overflow-auto p-8">
+        <div className="bg-[#2E374B] rounded-lg w-[1084px] xl:h-[40%] md:h-[50%] overflow-auto p-8">
           <div className="flex items-center justify-between">
             <h2 className="h-[52px] font-inter font-[700] text-[30px] leading-[51px] text-new">
             Edit UPI ID Details
@@ -37,11 +37,8 @@ const UpiEditDialog = ({ isOpen, onClose }) => {
             </div>
 
           <div className="flex justify-center gap-4 items-center mt-6">
-            <button className="bg-red-600 text-white rounded-[10px] w-[147px] h-[40px]">
+            <button className="bg-red-500 text-white rounded-[10px] w-[147px] h-[40px]">
               Delete
-            </button>
-            <button className="bg-blue-500 text-white rounded-[10px] w-[147px] h-[40px]">
-              Edit
             </button>
           </div>
         </div>

@@ -22,8 +22,8 @@ const Subscription = () => {
   };
 
   return (
-    <div className="pb-[5rem] xl:px-[18rem] md:px-[10rem] py-[6rem] bg-gradient min-h-screen">
-      <div className="w-[1130px] flex justify-between">
+    <div className="pb-[5rem] xl:pl-[12rem] md:pl-[10rem] py-[6rem] bg-gradient min-h-screen">
+      <div className="xl:w-[1520px] md:w-[1130px] flex items-center justify-between">
         <span className="w-[176px] h-[27px] font-inter text-[22px] font-[600] leading-[27px] text-white">
           Service
         </span>
@@ -42,7 +42,7 @@ const Subscription = () => {
       </div>
 
       <div className="flex mt-[3rem]">
-        <table className="w-[1130px] h-[230px] bg-[#29303F] rounded-[30px]">
+        <table className="xl:w-[1520px] md:w-[1130px] h-[230px] bg-[#29303F] rounded-[30px]">
           <thead className="text-[#BABABA] font-inter font-[600] text-[14px] leading-[20px] h-[51px]">
             <tr>
               <th className="text-center">DATE</th>

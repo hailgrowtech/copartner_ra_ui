@@ -94,7 +94,7 @@ const ProfileEdit = ({ closeDialog }) => {
                 </label>
                 <input
                   onClick={closeSubscriptionDropdown}
-                  type="text"
+                  type="number"
                   id="default-input"
                   placeholder="Enter Mobile Number"
                   className="w-[480px] py-2 px-4 rounded-md text-white border border-[#40495C] bg-[#282F3E]"
@@ -133,7 +133,6 @@ const ProfileEdit = ({ closeDialog }) => {
                 <div className="relative">
                   <input
                     id="subscriptionType"
-                    type="text"
                     value={subscriptionType}
                     readOnly
                     onClick={toggleSubscriptionDropdown}
@@ -186,7 +185,6 @@ const ProfileEdit = ({ closeDialog }) => {
                 <div className="relative">
                   <input
                     id="experienceType"
-                    type="text"
                     value={experienceType}
                     readOnly
                     onClick={toggleExpDropdown}
@@ -312,14 +310,14 @@ const ProfileEdit = ({ closeDialog }) => {
             </button>
           </div>
 
-          <div className="flex justify-center items-center mt-6 gap-4">
+          {/* <div className="flex justify-center items-center mt-6 gap-4">
             <button className="text-white opacity-[50%] font-inter font-[400] text-[14px] leading-[26px]">
             Know More About Copartner Process
             </button>
             <button>
             <img src={arrowRight} alt="ArrowIcon" className="w-[12px] h-[12px]" />
             </button>
-          </div>
+          </div> */}
         </div>
       </div>
     </div>

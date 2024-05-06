@@ -5,17 +5,17 @@ import Charts from "../graphs/Charts";
 const EarningAnalysis = () => {
   return (
     <div className="flex flex-col py-8">
-      <div className="flex gap-[23rem] mb-4">
+      <div className="flex md:gap-[20rem] xl:gap-[33rem] mb-4">
         <span className="text-xl font-semibold text-white">
           Earning analysis
         </span>
-        <span className="text-xl font-semibold text-white">
+        <span className="text-xl font-semibold text-white md:mr-14 xl:mr-20">
           Earning Analysis Graph
         </span>
       </div>
 
-      <div className="w-[1000px] gap-8 flex justify-center">
-        <div className="w-1/2 flex flex-row bg_cards rounded-[10px]">
+      <div className="md:w-[1000px] xl:w-[1500px] xl:justify-around gap-4 flex">
+        <div className="flex flex-row bg_cards rounded-[10px]">
           <PieCharts /> 
           <div className="flex flex-col item-center justify-center gap-6 w-[150px]">
             <div className="flex flex-col">

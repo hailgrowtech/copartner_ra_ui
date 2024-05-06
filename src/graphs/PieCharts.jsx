@@ -12,7 +12,7 @@ const data01 = [
 
 const PieCharts = () => {
   return (
-    <PieChart width={450} height={300}>
+    <PieChart width={350} height={300} className="ml-[-3rem]">
       <Pie
         dataKey="value"
         isAnimationActive={false}

@@ -31,37 +31,15 @@ const Navbar = ({ activeTab }) => {
 
   return (
     <div
-      className={`fixed flex justify-center items-center md:py-[1rem] w-full z-[9] ${
+      className={`fixed flex justify-center items-center md:py-[1rem] ${styles.boxWidth} ${styles.paddingX} z-[9] ${
         isScrolled ? styles.transparentNavbar : styles.scrolledNavbar
       }`}
     >
-      <nav className="flex w-[600px]">
-        <div className="flex gap-4">
-          {/* {isDashboard && (
-            <div className="w-[265px] h-[50px] rounded-[24px] overflow-hidden flex">
-              <button
-                className={`w-1/2 py-2 font-inter font-[600] text-[16px] leading-[19px] text-center ${
-                  showTab === "copartner"
-                    ? "bg-gray-200 text-[#282F3E]"
-                    : "bg-btn text-gray-500"
-                }`}
-                onClick={() => handleTabClick("copartner")}
-              >
-                Copartner
-              </button>
-              <button
-                className={`w-1/2 py-2 font-inter font-[600] text-[16px] leading-[19px] text-center ${
-                  showTab === "personal"
-                    ? "bg-gray-200 text-[#282F3E]"
-                    : "bg-btn text-gray-500"
-                }`}
-                onClick={() => handleTabClick("personal")}
-              >
-                Personal
-              </button>
-            </div>
-          )} */}
+      <nav className="flex w-[600px] md:ml-[5rem] xl:ml-[20rem]">
+        <div className="flex md:gap-20 xl:gap-40">
           <div className="w-[265px] h-[50px] rounded-[24px] overflow-hidden flex">
+          {isDashboard && (
+            <>
             <button
               className={`w-1/2 py-2 font-inter font-[600] text-[16px] leading-[19px] text-center ${
                 showTab === "copartner"
@@ -82,6 +60,8 @@ const Navbar = ({ activeTab }) => {
             >
               Personal
             </button>
+            </>
+             )}
           </div>
 
           <div className="flex w-[540px] ml-[4rem] gap-[2rem]">
