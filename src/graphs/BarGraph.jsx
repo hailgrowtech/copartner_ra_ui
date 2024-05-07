@@ -53,7 +53,7 @@ const yTicks = [0, 100, 200, 300, 400, 500];
 const BarGraph = () => {
   return (
     <ResponsiveContainer
-      className={`bg_cards rounded-[10px] ml-[-3.8rem]`}
+      className={`bg_cards rounded-[10px] ml-[-3.8rem] md:flex hidden`}
       width="102%"
       height={300}
     >

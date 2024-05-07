@@ -134,10 +134,19 @@ input[type="number"] {
   background: linear-gradient(119.15deg, rgba(46, 55, 75, 0.5) 98.91%, rgba(41, 47, 60, 0.5) 118.09%);
 }
 
-.profile-image_1 {
+/* .profile-image_1 {
   width: 100%;
   max-height: 240px;
   object-fit:contain;
+  position: relative;
+  z-index: 2;
+  mask-image: linear-gradient(rgba(0, 0, 0, 1) 70%, transparent);
+} */
+
+.profile-image_1 {
+  min-width: 60%;
+  /* max-height: 170px;  */
+  object-fit: contain;
   position: relative;
   z-index: 2;
   mask-image: linear-gradient(rgba(0, 0, 0, 1) 70%, transparent);

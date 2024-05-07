@@ -57,7 +57,7 @@ const data = [
 const Charts = () => {
   return (
     <LineChart className={`bg_cards rounded-[10px]`}
-      width={650}
+      width={610}
       height={300} 
       data={data}
       margin={{

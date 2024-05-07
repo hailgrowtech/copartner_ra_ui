@@ -110,7 +110,7 @@ export const expertise_data = [
     arrowIcon: arrow,
     basicTitle: 'Basic',
     price: '₹2,999',
-    access: '1 Month Access',
+    access: '/1 Month Access',
     activeUser: 'Active User:',
     valueActiveUser: '60/100',
   },
