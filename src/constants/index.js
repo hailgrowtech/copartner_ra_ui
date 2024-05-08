@@ -129,7 +129,7 @@ export const subscriptionData = [
   },
   {
     date: "26/01/2024",
-    subType: 'Futures & Options',
+    subType: 'Commodity',
     plan: "Standard",
     duration: "3 month",
     amount: "₹5,999 ",

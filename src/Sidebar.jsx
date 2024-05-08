@@ -23,19 +23,12 @@ const Sidebar = ({ activeTab, setActiveTab, setShowSidebar }) => {
     }
   }, [location]);
 
-  const handleClick = (title) => {
-    console.log("HandleClicked is Triggered...");
-    if (title === activeTab) {
-      // If the clicked title is the active tab, toggle the sidebar
-      setShowSidebar((prevState) => !prevState);
-      setActiveTab("");
-    } else {
-      setActiveTab(title);
-      setShowSidebar(false); // Close sidebar when a different tab is clicked
-    }
+  const handleClose = () => {
+    setShowSidebar(false);
+    setActiveTab("");
   };
 
-  const handleClose = () => {
+  const handleSidebarTabClick = () => {
     setShowSidebar(false);
     setActiveTab("");
   };
@@ -68,7 +61,10 @@ const Sidebar = ({ activeTab, setActiveTab, setShowSidebar }) => {
           <Link
             to={side.path}
             key={side.id}
-            onClick={() => handleClick(side.title)}
+            onClick={() => {
+              setActiveTab(side.title);
+              // handleSidebarTabClick(); 
+            }}
             className={`flex w-[260px] h-[74px] rounded-[16px] text-white flex-row 
             cursor-pointer ${
               window.innerWidth >= 768 ? "md:ml-[-4rem] xl:ml-[-4rem]" : ""

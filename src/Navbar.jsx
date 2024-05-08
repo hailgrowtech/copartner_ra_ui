@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import styles from "./style";
 import { searchIcon, logo, notification, dummyUser, menu } from "./assets";
+import { Link } from "react-router-dom";
 
 const Navbar = ({ activeTab, toggleSidebar }) => {
   const [showTab, setShowTab] = useState("copartner");
@@ -14,7 +15,6 @@ const Navbar = ({ activeTab, toggleSidebar }) => {
 
     window.addEventListener("resize", handleResize);
 
-    // Cleanup
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
@@ -52,11 +52,13 @@ const Navbar = ({ activeTab, toggleSidebar }) => {
         <div className="flex md:flex-row flex-col items-center sm:flex-col gap-[4px] md:gap-20 xl:gap-40">
           {isSmallScreen ? (
             <div className="flex gap-12 items-center w-[360px] h-[50px]">
-              <img
+              <Link to='/setting'>
+                <img
                 src={dummyUser}
                 alt="LoginUser"
                 className="w-[40px] h-[40px] rounded-full"
               />
+              </Link>
               <div className="w-[159px] h-[30px] rounded-[24px] overflow-hidden flex">
                 <button
                   className={`w-1/2  py-2 font-inter font-[600] text-[11px] leading-[10px] text-center ${
@@ -88,7 +90,7 @@ const Navbar = ({ activeTab, toggleSidebar }) => {
               </button>
             </div>
           ) : (
-            isDashboard && (
+            // isDashboard && (
               <div className="w-[265px] h-[50px] rounded-[24px] overflow-hidden flex">
                 <button
                   className={`w-1/2 py-2 font-inter font-[600] text-[16px] leading-[19px] text-center ${
@@ -111,7 +113,7 @@ const Navbar = ({ activeTab, toggleSidebar }) => {
                   Personal
                 </button>
               </div>
-            )
+            // )
           )}
 
           {isSmallScreen ? (
@@ -160,11 +162,13 @@ const Navbar = ({ activeTab, toggleSidebar }) => {
                 />
               </div>
 
+              <Link to='/setting'>
               <img
                 src={dummyUser}
                 alt="LoginUser"
                 className="w-[50px] h-[50px] rounded-full"
               />
+              </Link>
             </div>
           )}
         </div>

@@ -78,9 +78,9 @@ const SubscriptionEditService = ({ closeDialog }) => {
   return (
     <div className="fixed inset-0 z-[999] flex items-center py-[8rem] justify-center">
       <div className="fixed inset-0 z-[999] flex items-center py-[8rem] justify-center bg-black bg-opacity-[40%]">
-        <div className="bg-[#2E374B] rounded-lg w-[1084px] h-full overflow-auto p-8">
+        <div className="bg-[#2E374B] rounded-lg md:w-[1084px] w-[378px] md:h-full h-[600px] overflow-auto p-8">
           <div className="flex items-center justify-between">
-            <h2 className="h-[52px] font-inter font-[700] text-[30px] leading-[51px] text-new">
+            <h2 className="md:h-[52px] font-inter font-[700] md:text-[30px] text-[24px] md:leading-[51px] text-new">
               Edit Service
             </h2>
             <button onClick={closeDialog}>
@@ -91,7 +91,7 @@ const SubscriptionEditService = ({ closeDialog }) => {
               />
             </button>
           </div>
-          <div className="flex flex-col mt-8 gap-2">
+          <div className="flex flex-col mt-8 gap-2 md:flex hidden">
             <div className="flex justify-between">
               <span className="w-[184px] h-[23px] text-white text-[20px] font-inter font-[500] leading-[16px]">
                 Upload Title Image
@@ -119,13 +119,13 @@ const SubscriptionEditService = ({ closeDialog }) => {
             </label>
           </div>
 
-          <div className="flex flex-col mt-[2rem] gap-4 w-[1006px] h-[520px]">
-            <div className="flex flex-row gap-12 mt-6">
+          <div className="flex flex-col mt-[2rem] gap-4 md:w-[1006px] md:h-[520px]">
+            <div className="flex md:flex-row flex-col md:gap-12 gap-4 md:mt-6 md:ml-0 ml-[-16px]">
               <div className="relative">
                 <label
                   htmlFor="subscriptionType"
                   className="flex items-center justify-center bg-[#282F3E] text-white opacity-[50%]
-                    w-[140px] h-[26px] rounded-[8px] font-[400] text-[14px] leading-[16px] text-center"
+                  md:w-[140px] w-[134px] md:h-[26px] h-[25px] rounded-[8px] font-[400] md:text-[14px] text-[13px] md:leading-[16px] leading-[15px] text-center"
                 >
                   Subscription Type
                 </label>
@@ -136,16 +136,16 @@ const SubscriptionEditService = ({ closeDialog }) => {
                       value={subscriptionType}
                       readOnly
                       onClick={toggleSubscriptionDropdown}
-                      className="w-[482px] px-4 py-2 cursor-pointer rounded-md text-white border border-[#40495C] bg-[#282F3E]"
+                      className="md:w-[482px] w-[345px] px-4 py-2 cursor-pointer rounded-md text-white border border-[#40495C] bg-[#282F3E]"
                     />
                     <img
                       src={dropdown}
                       alt="DropDown"
-                      className="absolute inset-y-0 right-3 w-[14px] h-[14px] top-[50%] transform -translate-y-1/2"
+                      className="absolute inset-y-0 md:right-3 right-[-6px] w-[14px] h-[14px] top-[50%] transform -translate-y-1/2"
                     />
                   </div>
                   {isSubscriptionOpen && (
-                    <div className="absolute z-10 mt-2 w-[482px] rounded-md bg-white shadow-lg">
+                    <div className="absolute z-10 mt-2 md:w-[482px] w-[345px] rounded-md bg-white shadow-lg">
                       <ul className="py-1">
                         <li
                           onClick={() => handleSubClick("Option")}
@@ -174,7 +174,7 @@ const SubscriptionEditService = ({ closeDialog }) => {
                 <label
                   htmlFor="planType"
                   className="flex items-center justify-center bg-[#282F3E] text-white opacity-[50%]
-                    w-[90px] h-[26px] rounded-[8px] font-[400] text-[14px] leading-[16px] text-center"
+                  md:w-[90px] w-[88px] md:h-[26px] h-[25px] rounded-[8px] font-[400] md:text-[14px] text-[13px] md:leading-[16px] leading-[15px] text-center"
                 >
                   Plan Name
                 </label>
@@ -185,16 +185,16 @@ const SubscriptionEditService = ({ closeDialog }) => {
                       value={planType}
                       readOnly
                       onClick={togglePlanDropdown}
-                      className="w-[482px] px-4 cursor-pointer py-2 rounded-md text-white border border-[#40495C] bg-[#282F3E]"
+                      className="md:w-[482px] w-[345px] px-4 cursor-pointer py-2 rounded-md text-white border border-[#40495C] bg-[#282F3E]"
                     />
                     <img
                       src={dropdown}
                       alt="DropDown"
-                      className="absolute inset-y-0 right-3 w-[14px] h-[14px] top-[50%] transform -translate-y-1/2"
+                      className="absolute inset-y-0 md:right-3 right-[-6px] w-[14px] h-[14px] top-[50%] transform -translate-y-1/2"
                     />
                   </div>
                   {isPlanOpen && (
-                    <div className="absolute z-10 mt-2 w-[482px] rounded-md bg-white shadow-lg">
+                    <div className="absolute z-10 mt-2 md:w-[482px] w-[345px] rounded-md bg-white shadow-lg">
                       <ul className="py-1">
                         <li
                           onClick={() => handlePlanClick("Monthly")}
@@ -227,12 +227,12 @@ const SubscriptionEditService = ({ closeDialog }) => {
               </div>
             </div>
 
-            <div className="flex flex-row gap-12">
+            <div className="flex md:flex-row flex-col md:gap-12 gap-4 md:ml-0 ml-[-16px]">
               <div className="relative">
                 <label
                   htmlFor="durationType"
                   className="flex items-center justify-center bg-[#282F3E] text-white opacity-[50%]
-                  w-[80px] h-[26px] rounded-[8px] font-[400] text-[14px] leading-[16px] text-center"
+                  md:w-[80px] w-[78px] md:h-[26px] h-[25px] rounded-[8px] font-[400] md:text-[14px] text-[13px] md:leading-[16px] leading-[15px] text-center"
                 >
                   Duration
                 </label>
@@ -243,16 +243,16 @@ const SubscriptionEditService = ({ closeDialog }) => {
                       value={durationType}
                       readOnly
                       onClick={toggleDurationDropdown}
-                      className="w-[482px] px-4 py-2 cursor-pointer rounded-md text-white border border-[#40495C] bg-[#282F3E]"
+                      className="md:w-[482px] w-[345px] px-4 py-2 cursor-pointer rounded-md text-white border border-[#40495C] bg-[#282F3E]"
                     />
                     <img
                       src={dropdown}
                       alt="DropDown"
-                      className="absolute inset-y-0 right-3 w-[14px] h-[14px] top-[50%] transform -translate-y-1/2"
+                      className="absolute inset-y-0 md:right-3 right-[-6px] w-[14px] h-[14px] top-[50%] transform -translate-y-1/2"
                     />
                   </div>
                   {isDuration && (
-                    <div className="absolute z-10 mt-2 w-[482px] rounded-md bg-white shadow-lg">
+                    <div className="absolute z-10 mt-2 md:w-[482px] w-[345px] rounded-md bg-white shadow-lg">
                       <ul className="py-1">
                         <li
                           onClick={() => handleDurationClick("1 Month")}
@@ -287,7 +287,7 @@ const SubscriptionEditService = ({ closeDialog }) => {
                 <div class="mb-0">
                   <label
                     className="flex items-center justify-center bg-[#282F3E] text-white opacity-[50%]
-                  w-[70px] h-[26px] rounded-[8px] font-[400] text-[14px] leading-[16px] text-center"
+                    md:w-[70px] w-[68px] md:h-[26px] h-[25px] rounded-[8px] font-[400] md:text-[14px] text-[13px] md:leading-[16px] leading-[15px] text-center"
                   >
                     Amount
                   </label>
@@ -295,33 +295,33 @@ const SubscriptionEditService = ({ closeDialog }) => {
                     type="number"
                     id="default-input"
                     placeholder="₹1,999"
-                    className="w-[482px] px-4 py-2 rounded-md text-white border border-[#40495C] bg-[#282F3E]"
+                    className="md:w-[482px] w-[345px] px-4 py-2 rounded-md text-white border border-[#40495C] bg-[#282F3E]"
                   />
                 </div>
               </div>
             </div>
 
-            <div className="relative">
+            <div className="relative md:ml-0 ml-[-16px]">
               <label
                 htmlFor="keyPointsType"
                 className="flex items-center justify-center bg-[#282F3E] text-white opacity-[50%]
-                    w-[140px] h-[26px] rounded-[8px] font-[400] text-[14px] leading-[16px] text-center"
+                md:w-[140px] w-[116px] md:h-[26px] h-[25px] rounded-[8px] font-[400] md:text-[14px] text-[13px] md:leading-[16px] leading-[15px] text-center"
               >
                 Plan Key Points
               </label>
               <div className="relative">
                 <div className="relative">
                   <input
-                    id="keyPointsType"
+                    id="default-input"
                     type="text"
                     placeholder="Expert Insights"
                     value={selectedItems.join(", ")}
                     readOnly
                     onClick={toggleKeyPointsDropdown}
-                    className="w-[1012px] px-4 py-2 cursor-pointer rounded-md text-white border border-[#40495C] bg-[#282F3E]"
+                    className="md:w-[1012px] w-[345px] md:px-4 px-2 py-2 cursor-pointer rounded-md text-white border border-[#40495C] bg-[#282F3E]"
                   />
                   {isKeyPointsOpen && (
-                    <div className="absolute z-10 mt-2 w-[482px] rounded-md bg-white shadow-lg">
+                    <div className="absolute z-10 mt-2 md:w-[482px] w-[345px] rounded-md bg-white shadow-lg">
                       <ul className="py-1">
                         <li className="px-4 py-2 flex gap-4 text-sm text-gray-700 hover:bg-gray-100">
                           <input
@@ -380,11 +380,11 @@ const SubscriptionEditService = ({ closeDialog }) => {
               </div>
             </div>
 
-            <div className="relative">
+            <div className="relative md:ml-0 ml-[-16px]">
               <div class="mb-0">
                 <label
                   className="flex items-center justify-center bg-[#282F3E] text-white opacity-[50%]
-                  w-[262px] h-[26px] rounded-[8px] font-[400] text-[14px] leading-[16px] text-center"
+                  md:w-[232px] w-[210px] md:h-[26px] h-[25px] rounded-[8px] font-[400] md:text-[14px] text-[13px] md:leading-[16px] leading-[15px] text-center"
                 >
                   Premium Telegram Channel Link
                 </label>
@@ -392,37 +392,37 @@ const SubscriptionEditService = ({ closeDialog }) => {
                   type="link"
                   id="default-input"
                   placeholder="Paste Link"
-                  className="w-[1012px] py-2 px-6 rounded-md text-white border border-[#40495C] bg-[#282F3E]"
+                  className="md:w-[1012px] w-[345px] py-2 md:px-6 px-2 rounded-md text-white border border-[#40495C] bg-[#282F3E]"
                 />
               </div>
             </div>
 
-            <div className="relative">
+            <div className="relative md:ml-0 ml-[-16px]">
               <label
                 className="flex items-center justify-center bg-[#282F3E] text-white opacity-[50%]
-                  w-[90px] h-[26px] rounded-[8px] font-[400] text-[14px] leading-[16px] text-center"
+                  w-[90px] h-[26px] rounded-[8px] font-[400] md:text-[14px] text-[13px] md:leading-[16px] leading-[13px] text-center"
               >
                 Description
               </label>
               <textarea
                 id="des-input"
                 rows="4"
-                class="block p-2 rounded-md text-white border border-[#40495C] bg-[#282F3E] w-full"
+                className="block p-2 rounded-md text-white border border-[#40495C] bg-[#282F3E] md:w-full w-[105%]"
                 placeholder="Write something here"
               ></textarea>
             </div>
           </div>
 
-          <div className="flex justify-end">
+          <div className="flex justify-end md:mt-0 mt-4">
             <button
               onClick={closeDialog}
-              className="px-4 py-2 mr-2 bg-gray-300 text-gray-700 rounded-lg hover:bg-gray-400"
+              className="px-4 py-2 mr-2 bg-gray-300 md:text-[14px] text-[10px] text-gray-700 rounded-lg hover:bg-gray-400"
             >
               Cancel
             </button>
             <button
               onClick={closeDialog}
-              className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
+              className="px-4 py-2 bg-blue-500 text-white  md:text-[14px] text-[10px] rounded-lg hover:bg-blue-600"
             >
               Confirm
             </button>

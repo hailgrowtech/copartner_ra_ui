@@ -32,24 +32,24 @@ const WalletWithdrawal = ({ closeDialog }) => {
   return (
     <div className="fixed inset-0 z-[999] flex items-center py-[8rem] justify-center">
       <div className="fixed inset-0 z-[999] flex items-center py-[8rem] justify-center bg-black bg-opacity-[40%]">
-        <div className="bg-[#2E374B] rounded-lg w-[1084px] xl:h-[550px] md:h-full overflow-auto p-8">
+        <div className="bg-[#2E374B] rounded-lg md:w-[1084px] xl:h-[550px] md:h-full w-[378px] h-[600px] overflow-auto p-8">
           <div className="flex items-center justify-between">
-            <h2 className="h-[52px] font-inter font-[700] text-[30px] leading-[51px] text-new">
+            <h2 className="md:h-[52px] font-inter font-[700] md:text-[30px] text-[26px] md:leading-[51px] text-new">
               Withdrawal
             </h2>
             <button onClick={closeDialog}>
               <img
                 src={closeIcon}
                 alt="Close_Icon"
-                className="w-[45px] h-[45px]"
+                className="md:w-[35px] w-[50px] md:h-[35px] h-[50px]"
               />
             </button>
           </div>
           <div className="flex flex-row items-center mt-6 justify-between">
-            <span className="w-[184px] h-[23px] text-white text-[20px] font-inter font-[500] leading-[16px]">
+            <span className="md:w-[184px] md:h-[23px] text-white md:text-[20px] text-[16px] font-inter font-[500] leading-[16px]">
               Select Your Bank
             </span>
-            <button onClick={openAddBank} className="w-[100px] h-[40px] rounded-[10px] border text-white font-[600] font-inter text-[12px]">
+            <button onClick={openAddBank} className="md:w-[100px] w-[70px] border-solid border-[1px] border-white md:h-[40px] h-[25px] rounded-[10px] border text-white font-[600] font-inter md:text-[12px] text-[10px]">
               +Add Bank
             </button>
             {isAddBankOpen && (
@@ -57,7 +57,7 @@ const WalletWithdrawal = ({ closeDialog }) => {
           )}
           </div>
 
-          <div className="flex flex-row items-center mt-6 justify-between">
+          <div className="flex md:flex-row flex-col md:gap-0 gap-2 items-center mt-6 justify-between">
             {withdrawalBank.map((wallet) => {
               return (
                 <div
@@ -81,10 +81,10 @@ const WalletWithdrawal = ({ closeDialog }) => {
           </div>
 
           <div className="flex flex-row items-center mt-6 justify-between">
-            <span className="w-[184px] h-[23px] text-white text-[20px] font-inter font-[500] leading-[16px]">
+            <span className="md:w-[184px] md:h-[23px] text-white md:text-[20px] text-[16px] font-inter font-[500] leading-[16px]">
               Select Your UPI ID
             </span>
-            <button onClick={openUpiBank} className="w-[100px] h-[40px] rounded-[10px] border text-white font-[600] font-inter text-[12px]">
+            <button onClick={openUpiBank} className="md:w-[100px] w-[70px] border-solid border-[1px] border-white md:h-[40px] h-[25px] rounded-[10px] border text-white font-[600] font-inter md:text-[12px] text-[10px]">
               +Add UPI ID
             </button>
             {isUpiOpen && (
@@ -92,7 +92,7 @@ const WalletWithdrawal = ({ closeDialog }) => {
             )}
           </div>
 
-          <div className="flex flex-row items-center mt-6 justify-between">
+          <div className="flex md:flex-row flex-col md:gap-0 gap-2 items-center mt-6 justify-between">
             {withdrawalBank.map((wallet) => {
               return (
                 <div
@@ -110,20 +110,20 @@ const WalletWithdrawal = ({ closeDialog }) => {
             })}
           </div>
 
-          <div className="h-[50px] flex justify-center items-center mt-6">
+          <div className="md:h-[50px] flex md:flex-row flex-col md:justify-center md:items-center mt-6">
             <span className="w-[82px] h-[27px] font-[500] text-[18px] leading-[27px] text-white">
               Amount:
             </span>
             <input
               type="number"
               id="wallet_withdrawal"
-              className="w-[287px] h-[50px] border border-[#40495C] bg-[#282F3E] rounded-[16px] text-white px-2"
+              className="md:w-[287px] h-[50px] border border-[#40495C] bg-[#282F3E] rounded-[16px] text-white px-2"
               placeholder="Your Withdrawal Balance: 3000"
             />
           </div>
 
           <div className="flex justify-center items-center mt-6">
-            <button className="bg-white rounded-[10px] w-[147px] h-[40px]">
+            <button className="bg-white rounded-[10px] w-[147px] h-[40px] md:text-[18px] text-[14px]">
               Withdrawal
             </button>
           </div>

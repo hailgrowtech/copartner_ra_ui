@@ -10,18 +10,18 @@ const Dashboard = () => {
   return (
     <div className="xl:pl-[12rem] md:pl-[10rem] md:py-[6rem] xl-py-[6rem] pt-[8rem]">
       <div className="flex xl:w-[1580px] md:w-[1180px] items-center">
-        <div className="flex gap-8 items-center">
+        <div className="flex md:gap-8 gap-16 items-center">
           <span className="md:w-[176px] md:h-[27px] w-[125px] h-[28px] font-inter md:text-[22px] text-[20px] font-[600] leading-[27px] text-white">
             User Analysis
           </span>
-          <div className="flex md:gap-[2rem] gap-2 xl:ml-[57rem] md:ml-[30rem]">
+          <div className="flex md:gap-[2rem] gap-4 xl:ml-[57rem] md:ml-[30rem]">
             <button className="md:w-[85px] w-[43px] md:h-[40px] h-[30px] rounded-[10px] bg-white text-black font-[600] font-inter text-[12px]">
               Today
             </button>
             <button className="md:w-[85px] w-[43px md:h-[40px] h-[30px] rounded-[10px] border text-white font-[600] font-inter text-[12px]">
               Weekly
             </button>
-            <button className="md:w-[100px] w-[43px md:h-[40px] h-[30px] rounded-[10px] border text-white font-[600] font-inter text-[12px]">
+            <button className="md:w-[100px] w-[43px md:h-[40px] h-[30px] rounded-[10px] border text-white font-[600] font-inter text-[12px] md:block hidden">
               Monthly
             </button>
             <button className="md:w-[60px]  w-[43px md:h-[40px] h-[30px] rounded-[10px] border text-white font-[600] font-inter text-[12px]">
@@ -39,7 +39,7 @@ const Dashboard = () => {
         <div className="flex flex-col gap-4">
           {userAnalysis.map((user) => (
             <div
-              className="flex flex-col md:justify-between md:w-[288px] w-[281px] md:h-[298px] h-[178px] rounded-[25px] bg_cards p-4"
+              className="flex flex-col md:justify-between md:w-[288px] w-[348px] md:h-[298px] md:mr-0 ml-[-2rem] h-[178px] rounded-[25px] bg_cards p-4"
               key={user.id}
             >
               <div className="flex flex-row justify-between">

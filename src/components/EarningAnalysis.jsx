@@ -14,7 +14,7 @@ const EarningAnalysis = () => {
         </span>
       </div>
 
-      <div className="md:w-[1000px] xl:w-[1500px] xl:justify-around sm:w-[380px] md:flex-row sm:flex-col gap-4 flex">
+      <div className="md:w-[1000px] xl:w-[1500px] w-[345px] xl:justify-around sm:w-[380px] md:flex-row flex-col gap-4 flex">
         <div className="flex flex-row bg_cards rounded-[10px] md:w-[100%] w-[358px] px-2">
           <PieCharts /> 
           <div className="flex flex-col item-center justify-center gap-6 md:w-[150px] w-[119px]">
@@ -45,7 +45,7 @@ const EarningAnalysis = () => {
           </div>
         </div>
 
-        <div className="w-1/2 md:block hidden">
+        <div className="flex flex-row bg_cards rounded-[10px] md:w-[100%] md:h-[100%] w-[358px] h-[245px]">
           <Charts />
         </div>
       </div>

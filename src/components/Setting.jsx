@@ -61,7 +61,7 @@ const Setting = () => {
     setIsEditUpiOpen(false);
     setIsAddBankOpen(false);
     setIsAddUpiOpen(false);
-  };
+  }; 
 
   return (
     <div className="pb-[5rem] xl:pl-[12rem] md:pl-[10rem] py-[6rem] bg-gradient min-h-screen"> 
@@ -212,7 +212,7 @@ const Setting = () => {
                   className="absolute top-0 left-0 w-full h-full object-contain"
                 />
               </div>
-              <div className="flex flex-col justify-between">
+              <div className="flex ml-[-7rem] flex-col justify-between">
                 <div className="flex flex-row gap-2 w-[70px] h-[32px]">
                   <img
                     src={expert.ratingIcon}

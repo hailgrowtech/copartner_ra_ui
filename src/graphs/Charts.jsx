@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useState, useEffect} from "react";
 import {
   LineChart,
   Line,
@@ -6,59 +6,70 @@ import {
   YAxis,
   CartesianGrid,
   Tooltip as LineTooltip,
-  Legend as LineLegend,
 } from "recharts";
 
 const data = [
   {
     name: "June",
-    //   uv: 4000,
     rs: 2400,
     amt: 2400,
   },
   {
     name: "July",
-    //   uv: 3000,
     rs: 1398,
     amt: 2210,
   },
   {
     name: "Aug",
-    //   uv: 2000,
     rs: 9800,
     amt: 2290,
   },
   {
     name: "Sep",
-    //   uv: 2780,
     rs: 3908,
     amt: 2000,
   },
   {
     name: "Oct",
-    //   uv: 1890,
     rs: 4800,
     amt: 2181,
   },
   {
     name: "Nov",
-    uv: 2390,
     rs: 3800,
     amt: 2500,
   },
   {
     name: "Dec",
-    //   uv: 3490,
     rs: 4300,
     amt: 2100,
   },
 ];
 
 const Charts = () => {
+  const [chartHeight, setChartHeight] = useState(300);
+  const [chartWidth, setChartWidth] = useState(610);
+
+  useEffect(() => {
+    const handleResize = () => {
+      const height = window.innerWidth <= 768 ? 245 : 300;
+      const width = window.innerWidth <= 768 ? 445 : 610;
+      setChartHeight(height);
+      setChartWidth(width)
+    };
+
+    handleResize();
+
+    window.addEventListener("resize", handleResize);
+
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
   return (
-    <LineChart className={`bg_cards rounded-[10px]`}
-      width={610}
-      height={300} 
+    <LineChart
+      className={`bg_cards rounded-[10px]`}
+      width={chartWidth}
+      height={chartHeight}
       data={data}
       margin={{
         top: 25,
@@ -71,10 +82,10 @@ const Charts = () => {
       <XAxis dataKey="name" />
       <YAxis />
       <LineTooltip />
-      <LineLegend />
       <Line type="monotone" dataKey="rs" stroke="#8884d8" activeDot={{ r: 8 }} />
     </LineChart>
   );
 };
 
 export default Charts;
+
