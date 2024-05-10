@@ -42,7 +42,7 @@ const Wallet = () => {
   };
 
   return (
-    <div className="pb-[5rem] xl:pl-[12rem] md:pl-[10rem] md:py-[6rem] pt-[8rem] bg-gradient min-h-screen">
+    <div className="pb-[5rem] xl:pl-[12rem] md:pl-[10rem] pl-6 md:py-[6rem] pt-[8rem] bg-gradient min-h-screen">
       <div className="xl:w-[1520px] md:w-[1130px] w-[350px] flex md:flex-row flex-col justify-between">
         <span className="md:w-[176px] w-[58px] md:h-[27px] h-[28px] font-inter md:text-[22px] text-[20px] font-[600] leading-[27px] text-[#ffffff]">
           Wallet
@@ -69,14 +69,14 @@ const Wallet = () => {
 
       <EarningAnalysis />
 
-      <div className="flex flex-col gap-6">
-        <div className="flex flex-row items-center justify-between">
+      <div className="flex flex-col md:gap-6 gap-3">
+        <div className="flex flex-row items-center justify-between md:ml-0 ml-[-8px]">
           <div className="xl:w-[1420px] md:w-[1030px] flex flex-col gap-4 mt-4">
             <div className="flex justify-between items-center">
               <span className="text-white w-[210px] h-[27px] font-inter font-[600] text-[22px] leading-[27px]">
                 Transaction History
               </span>
-              <button className="border-solid border-[1px] border-white rounded-[8px] md:hidden block p-2">
+              <button className="border-solid border-[1px] border-white rounded-[8px] md:hidden block p-2 mr-2">
                 <img src={filter} alt="Filter" className="w-[20px] h-[20px]" />
               </button>
             </div>
@@ -115,11 +115,11 @@ const Wallet = () => {
           </div>
 
           <div className="relative mr-[6rem]">
-            <button className="flex items-center justify-center w-[100px] h-[40px] rounded-[10px] border text-white font-[600] font-inter text-[12px]">
+            <button className="flex items-center justify-center w-[100px] h-[40px] rounded-[10px] border text-white font-[600] font-inter text-[12px] ml-[-12px] md:flex hidden">
               <img
                 src={filter}
                 alt="Filter-Icon"
-                className="w-[20px] h-[20px] mr-2 md:block hidden"
+                className="w-[20px] h-[20px] mr-2"
               />
               Filter
             </button>
@@ -129,11 +129,11 @@ const Wallet = () => {
         {showTransactions === "transaction" && (
           <>
             {smallScreen ? (
-              <div className="flex mr-[12rem] flex-wrap justify-center items-center">
+              <div className="flex flex-col flex-wrap justify-center items-center">
                 {transcationData.slice(0, 5).map((row, index) => (
                   <div
                     key={index}
-                    className="flex flex-col justify-around w-[361px] h-[248px] bg-[#18181B] bg-opacity-[50%] rounded-[30px] md:m-4 m-[10px] p-4 w-[90%] max-w-sm"
+                    className="flex flex-col justify-around w-[358px] ml-[-6rem] h-[248px] bg-[#18181B] bg-opacity-[50%] rounded-[30px] md:m-4 m-[10px] p-4"
                   >
                     <div className="flex flex-row justify-between">
                       <p className="w-[173px] h-[26px] font-[600] text-[16px] leading-[25px] text-lightWhite">
@@ -165,7 +165,7 @@ const Wallet = () => {
                     </span>
                   </div>
                 ))}
-                <button className="md:w-[147px] md:h-[40px] md:flex items-center justify-center flex w-[110px] h-[30px] rounded-[6px] bg-lightWhite md:text-[14px] text-[10px] font-[500] md:leading-[16px] leading-[12px]">
+                <button className="items-center mr-[6rem] mt-2 justify-center flex w-[110px] h-[30px] rounded-[6px] bg-lightWhite text-[10px] font-[500] leading-[12px]">
                   Show More
                 </button>
               </div>
@@ -226,11 +226,11 @@ const Wallet = () => {
         {showTransactions === "withdrawal" && (
           <>
             {smallScreen ? (
-              <div className="flex mr-[12rem] flex-wrap justify-center items-center">
+              <div className="flex flex-col flex-wrap justify-center items-center">
                 {withdrawalData.slice(0, 5).map((row, index) => (
                   <div
                     key={index}
-                    className="flex flex-col justify-around w-[361px] h-[248px] bg-[#18181B] bg-opacity-[50%] rounded-[30px] md:m-4 m-[10px] p-4 w-[90%] max-w-sm"
+                    className="flex flex-col justify-around w-[358px] ml-[-6rem] h-[248px] bg-[#18181B] bg-opacity-[50%] rounded-[30px] md:m-4 m-[10px] p-4"
                   >
                     <div className="flex flex-row justify-between">
                       <p className="w-[173px] h-[26px] font-[600] text-[16px] leading-[25px] text-lightWhite">
@@ -259,7 +259,7 @@ const Wallet = () => {
                     </span>
                   </div>
                 ))}
-                <button className="md:w-[147px] md:h-[40px] md:flex items-center justify-center flex w-[110px] h-[30px] rounded-[6px] bg-lightWhite md:text-[14px] text-[10px] font-[500] md:leading-[16px] leading-[12px]">
+                <button className="items-center mr-[6rem] mt-2 justify-center flex w-[110px] h-[30px] rounded-[6px] bg-lightWhite text-[10px] font-[500] leading-[12px]">
                   Show More
                 </button>
               </div>
@@ -316,11 +316,11 @@ const Wallet = () => {
         {showTransactions === "request" && (
           <>
             {smallScreen ? (
-              <div className="flex mr-[12rem] flex-wrap justify-center items-center">
+              <div className="flex flex-col flex-wrap justify-center items-center">
                 {withdrawalData.slice(0, 5).map((row, index) => (
                   <div
                     key={index}
-                    className="flex flex-col justify-around w-[361px] h-[248px] bg-[#18181B] bg-opacity-[50%] rounded-[30px] md:m-4 m-[10px] p-4 w-[90%] max-w-sm"
+                    className="flex flex-col justify-around w-[358px] ml-[-6rem] ml- h-[248px] bg-[#18181B] bg-opacity-[50%] rounded-[30px] md:m-4 m-[10px] p-4"
                   >
                     <div className="flex flex-row justify-between">
                       <p className="w-[173px] h-[26px] font-[600] text-[16px] leading-[25px] text-lightWhite">
@@ -365,7 +365,7 @@ const Wallet = () => {
                     </span>
                   </div>
                 ))}
-                <button className="md:w-[147px] md:h-[40px] md:flex items-center justify-center flex w-[110px] h-[30px] rounded-[6px] bg-lightWhite md:text-[14px] text-[10px] font-[500] md:leading-[16px] leading-[12px]">
+                <button className="items-center mr-[6rem] mt-2 justify-center flex w-[110px] h-[30px] rounded-[6px] bg-lightWhite text-[10px] font-[500] leading-[12px]">
                   Show More
                 </button>
               </div>

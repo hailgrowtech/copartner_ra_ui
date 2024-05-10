@@ -69,11 +69,11 @@ const SubscriptionDialog = ({ closeDialog }) => {
   };
 
   return (
-    <div className="fixed inset-0 z-[999] flex items-center py-[8rem] justify-center">
-      <div className="fixed inset-0 z-[999] flex items-center py-[8rem] justify-center bg-black bg-opacity-[40%]">
+    <div className="fixed inset-0 z-[999] flex items-center py-[2rem] justify-center">
+      <div className="fixed inset-0 z-[999] flex items-center py-[2rem] justify-center bg-black bg-opacity-[40%]">
         <div className="bg-[#2E374B] rounded-lg md:w-[1084px] w-[378px] md:h-full h-[600px] overflow-auto p-8">
           <div className="flex items-center justify-between">
-            <h2 className="md:h-[52px] font-inter font-[700] md:text-[30px] text-[18px] md:leading-[51px] text-new">
+            <h2 className="md:h-[52px] font-inter font-[700] md:text-[30px] text-[24px] md:leading-[51px] text-new">
               Add New Subscription
             </h2>
             <button onClick={closeDialog}>
@@ -395,18 +395,18 @@ const SubscriptionDialog = ({ closeDialog }) => {
             </div>
           </div>
 
-          <div className="flex justify-end md:mt-0 mt-4">
+          <div className="flex md:flex-row flex-col gap-2 justify-end md:mt-0 mt-4">
             <button
               onClick={closeDialog}
-              className="px-4 py-2 mr-2 bg-gray-300 md:text-[14px] text-[10px] text-gray-700 rounded-lg hover:bg-gray-400"
+              className="px-4 w-[100%] py-2 bg-blue-500 text-white md:text-[14px] text-[14px] rounded-lg hover:bg-blue-600"
             >
-              Cancel
+              Confirm
             </button>
             <button
               onClick={closeDialog}
-              className="px-4 py-2 bg-blue-500 text-white  md:text-[14px] text-[10px] rounded-lg hover:bg-blue-600"
+              className="px-4 w-[100%] py-2 mr-2 bg-gray-300 md:text-[14px] text-[14px] text-gray-700 rounded-lg hover:bg-gray-400"
             >
-              Confirm
+              Cancel
             </button>
           </div>
         </div>

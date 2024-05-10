@@ -259,23 +259,35 @@ export const withdrawalBank = [
     bankImg: hdfc,
     bankName: 'HDFC Bank',
     accNum: '431200109911',
-    upiImg: paytm,
-    upiId: 'ArunKumar@paytm.ybl'
   },
   {
     id: 2,
     bankImg: icici,
     bankName: 'ICICI Bank',
     accNum: '431200109911',
-    upiImg: googlepay,
-    upiId: 'ArunKumar@google.ybl'
   },
   {
     id: 3,
     bankImg: kotak,
     bankName: 'Kotak Bank',
     accNum: '431200109911',
-    upiImg: phonepe,
-    upiId: 'ArunKumar@phonepe.ybl'
   },
+]
+
+export const upiBank = [
+  {
+    id: 4, 
+    upiImg: paytm,
+    upiId: 'ArunKumar@paytm.ybl',
+  }, 
+  {
+    id: 5, 
+    upiImg: googlepay,
+    upiId: 'ArunKumar@google.ybl'
+  },
+  {
+    id: 6,
+    upiImg: phonepe,
+    upiId: 'ArunKumar@phonepe.ybl',
+  }
 ]

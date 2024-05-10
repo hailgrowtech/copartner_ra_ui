@@ -44,14 +44,14 @@ const Navbar = ({ activeTab, toggleSidebar }) => {
     <div
       className={`fixed flex justify-center items-center py-[1rem] ${
         styles.boxWidth
-      } ${styles.paddingX} z-[9] ${
+      } z-[9] ${
         isScrolled ? styles.transparentNavbar : styles.scrolledNavbar
       }`}
     >
-      <nav className="flex md:w-[600px] md:ml-[5rem] xl:ml-[20rem]">
+      <nav className="flex md:w-[600px] md:ml-[5rem] xl:ml-[20rem] ml-8">
         <div className="flex md:flex-row flex-col items-center sm:flex-col gap-[4px] md:gap-20 xl:gap-40">
           {isSmallScreen ? (
-            <div className="flex gap-12 items-center w-[360px] h-[50px]">
+            <div className="flex gap-12 items-center md:w-[360px] w-[380px] h-[50px]">
               <Link to='/setting'>
                 <img
                 src={dummyUser}
@@ -81,7 +81,7 @@ const Navbar = ({ activeTab, toggleSidebar }) => {
                   Personal
                 </button>
               </div>
-              <button onClick={toggleSidebar}>
+              <button onClick={toggleSidebar} className="md:ml-0 ml-[20px]">
                 <img
                   src={menu}
                   alt="Menu"
@@ -117,7 +117,7 @@ const Navbar = ({ activeTab, toggleSidebar }) => {
           )}
 
           {isSmallScreen ? (
-            <div className="flex pr-8 gap-[1rem]">
+            <div className="flex md:mr-8 mr-10 gap-[1rem]">
               <div className="relative">
                 <img
                   src={searchIcon}
@@ -131,7 +131,7 @@ const Navbar = ({ activeTab, toggleSidebar }) => {
                 />
               </div>
 
-              <div className="flex items-center justify-center w-[36px] h-[40px] border-2 border-[#282F3E] p-1 rounded-[10px]">
+              <div className="flex items-center justify-center w-[36px] h-[40px] border-2 border-[#282F3E] p-1 rounded-[10px] md-mr-0 mr-[-8px]">
                 <img
                   src={notification}
                   alt="Notification Icon"

@@ -5,7 +5,7 @@ import Charts from "../graphs/Charts";
 const EarningAnalysis = () => {
   return (
     <div className="flex flex-col py-8">
-      <div className="flex md:gap-[20rem] xl:gap-[33rem] mb-4">
+      <div className="flex md:gap-[22rem] xl:gap-[33rem] mb-4">
         <span className="text-xl font-semibold text-white">
           Earning analysis
         </span>
@@ -14,7 +14,7 @@ const EarningAnalysis = () => {
         </span>
       </div>
 
-      <div className="md:w-[1000px] xl:w-[1500px] w-[345px] xl:justify-around sm:w-[380px] md:flex-row flex-col gap-4 flex">
+      <div className="md:w-[1000px] xl:w-[1500px] w-[345px] xl:justify-around sm:w-[380px] md:flex-row flex-col md:gap-10 gap-4 flex md-ml-0 ml-[-6px]">
         <div className="flex flex-row bg_cards rounded-[10px] md:w-[100%] w-[358px] px-2">
           <PieCharts /> 
           <div className="flex flex-col item-center justify-center gap-6 md:w-[150px] w-[119px]">
@@ -44,6 +44,10 @@ const EarningAnalysis = () => {
             </div>
           </div>
         </div>
+
+        <span className="text-xl font-semibold text-white md:mr-14 xl:mr-20 md:hidden flex">
+          Earning Analysis Graph
+        </span>
 
         <div className="flex flex-row bg_cards rounded-[10px] md:w-[100%] md:h-[100%] w-[358px] h-[245px]">
           <Charts />

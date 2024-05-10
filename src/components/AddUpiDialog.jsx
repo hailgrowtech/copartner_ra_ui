@@ -9,7 +9,7 @@ const AddUpiDialog = ({ isOpen, onClose }) => {
       <div className="fixed inset-0 z-[999] flex items-center py-[8rem] justify-center bg-black bg-opacity-[40%]">
         <div className="bg-[#2E374B] rounded-lg md:w-[1084px] xl:h-[50%] md:h-[65%] w-[378px] h-[410px] overflow-auto p-8">
           <div className="flex items-center justify-between">
-            <h2 className="md:h-[52px] font-inter font-[700] md:text-[30px] text-[18px] md:leading-[51px] text-new">
+            <h2 className="md:h-[52px] font-inter font-[700] md:text-[30px] text-[24px] md:leading-[51px] text-new">
               Add UPI ID Details
             </h2>
             <button onClick={onClose}>
@@ -47,7 +47,7 @@ const AddUpiDialog = ({ isOpen, onClose }) => {
             />
             <label
               for="link-checkbox"
-              className="ms-2 text-[14px] font-medium text-gray-900 dark:text-gray-300"
+              className="ms-2 text-[14px] font-medium text-white"
             >
               By checking this box, I acknowledge that the bank/payment details
               provided are accurate and authorize Hailgro Tech Solutions Pvt.

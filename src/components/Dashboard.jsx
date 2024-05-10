@@ -8,13 +8,13 @@ const yTicks = [0, 100, 200, 300, 400, 500];
 
 const Dashboard = () => {
   return (
-    <div className="xl:pl-[12rem] md:pl-[10rem] md:py-[6rem] xl-py-[6rem] pt-[8rem]">
+    <div className="xl:pl-[12rem] md:pl-[10rem] pl-6 md:py-[6rem] xl-py-[6rem] pt-[8rem]">
       <div className="flex xl:w-[1580px] md:w-[1180px] items-center">
         <div className="flex md:gap-8 gap-16 items-center">
           <span className="md:w-[176px] md:h-[27px] w-[125px] h-[28px] font-inter md:text-[22px] text-[20px] font-[600] leading-[27px] text-white">
             User Analysis
           </span>
-          <div className="flex md:gap-[2rem] gap-4 xl:ml-[57rem] md:ml-[30rem]">
+          <div className="flex md:gap-[2rem] gap-4 xl:ml-[57rem] md:ml-[30rem] ml-[-10px]">
             <button className="md:w-[85px] w-[43px] md:h-[40px] h-[30px] rounded-[10px] bg-white text-black font-[600] font-inter text-[12px]">
               Today
             </button>
@@ -36,10 +36,10 @@ const Dashboard = () => {
           <BarGraph />
         </div>
 
-        <div className="flex flex-col gap-4">
+        <div className="flex flex-col gap-4 md-mr-0 ml-[-12px]">
           {userAnalysis.map((user) => (
             <div
-              className="flex flex-col md:justify-between md:w-[288px] w-[348px] md:h-[298px] md:mr-0 ml-[-2rem] h-[178px] rounded-[25px] bg_cards p-4"
+              className="flex flex-col md:justify-between md:w-[288px] w-[355px] md:h-[298px] md:mr-0 ml-[-2rem] h-[178px] rounded-[25px] bg_cards p-4"
               key={user.id}
             >
               <div className="flex flex-row justify-between">
@@ -90,7 +90,7 @@ const Dashboard = () => {
           Subscription : Services
         </span>
 
-        <div className="xl:w-[1530px] md:w-[1122px] md:h-[480px] xl-h-[480px] w-[361px] bg_cards p-4 rounded-[24px]">
+        <div className="xl:w-[1530px] md:w-[1122px] md:h-[480px] xl-h-[480px] w-[361px] md:ml-0 ml-[-8px] bg_cards p-4 rounded-[24px]">
           {expertise_data.map((expert) => (
             <div className="flex flex-col">
               <div className="flex flex-row">

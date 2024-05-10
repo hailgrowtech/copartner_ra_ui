@@ -35,14 +35,14 @@ const Subscription = () => {
   };
 
   return (
-    <div className="pb-[5rem] xl:pl-[12rem] md:pl-[10rem] md:py-[6rem] pt-[8rem] bg-gradient min-h-screen">
+    <div className="pb-[5rem] xl:pl-[12rem] md:pl-[10rem] pl-6 md:py-[6rem] pt-[8rem] bg-gradient min-h-screen">
       <div className="xl:w-[1520px] md:w-[1130px] w-[350px] flex items-center justify-between">
         <span className="w-[176px] h-[27px] font-inter text-[22px] font-[600] leading-[27px] text-white md:ml-0 ml-2">
           Service
         </span>
         <button
           onClick={openDialog}
-          className="md:w-[100px] w-[70px] md:h-[40px] h-[30px] rounded-[10px] text-white font-[600] font-inter md:text-[12px] text-[14px] border-solid border-[1px] border-white"
+          className="md:w-[100px] w-[70px] md:h-[40px] h-[30px] rounded-[10px] text-white font-[600] font-inter md:text-[12px] text-[14px] border-solid border-[1px] border-white md:mr-4 mr-2"
         >
           +Add
         </button>
@@ -56,7 +56,7 @@ const Subscription = () => {
 
       <div className="flex mt-[3rem]">
         {smallScreen ? (
-          <div className="flex flex-wrap justify-center items-center">
+          <div className="flex flex-wrap justify-center items-center ml-[-22px]">
             {subscriptionData.map((row, index) => (
               <div
                 key={index}

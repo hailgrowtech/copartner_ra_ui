@@ -47,7 +47,7 @@ const Sidebar = ({ activeTab, setActiveTab, setShowSidebar }) => {
           window.innerWidth < 786 ? "flex" : "hidden"
         }`}
       >
-        <img src={closeIcon} alt="Close" className="w-[45px] h-[45px]" />
+        <img src={closeIcon} alt="Close" className="w-[45px] h-[45px] ml-[5rem]" />
       </button>
 
       <Link to="/">
@@ -92,7 +92,7 @@ const Sidebar = ({ activeTab, setActiveTab, setShowSidebar }) => {
         ))}
       </div>
 
-      <button className="w-[110px] h-[30px] bg-white text-black rounded-[5px] mt-[4rem]">
+      <button className="w-[110px] h-[30px] text-[14px] bg-white text-black rounded-[5px] mt-[4rem]">
         Logout
       </button>
     </div>

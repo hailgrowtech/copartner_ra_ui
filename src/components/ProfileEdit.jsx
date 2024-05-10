@@ -34,20 +34,20 @@ const ProfileEdit = ({ closeDialog }) => {
   return (
     <div className="fixed inset-0 z-[999] flex items-center py-[8rem] justify-center">
       <div className="fixed inset-0 z-[999] flex items-center py-[8rem] justify-center bg-black bg-opacity-[40%]">
-        <div className="bg-[#2E374B] rounded-lg w-[1084px] h-full overflow-auto p-8">
+        <div className="bg-[#2E374B] rounded-lg md:w-[1084px] w-[378px] md:h-full h-[600px] overflow-auto p-8">
           <div className="flex items-center justify-between">
-            <h2 className="h-[52px] font-inter font-[700] text-[30px] leading-[51px] text-new">
+            <h2 className="md:h-[52px] font-inter font-[700] md:text-[30px] text-[24px] md:leading-[51px] text-new">
               Profile Edit
             </h2>
             <button onClick={closeDialog}>
               <img
                 src={closeIcon}
                 alt="Close_Icon"
-                className="w-[35px] h-[35px]"
+                className="md:w-[35px] w-[50px] md:h-[35px] h-[50px]"
               />
             </button>
           </div>
-          <div className="flex flex-col mt-8 gap-2">
+          <div className="flex flex-col mt-8 gap-2 md:flex hidden">
             <span className="h-[23px] text-white text-[20px] font-inter font-[500] leading-[16px]">
               Upload Profile Image
             </span>
@@ -66,12 +66,12 @@ const ProfileEdit = ({ closeDialog }) => {
             </label>
           </div>
 
-          <div className="flex flex-row justify-between mt-8">
+          <div className="flex md:flex-row flex-col md:justify-between md:mt-8 mt-4 md:ml-0 ml-[-16px] md:gap-0 gap-4">
             <div className="relative">
               <div className="mb-0">
                 <label
                   className="flex items-center justify-center bg-[#282F3E] text-white opacity-[50%]
-                  w-[80px] h-[26px] rounded-[8px] font-[400] text-[14px] leading-[16px] text-center"
+                  md:w-[80px] w-[60px] md:h-[26px] h-[25px] rounded-[8px] font-[400] md:text-[14px] text-[13px] md:leading-[16px] leading-[15px] text-center"
                 >
                   Name
                 </label>
@@ -80,7 +80,7 @@ const ProfileEdit = ({ closeDialog }) => {
                   type="text"
                   id="default-input"
                   placeholder="Arun Kumar"
-                  className="w-[480px] py-2 px-4 rounded-md text-white border border-[#40495C] bg-[#282F3E]"
+                  className="md:w-[482px] w-[345px] px-4 py-2 rounded-md text-white border border-[#40495C] bg-[#282F3E]"
                 />
               </div>
             </div>
@@ -88,7 +88,7 @@ const ProfileEdit = ({ closeDialog }) => {
               <div className="mb-0">
                 <label
                   className="flex items-center justify-center bg-[#282F3E] text-white opacity-[50%]
-                  w-[130px] h-[26px] rounded-[8px] font-[400] text-[14px] leading-[16px] text-center"
+                  md:w-[130px] w-[110px] md:h-[26px] h-[25px] rounded-[8px] font-[400] md:text-[14px] text-[13px] md:leading-[16px] leading-[15px] text-center"
                 >
                   Mobile Number
                 </label>
@@ -97,18 +97,18 @@ const ProfileEdit = ({ closeDialog }) => {
                   type="number"
                   id="default-input"
                   placeholder="Enter Mobile Number"
-                  className="w-[480px] py-2 px-4 rounded-md text-white border border-[#40495C] bg-[#282F3E]"
+                  className="md:w-[482px] w-[345px] px-4 py-2 rounded-md text-white border border-[#40495C] bg-[#282F3E]"
                 />
               </div>
             </div>
           </div>
 
-          <div className="flex flex-row justify-between mt-8">
+          <div className="flex md:flex-row flex-col justify-between md:mt-8 mt-4 md:ml-0 ml-[-16px] md:gap-0 gap-4">
             <div className="relative">
               <div className="mb-0">
                 <label
                   className="flex items-center justify-center bg-[#282F3E] text-white opacity-[50%]
-                  w-[80px] h-[26px] rounded-[8px] font-[400] text-[14px] leading-[16px] text-center"
+                  md:w-[80px] w-[70px] md:h-[26px] h-[25px] rounded-[8px] font-[400] md:text-[14px] text-[13px] md:leading-[16px] leading-[15px] text-center"
                 >
                   MAIL ID
                 </label>
@@ -117,7 +117,7 @@ const ProfileEdit = ({ closeDialog }) => {
                   type="email"
                   id="default-input"
                   placeholder="Enter your Mail ID"
-                  className="w-[480px] py-2 px-4 rounded-md text-white border border-[#40495C] bg-[#282F3E]"
+                  className="md:w-[482px] w-[345px] px-4 py-2 rounded-md text-white border border-[#40495C] bg-[#282F3E]"
                 />
               </div>
             </div>
@@ -125,7 +125,7 @@ const ProfileEdit = ({ closeDialog }) => {
               <label
                 htmlFor="subscriptionType"
                 className="flex items-center justify-center bg-[#282F3E] text-white opacity-[50%]
-                    w-[110px] h-[26px] rounded-[8px] font-[400] text-[14px] leading-[16px] text-center"
+                    md:w-[110px] w-[90px] md:h-[26px] h-[25px] rounded-[8px] font-[400] md:text-[14px] text-[13px] md:leading-[16px] leading-[15px] text-center"
               >
                 Expertise In
               </label>
@@ -136,7 +136,7 @@ const ProfileEdit = ({ closeDialog }) => {
                     value={subscriptionType}
                     readOnly
                     onClick={toggleSubscriptionDropdown}
-                    className="w-[482px] px-4 py-2 cursor-pointer rounded-md text-white border border-[#40495C] bg-[#282F3E]"
+                    className="md:w-[482px] w-[345px] px-4 py-2 rounded-md text-white border border-[#40495C] bg-[#282F3E]"
                   />
                   <img
                     src={dropdown}
@@ -172,12 +172,12 @@ const ProfileEdit = ({ closeDialog }) => {
             </div>
           </div>
 
-          <div className="flex flex-row justify-between mt-8">
+          <div className="flex md:flex-row flex-col md:justify-between md:mt-8 mt-4 md:ml-0 ml-[-16px] md:gap-0 gap-4">
             <div className="relative">
               <label
                 htmlFor="subscriptionType"
                 className="flex items-center justify-center bg-[#282F3E] text-white opacity-[50%]
-                    w-[100px] h-[26px] rounded-[8px] font-[400] text-[14px] leading-[16px] text-center"
+                    md:w-[100px] w-[80px] h-[26px] rounded-[8px] font-[400] md:text-[14px] text-[13px] md:leading-[16px] leading-[15px] text-center"
               >
                 Experience
               </label>
@@ -188,7 +188,7 @@ const ProfileEdit = ({ closeDialog }) => {
                     value={experienceType}
                     readOnly
                     onClick={toggleExpDropdown}
-                    className="w-[482px] px-4 py-2 cursor-pointer rounded-md text-white border border-[#40495C] bg-[#282F3E]"
+                    className="md:w-[482px] w-[345px] px-4 py-2 rounded-md text-white border border-[#40495C] bg-[#282F3E]"
                   />
                   <img
                     src={dropdown}
@@ -238,7 +238,7 @@ const ProfileEdit = ({ closeDialog }) => {
               <div class="mb-0">
                 <label
                   className="flex items-center justify-center bg-[#282F3E] text-white opacity-[50%]
-                  w-[220px] h-[26px] rounded-[8px] font-[400] text-[14px] leading-[16px] text-center"
+                  md:w-[220px] w-[190px] md:h-[26px] h-[25px] rounded-[8px] font-[400] md:text-[14px] text-[13px] md:leading-[16px] leading-[15px] text-center"
                 >
                   Free Telegram Channel Link
                 </label>
@@ -247,18 +247,18 @@ const ProfileEdit = ({ closeDialog }) => {
                   type="link"
                   id="default-input"
                   placeholder="Enter your Mail ID"
-                  className="w-[480px] py-2 px-4 rounded-md text-white border border-[#40495C] bg-[#282F3E]"
+                  className="md:w-[482px] w-[345px] px-4 py-2 rounded-md text-white border border-[#40495C] bg-[#282F3E]"
                 />
               </div>
             </div>
           </div>
 
-          <div className="flex flex-row justify-between mt-8">
+          <div className="flex md:flex-row flex-col justify-between md:mt-8 mt-4 md:ml-0 ml-[-16px] md:gap-0 gap-4">
             <div className="relative">
               <div className="mb-0">
                 <label
                   className="flex items-center justify-center bg-[#282F3E] text-white opacity-[50%]
-                  w-[235px] h-[26px] rounded-[8px] font-[400] text-[14px] leading-[16px] text-center"
+                  md:w-[235px] w-[210px] md:h-[26px] h-[25px] rounded-[8px] font-[400] md:text-[14px] text-[13px] md:leading-[16px] leading-[15px] text-center"
                 >
                   Members In Telegram Channel
                 </label>
@@ -267,7 +267,7 @@ const ProfileEdit = ({ closeDialog }) => {
                   type="text"
                   id="default-input"
                   placeholder="Enter Members"
-                  className="w-[480px] py-2 px-4 rounded-md text-white border border-[#40495C] bg-[#282F3E]"
+                  className="md:w-[482px] w-[345px] px-4 py-2 rounded-md text-white border border-[#40495C] bg-[#282F3E]"
                 />
               </div>
             </div>
@@ -275,7 +275,7 @@ const ProfileEdit = ({ closeDialog }) => {
               <div className="mb-0">
                 <label
                   className="flex items-center justify-center bg-[#282F3E] text-white opacity-[50%]
-                  w-[200px] h-[26px] rounded-[8px] font-[400] text-[14px] leading-[16px] text-center"
+                  md:w-[200px] w-[180px] h-[26px] rounded-[8px] font-[400] text-[14px] md:text-[14px] text-[13px] md:leading-[16px] leading-[15px] text-center"
                 >
                   SEBI Registration Number
                 </label>
@@ -284,28 +284,30 @@ const ProfileEdit = ({ closeDialog }) => {
                   type="number"
                   id="default-input"
                   placeholder="Enter SEBI Registration Number"
-                  className="w-[480px] py-2 px-4 rounded-md text-white border border-[#40495C] bg-[#282F3E]"
+                  className="md:w-[482px] w-[345px] px-4 py-2 rounded-md text-white border border-[#40495C] bg-[#282F3E]"
                 />
               </div>
             </div>
           </div>
 
-          <div className="relative mt-6">
-            <label
-              className="flex items-center justify-center bg-[#282F3E] text-white opacity-[50%]
-                  w-[232px] h-[26px] rounded-[8px] font-[400] text-[14px] leading-[16px] text-center"
-            >
-              Premium Telegram Channel Link
-            </label>
-            <input
-              type="link"
-              id="default-input"
-              placeholder="Paste Link"
-              className="w-[1020px] py-2 px-4 rounded-md text-white border border-[#40495C] bg-[#282F3E]"
-            />
-          </div>
+          <div className="relative md:ml-0 ml-[-16px] md:mt-8 mt-4">
+              <div className="mb-0">
+                <label
+                  className="flex items-center justify-center bg-[#282F3E] text-white opacity-[50%]
+                  md:w-[232px] w-[210px] md:h-[26px] h-[25px] rounded-[8px] font-[400] md:text-[14px] text-[13px] md:leading-[16px] leading-[15px] text-center"
+                >
+                  Premium Telegram Channel Link
+                </label>
+                <input
+                  type="link"
+                  id="default-input"
+                  placeholder="Paste Link"
+                  className="md:w-[1012px] w-[345px] py-2 px-4 rounded-md text-white border border-[#40495C] bg-[#282F3E]"
+                />
+              </div>
+            </div>
           <div className="flex justify-center items-center mt-6">
-            <button className="bg-white rounded-[10px] w-[147px] h-[40px]">
+            <button className="bg-white rounded-[10px] text-[14px] w-[147px] h-[40px]">
               Change
             </button>
           </div>

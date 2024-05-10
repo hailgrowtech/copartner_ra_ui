@@ -5,25 +5,25 @@ const UpiEditDialog = ({ isOpen, onClose }) => {
   return (
     <div className="fixed inset-0 z-[999] flex items-center py-[8rem] justify-center">
       <div className="fixed inset-0 z-[999] flex items-center py-[8rem] justify-center bg-black bg-opacity-[40%]">
-        <div className="bg-[#2E374B] rounded-lg w-[1084px] xl:h-[40%] md:h-[50%] overflow-auto p-8">
+        <div className="bg-[#2E374B] rounded-lg md:w-[1084px] w-[378px] xl:h-[40%] md:h-[50%] overflow-auto p-8">
           <div className="flex items-center justify-between">
-            <h2 className="h-[52px] font-inter font-[700] text-[30px] leading-[51px] text-new">
+            <h2 className="md:h-[52px] font-inter font-[700] md:text-[30px] text-[24px] md:leading-[51px] text-new">
             Edit UPI ID Details
             </h2>
             <button onClick={onClose}>
               <img
                 src={closeIcon}
                 alt="Close_Icon"
-                className="w-[45px] h-[45px]"
+                className="md:w-[35px] w-[50px] md:h-[35px] h-[50px]"
               />
             </button>
           </div>
 
-          <div className="relative mt-8">
+          <div className="relative md:mt-8 mt-4">
               <div class="mb-0">
                 <label
                   className="flex items-center justify-center bg-[#282F3E] text-white opacity-[50%]
-                  w-[76px] h-[26px] rounded-[8px] font-[400] text-[14px] leading-[16px] text-center"
+                  md:w-[76px] w-[70px] h-[25px] md:h-[26px] rounded-[8px] font-[400] md:text-[14px] text-[13px] md:leading-[16px] leading-[15px] text-center"
                 >
                   UPI ID
                 </label>
@@ -37,7 +37,7 @@ const UpiEditDialog = ({ isOpen, onClose }) => {
             </div>
 
           <div className="flex justify-center gap-4 items-center mt-6">
-            <button className="bg-red-500 text-white rounded-[10px] w-[147px] h-[40px]">
+            <button className="bg-red-500 text-white text-[14px] rounded-[10px] w-[147px] h-[40px]">
               Delete
             </button>
           </div>

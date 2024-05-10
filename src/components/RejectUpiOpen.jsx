@@ -19,7 +19,7 @@ const RejectUpiOpen = ({ isOpen, onClose }) => {
             </button>
           </div>
 
-          <div className="relative mt-8">
+          <div className="relative md:mt-8 mt-6">
             <label
               className="flex items-center justify-center bg-[#282F3E] text-white opacity-[50%]
                   w-[76px] h-[26px] rounded-[8px] font-[400] text-[14px] leading-[16px] text-center"
@@ -39,9 +39,6 @@ const RejectUpiOpen = ({ isOpen, onClose }) => {
           <div className="flex justify-center gap-4 items-center mt-6">
             <button className="bg-white md:text-[16px] text-[12px] text-black rounded-[10px] w-[147px] h-[40px]">
               Okey
-            </button>
-            <button className="bg-red-500 md:text-[16px] text-[12px] text-white rounded-[10px] w-[147px] h-[40px]">
-              Delete
             </button>
           </div>
         </div>

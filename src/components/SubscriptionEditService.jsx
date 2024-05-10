@@ -2,9 +2,7 @@ import React, { useState } from "react";
 import { dropdown, closeIcon } from "../assets";
 
 const SubscriptionEditService = ({ closeDialog }) => {
-  const [subscriptionType, setSubscriptionType] = useState(
-    "Future & Option"
-  );
+  const [subscriptionType, setSubscriptionType] = useState("Future & Option");
   const [planType, setPlanType] = useState("Basic");
   const [durationType, setDurationType] = useState("1 Month");
   const [keyPointsType, setKeyPointsType] = useState("Plan Key Points");
@@ -87,7 +85,7 @@ const SubscriptionEditService = ({ closeDialog }) => {
               <img
                 src={closeIcon}
                 alt="Close_Icon"
-                className="w-[35px] h-[35px]"
+                className="md:w-[35px] w-[50px] md:h-[35px] h-[50px]"
               />
             </button>
           </div>
@@ -97,7 +95,7 @@ const SubscriptionEditService = ({ closeDialog }) => {
                 Upload Title Image
               </span>
               <label class="inline-flex items-center me-5 cursor-pointer">
-              <span class="mr-3 text-sm font-medium text-gray-900 dark:text-gray-300">
+                <span class="mr-3 text-sm font-medium text-gray-900 dark:text-gray-300">
                   Active:
                 </span>
                 <input type="checkbox" value="" class="sr-only peer" checked />
@@ -413,18 +411,18 @@ const SubscriptionEditService = ({ closeDialog }) => {
             </div>
           </div>
 
-          <div className="flex justify-end md:mt-0 mt-4">
+          <div className="flex md:flex-row flex-col gap-2 justify-end md:mt-0 mt-4">
             <button
               onClick={closeDialog}
-              className="px-4 py-2 mr-2 bg-gray-300 md:text-[14px] text-[10px] text-gray-700 rounded-lg hover:bg-gray-400"
+              className="px-4 w-[100%] py-2 bg-blue-500 text-white md:text-[14px] text-[14px] rounded-lg hover:bg-blue-600"
             >
-              Cancel
+              Change
             </button>
             <button
               onClick={closeDialog}
-              className="px-4 py-2 bg-blue-500 text-white  md:text-[14px] text-[10px] rounded-lg hover:bg-blue-600"
+              className="px-4 w-[100%] py-2 mr-2 bg-gray-300 md:text-[14px] text-[14px] text-gray-700 rounded-lg hover:bg-gray-400"
             >
-              Confirm
+              Cancel
             </button>
           </div>
         </div>

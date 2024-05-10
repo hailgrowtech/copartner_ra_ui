@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { closeIcon, dropdown } from "../assets";
-import { withdrawalBank } from "../constants";
+import { withdrawalBank, upiBank } from "../constants";
 import AddBankDialog from "./AddBankDialog";
 import AddUpiDialog from "./AddUpiDialog";
 
@@ -8,6 +8,17 @@ const WalletWithdrawal = ({ closeDialog }) => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isAddBankOpen, setIsAddBankOpen] = useState(false);
   const [isUpiOpen, setUpiOpen] = useState(false);
+
+  const [selectedBank, setSelectedBank] = useState(null);
+  const [selectedUpi, setSelectedUpi] = useState(null);
+
+  const handleBankClick = (id) => {
+    setSelectedBank(id === selectedBank ? null : id);
+  };
+
+  const handleUpiClick = (id) => {
+    setSelectedUpi(id === selectedUpi ? null : id);
+  };
 
   const openDialog = () => {
     setIsDialogOpen(true);
@@ -34,7 +45,7 @@ const WalletWithdrawal = ({ closeDialog }) => {
       <div className="fixed inset-0 z-[999] flex items-center py-[8rem] justify-center bg-black bg-opacity-[40%]">
         <div className="bg-[#2E374B] rounded-lg md:w-[1084px] xl:h-[550px] md:h-full w-[378px] h-[600px] overflow-auto p-8">
           <div className="flex items-center justify-between">
-            <h2 className="md:h-[52px] font-inter font-[700] md:text-[30px] text-[26px] md:leading-[51px] text-new">
+            <h2 className="md:h-[52px] font-inter font-[700] md:text-[30px] text-[24px] md:leading-[51px] text-new">
               Withdrawal
             </h2>
             <button onClick={closeDialog}>
@@ -49,7 +60,7 @@ const WalletWithdrawal = ({ closeDialog }) => {
             <span className="md:w-[184px] md:h-[23px] text-white md:text-[20px] text-[16px] font-inter font-[500] leading-[16px]">
               Select Your Bank
             </span>
-            <button onClick={openAddBank} className="md:w-[100px] w-[70px] border-solid border-[1px] border-white md:h-[40px] h-[25px] rounded-[10px] border text-white font-[600] font-inter md:text-[12px] text-[10px]">
+            <button onClick={openAddBank} className="md:w-[100px] w-[90px] border-solid border-[1px] border-white md:h-[40px] h-[30px] rounded-[10px] border text-white font-[600] font-inter md:text-[12px] text-[10px]">
               +Add Bank
             </button>
             {isAddBankOpen && (
@@ -62,7 +73,8 @@ const WalletWithdrawal = ({ closeDialog }) => {
               return (
                 <div
                   key={wallet.id}
-                  className={`w-[310px] h-[76px] rounded-[16px] border border-[#40495C] p-2 ${wallet.id === 1 ? 'bg-[#282F3E]' : 'bg-transparent'}`}
+                  className={`w-[310px] h-[76px] rounded-[16px] border border-[#40495C] p-2 ${selectedBank === wallet.id ? 'bg-[#282F3E]' : 'bg-transparent'}`}
+                  onClick={() => handleBankClick(wallet.id)}
                 >
                   <div className="flex flex-row items-center gap-2">
                     <img src={wallet.bankImg} className="w-[74px] h-[59px]" />
@@ -84,7 +96,7 @@ const WalletWithdrawal = ({ closeDialog }) => {
             <span className="md:w-[184px] md:h-[23px] text-white md:text-[20px] text-[16px] font-inter font-[500] leading-[16px]">
               Select Your UPI ID
             </span>
-            <button onClick={openUpiBank} className="md:w-[100px] w-[70px] border-solid border-[1px] border-white md:h-[40px] h-[25px] rounded-[10px] border text-white font-[600] font-inter md:text-[12px] text-[10px]">
+            <button onClick={openUpiBank} className="md:w-[100px] w-[90px] border-solid border-[1px] border-white md:h-[40px] h-[30px] rounded-[10px] border text-white font-[600] font-inter md:text-[12px] text-[10px]">
               +Add UPI ID
             </button>
             {isUpiOpen && (
@@ -93,11 +105,12 @@ const WalletWithdrawal = ({ closeDialog }) => {
           </div>
 
           <div className="flex md:flex-row flex-col md:gap-0 gap-2 items-center mt-6 justify-between">
-            {withdrawalBank.map((wallet) => {
+            {upiBank.map((wallet) => {
               return (
                 <div
                   key={wallet.id}
-                  className={`w-[310px] h-[40px] rounded-[8px] border border-[#40495C] bg-transparent`}
+                  className={`w-[310px] h-[40px] rounded-[8px] border border-[#40495C] ${selectedBank === wallet.id ? 'bg-[#282F3E]' : 'bg-transparent'}`}
+                  onClick={() => handleBankClick(wallet.id)}
                 >
                   <div className="flex flex-row items-center gap-2 p-1">
                     <img src={wallet.upiImg} className="w-[32px] h-[28px]" />
