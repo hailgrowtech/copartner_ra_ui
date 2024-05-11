@@ -40,6 +40,7 @@ import googlepay from './googlePay.png';
 import phonepe from './phonepe.png';
 import arrowRight from './arrowRight.png';
 import menu from './menu.png';
+import signup from './signUpBck.png';
 
 export {
     availableIcon,
@@ -78,5 +79,5 @@ export {
     hdfc, kotak, icici,
     paytm, googlepay, phonepe,
     arrowRight,
-    menu,
+    menu, signup,
 }
