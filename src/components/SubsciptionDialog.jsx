@@ -71,20 +71,20 @@ const SubscriptionDialog = ({ closeDialog }) => {
   return (
     <div className="fixed inset-0 z-[999] flex items-center py-[2rem] justify-center">
       <div className="fixed inset-0 z-[999] flex items-center py-[2rem] justify-center bg-black bg-opacity-[40%]">
-        <div className="bg-[#2E374B] rounded-lg md:w-[1084px] w-[378px] md:h-full h-[600px] overflow-auto p-8">
+        <div className="bg-[#2E374B] rounded-lg md:w-[1084px] w-[378px] md:h-[680px] h-[600px] overflow-auto p-8">
           <div className="flex items-center justify-between">
-            <h2 className="md:h-[52px] font-inter font-[700] md:text-[30px] text-[24px] md:leading-[51px] text-new">
+            <h2 className="md:h-[52px] font-inter font-[700] md:text-[30px] text-[18px] md:leading-[51px] text-new md:ml-0 ml-[-0.8rem]">
               Add New Subscription
             </h2>
-            <button onClick={closeDialog}>
+            <button onClick={closeDialog} className="md:mr-0 mr-[-1.4rem]">
               <img
                 src={closeIcon}
                 alt="Close_Icon"
-                className="md:w-[35px] w-[50px] md:h-[35px] h-[50px]"
+                className="md:w-[35px] w-[40px] md:h-[35px] h-[40px]"
               />
             </button>
           </div>
-          <div className="flex flex-col mt-8 gap-2 md:flex hidden">
+          {/* <div className="flex flex-col mt-8 gap-2 md:flex hidden">
             <span className="w-[184px] h-[23px] text-white text-[20px] font-inter font-[500] leading-[16px]">
               Upload Title Image
             </span>
@@ -101,9 +101,9 @@ const SubscriptionDialog = ({ closeDialog }) => {
                 Select
               </span>
             </label>
-          </div>
+          </div> */}
 
-          <div className="flex flex-col mt-[2rem] gap-4 md:w-[1006px] md:h-[520px]">
+          <div className="flex flex-col md:mt-0 mt-[1rem] gap-4 md:w-[1006px] md:h-[520px]">
             <div className="flex md:flex-row flex-col md:gap-12 gap-4 md:mt-6 md:ml-0 ml-[-16px]">
               <div className="relative">
                 <label

@@ -1,6 +1,6 @@
 import React from "react";
 import { userAnalysis, expertise_data } from "../constants";
-import { edit } from "../assets";
+import { edit, customDrop } from "../assets";
 import BarGraph from "../graphs/BarGraph";
 import EarningAnalysis from "./EarningAnalysis";
 
@@ -10,28 +10,31 @@ const Dashboard = () => {
   return (
     <div className="xl:pl-[12rem] md:pl-[10rem] pl-6 md:py-[6rem] xl-py-[6rem] pt-[8rem]">
       <div className="flex xl:w-[1580px] md:w-[1180px] items-center">
-        <div className="flex md:gap-8 gap-16 items-center">
+        <div className="flex md:gap-0 gap-16 items-center">
           <span className="md:w-[176px] md:h-[27px] w-[125px] h-[28px] font-inter md:text-[22px] text-[20px] font-[600] leading-[27px] text-white">
             User Analysis
           </span>
-          <div className="flex md:gap-[2rem] gap-4 xl:ml-[57rem] md:ml-[30rem] ml-[-10px]">
-            <button className="md:w-[85px] w-[43px] md:h-[40px] h-[30px] rounded-[10px] bg-white text-black font-[600] font-inter text-[12px]">
+          <div className="flex md:gap-[2rem] gap-2 xl:ml-[57rem] md:ml-[30rem] ml-[-10px]">
+            <button className="md:w-[85px] w-[43px] md:h-[40px] h-[30px] rounded-[10px] bg-white text-black font-[600] font-inter md:text-[12px] text-[10px]">
               Today
             </button>
-            <button className="md:w-[85px] w-[43px md:h-[40px] h-[30px] rounded-[10px] border text-white font-[600] font-inter text-[12px]">
+            <button className="md:w-[85px] w-[43px md:h-[40px] h-[30px] rounded-[10px] border-solid border-[1px] border-white text-white font-[600] font-inter md:text-[12px] text-[10px] md:p-0 p-1">
               Weekly
             </button>
-            <button className="md:w-[100px] w-[43px md:h-[40px] h-[30px] rounded-[10px] border text-white font-[600] font-inter text-[12px] md:block hidden">
+            <button className="md:w-[100px] w-[43px md:h-[40px] h-[30px] rounded-[10px] border-solid border-[1px] border-white text-white font-[600] font-inter md:text-[12px] md:block hidden">
               Monthly
             </button>
-            <button className="md:w-[60px]  w-[43px md:h-[40px] h-[30px] rounded-[10px] border text-white font-[600] font-inter text-[12px]">
-              Custom
-            </button>
+            <div className="relative flex flex-row">
+              <button className="md:w-[90px] w-[63px] md:h-[40px] h-[30px] rounded-[10px] border-solid border-[1px] border-white text-white font-[600] font-inter md:text-[12px] text-[10px] md:p-2 p-1 flex items-center justify-between">
+                <span>Custom</span>
+                <img src={customDrop} alt="" className="w-[14px] h-[14px]" />
+              </button>
+            </div>
           </div>
         </div>
       </div>
 
-      <div className="flex flex-col md:flex-row gap-6 md:px-[4rem] pl-[2.5rem] md:py-8 py-6">
+      <div className="flex flex-col md:flex-row md:gap-6 gap-4 md:px-[4rem] pl-[2.5rem] md:py-8 py-0">
         <div className="flex-1">
           <BarGraph />
         </div>
@@ -85,12 +88,12 @@ const Dashboard = () => {
 
       <EarningAnalysis />
 
-      <div className="py-8 flex flex-col gap-4">
+      <div className="py-8 flex flex-col gap-4 md:mt-0 mt-[-2rem]">
         <span className="font-inter font-[600] text-[22px] leading-[27px] w-[246px] h-[27px] text-white">
           Subscription : Services
         </span>
 
-        <div className="xl:w-[1530px] md:w-[1122px] md:h-[480px] xl-h-[480px] w-[361px] md:ml-0 ml-[-8px] bg_cards p-4 rounded-[24px]">
+        <div className="xl:w-[1530px] md:w-[1122px] md:h-[480px] xl-h-[480px] w-[361px] md:ml-0 ml-[-8px] bg_cards p-4 rounded-[24px] md:mt-0 mt-[-2px]">
           {expertise_data.map((expert) => (
             <div className="flex flex-col">
               <div className="flex flex-row">
@@ -99,7 +102,7 @@ const Dashboard = () => {
                     <span className="md:w-[331px] w-[152px] md:h-[67px] h-[31px] font-inter font-[700] md:text-[57px] text-[26px] md:leading-[66px] leading-[30px] text-gradient">
                       {expert.name}
                     </span>
-                    <span className="text-[#E4E4E7] opacity-[40%] font-inter font-[500] md:text-[17px] text-[14px] md:leading-[22px]">
+                    <span className="text-white font-inter font-[500] md:text-[17px] text-[14px] md:leading-[22px]">
                       {expert.title}
                     </span>
                   </div>
@@ -132,12 +135,12 @@ const Dashboard = () => {
                     </span>{" "}
                     100
                   </span>
-                  <button className="md:w-[373px] md:h-[31px] flex items-center justify-center rounded-[21.5px] border-[1.5px] border-[#4e4e4ecc]">
+                  <div className="md:w-[373px] md:h-[31px] w-[310px] h-[22px] flex items-center justify-center rounded-[21.5px] border-[1.5px] border-[#4e4e4ecc]">
                     <button className="flex justify-center items-center md:gap-2 gap-2">
                       <img
                         src={expert.telegram}
                         alt="Telegram"
-                        className="w-[18.6px] h-[18.6px]"
+                        className="md:w-[18.6px] w-[14px] h-[14px] md:h-[18.6px]"
                       />
                       <button className="md:w-[300px] md:h-[23px] text-white font-[400] md:text-[12px] text-[10px] md:leading-[22px]">
                         {expert.greet}
@@ -148,7 +151,7 @@ const Dashboard = () => {
                         className="w-[13px] h-[13px]"
                       />
                     </button>
-                  </button>
+                  </div>
                 </div>
 
                 {/* <div className="md:h-[344px] relative profile-image_1 mb-4">
@@ -163,7 +166,7 @@ const Dashboard = () => {
                     className="absolute top-0 left-0 w-full h-full object-contain rounded-t-[11px]"
                   />
                 </div> */}
-                <div className="md:h-[344px] sm:h-[240px] md:max-h-[250px] max-h-[180px] md:right-0 right-[2rem] relative profile-image_1 mb-4">
+                <div className="md:h-[344px] sm:h-[240px] md:max-h-[250px] max-h-[180px] md:right-0 right-[10rem] relative profile-image_1 mb-4">
                   <img
                     src={expert.icon}
                     alt="background"
@@ -176,7 +179,7 @@ const Dashboard = () => {
                   />
                 </div>
 
-                <div className="flex flex-col justify-between md:ml-[-2rem] ml-[-6rem]">
+                <div className="flex flex-col justify-between md:ml-[-2rem] ml-[-14rem]">
                   <div className="flex flex-row gap-2 md:w-[70px] w-[41px] md:h-[32px] h-[19px]">
                     <img
                       src={expert.ratingIcon}
@@ -187,8 +190,8 @@ const Dashboard = () => {
                       {expert.rating}
                     </span>
                   </div>
-                  <div className="md:w-[93px] w-[46px] md:h-[32p] h-[20px] rounded-[36px] border border-[#fffff] flex justify-center items-center">
-                    <button className="flex flex-row items-center gap-2 justify-center items-center">
+                  <div className="md:w-[93px] w-[46px] md:h-[32px] h-[20px] md:mt-0 mb-[2rem] rounded-[36px] border border-[#fffff] flex justify-center items-center">
+                    <button className="flex flex-row items-center md:gap-2 gap-2 justify-center items-center">
                       <img
                         src={edit}
                         alt="Edit"
@@ -216,13 +219,13 @@ const Dashboard = () => {
                     <span className="text-[#E4E4E7] opacity-[40%]">
                       {expert.activeUser}
                     </span>
-                    <span className="text-white">{expert.valueActiveUser}</span>
+                    <span className="text-white">15/100</span>
                   </div>
                 </div>
                 <div className="bg-white md:w-[2px] w-[0.7px] md:h-[130px] md:ml-0 ml-[3rem]"></div>
                 <div className="md:w-[165px] w-[150px] h-[38px] flex flex-col">
                   <div className="md:w-[225px] md:h-[97px] md:gap-0 gap-1 flex md:flex-col flex-row md:items-start items-center">
-                    <span className="text-gradient-2 md:w-[89px] md:h-[32px] font-inter font-[700] md:text-[23px] text-[12px]">
+                    <span className="text-gradient-2 md:w-[110px] md:h-[32px] font-inter font-[700] md:text-[23px] text-[12px]">
                       Quaterly
                     </span>
                     <span className="text-white md:w-[120px] font-poppins font-[700] md:text-[36px]">
@@ -233,13 +236,13 @@ const Dashboard = () => {
                     <span className="text-[#E4E4E7] opacity-[40%]">
                       {expert.activeUser}
                     </span>
-                    <span className="text-white">{expert.valueActiveUser}</span>
+                    <span className="text-white">15/100</span>
                   </div>
                 </div>
                 <div className="bg-white w-[2px] h-[130px] ml-[1rem] md:flex hidden"></div>
                 <div className="md:w-[165px] w-[150px] h-[38px] flex flex-col">
                   <div className="md:w-[225px] md:h-[97px] md:gap-0 gap-1 flex md:flex-col flex-row md:items-start items-center">
-                    <span className="text-gradient-2 md:w-[89px] md:h-[32px] font-inter font-[700] md:text-[23px] text-[12px]">
+                    <span className="text-gradient-2 md:w-[149px] md:h-[32px] font-inter font-[700] md:text-[23px] text-[12px]">
                       Half-Yearly
                     </span>
                     <span className="text-white md:w-[120px] font-poppins font-[700] md:text-[36px]">
@@ -250,7 +253,7 @@ const Dashboard = () => {
                     <span className="text-[#E4E4E7] opacity-[40%]">
                       {expert.activeUser}
                     </span>
-                    <span className="text-white">{expert.valueActiveUser}</span>
+                    <span className="text-white">35/100</span>
                   </div>
                 </div>
                 <div className="bg-white md:w-[2px] w-[0.7px] md:h-[130px] md:ml-0 ml-[3rem]"></div>
@@ -267,7 +270,7 @@ const Dashboard = () => {
                     <span className="text-[#E4E4E7] opacity-[40%]">
                       {expert.activeUser}
                     </span>
-                    <span className="text-white">{expert.valueActiveUser}</span>
+                    <span className="text-white">35/100</span>
                   </div>
                 </div>
               </div>

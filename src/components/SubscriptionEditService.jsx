@@ -78,46 +78,30 @@ const SubscriptionEditService = ({ closeDialog }) => {
       <div className="fixed inset-0 z-[999] flex items-center py-[8rem] justify-center bg-black bg-opacity-[40%]">
         <div className="bg-[#2E374B] rounded-lg md:w-[1084px] w-[378px] md:h-full h-[600px] overflow-auto p-8">
           <div className="flex items-center justify-between">
-            <h2 className="md:h-[52px] font-inter font-[700] md:text-[30px] text-[24px] md:leading-[51px] text-new">
+            <h2 className="md:h-[52px] font-inter font-[700] md:text-[30px] text-[18px] md:leading-[51px] text-new md:ml-0 ml-[-0.8rem]">
               Edit Service
             </h2>
-            <button onClick={closeDialog}>
+            <button onClick={closeDialog} className="md:mr-0 mr-[-1.4rem]">
               <img
                 src={closeIcon}
                 alt="Close_Icon"
-                className="md:w-[35px] w-[50px] md:h-[35px] h-[50px]"
+                className="md:w-[35px] w-[40px] md:h-[35px] h-[40px]"
               />
             </button>
           </div>
-          <div className="flex flex-col mt-8 gap-2 md:flex hidden">
+          <div className="flex flex-col md:mt-4 gap-2">
             <div className="flex justify-between">
-              <span className="w-[184px] h-[23px] text-white text-[20px] font-inter font-[500] leading-[16px]">
-                Upload Title Image
-              </span>
-              <label class="inline-flex items-center me-5 cursor-pointer">
-                <span class="mr-3 text-sm font-medium text-gray-900 dark:text-gray-300">
+              <label className="inline-flex items-center me-5 cursor-pointer md:ml-0 ml-[-0.8rem]">
+                <span className="mr-3 text-sm font-medium text-white">
                   Active:
                 </span>
                 <input type="checkbox" value="" class="sr-only peer" checked />
                 <div class="relative w-11 h-6 bg-gray-200 rounded-full peer dark:bg-gray-700 peer-focus:ring-4 peer-focus:ring-green-300 dark:peer-focus:ring-green-800 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-green-600"></div>
               </label>
             </div>
-            <label
-              htmlFor="fileInput"
-              className="relative w-[482px] h-[142px] border-2 border-dotted border-[#ffffff] opacity-[50%] rounded-[10px] cursor-pointer"
-            >
-              <input
-                id="fileInput"
-                type="file"
-                className="absolute inset-0 opacity-0 w-full h-full"
-              />
-              <span className="flex items-center justify-center py-14 font-inter font-[400] text-[13px] leading-[16px] text-white opacity-[50%]">
-                Select
-              </span>
-            </label>
           </div>
 
-          <div className="flex flex-col mt-[2rem] gap-4 md:w-[1006px] md:h-[520px]">
+          <div className="flex flex-col md:mt-0 mt-[1rem] gap-4 md:w-[1006px] md:h-[520px]">
             <div className="flex md:flex-row flex-col md:gap-12 gap-4 md:mt-6 md:ml-0 ml-[-16px]">
               <div className="relative">
                 <label

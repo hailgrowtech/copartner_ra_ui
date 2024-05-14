@@ -10,14 +10,14 @@ const AddBankDialog = ({ isOpen, onClose, isAddBankOpen }) => {
       <div className="fixed inset-0 z-[999] flex items-center py-[8rem] justify-center bg-black bg-opacity-[40%]">
         <div className="bg-[#2E374B] rounded-lg md:w-[1084px] md:h-[90%] xl:h-[70%] w-[378px] h-[600px] overflow-auto p-8">
           <div className="flex items-center justify-between">
-            <h2 className="md:h-[52px] font-inter font-[700] md:text-[30px] text-[24px] md:leading-[51px] text-new">
+            <h2 className="md:h-[52px] font-inter font-[700] md:text-[30px] md:text-[24px] text-[18px] md:leading-[51px] text-new md:ml-0 ml-[-0.8rem]">
               Add Bank Details
             </h2>
-            <button onClick={onClose}>
+            <button onClick={onClose} className="md:mr-0 mr-[-1.4rem]">
               <img
                 src={closeIcon}
                 alt="Close_Icon"
-                className="w-[45px] h-[45px]"
+                className="md:w-[45px] w-[40px] md:h-[45px] h-[40px]"
               />
             </button>
           </div>

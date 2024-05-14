@@ -2,34 +2,38 @@ import React, { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { sideBar } from "./constants";
 import { closeIcon, logo, menu } from "./assets";
-
 const Sidebar = ({ activeTab, setActiveTab, setShowSidebar }) => {
   const location = useLocation();
 
-  useEffect(() => {
-    console.log("UseEffect is Working well...");
-    const currentPath = location.pathname;
+  const scrollToTop = () => {
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
+  };
 
+  useEffect(() => {
+    const currentPath = location.pathname;
     const activeNav = sideBar.find(
       (side) =>
         `/${side.id}` === currentPath ||
         (side.id === "dashboard" && currentPath === "/")
     );
-
     if (activeNav) {
       setActiveTab(activeNav.title);
     } else {
       setActiveTab(null);
     }
   }, [location]);
-
   const handleClose = () => {
     setShowSidebar(false);
     setActiveTab("");
   };
 
   const handleSidebarTabClick = () => {
-    setShowSidebar(false);
+    if (window.innerWidth < 768) {
+      setShowSidebar(false);
+    }
     setActiveTab("");
   };
 
@@ -47,10 +51,13 @@ const Sidebar = ({ activeTab, setActiveTab, setShowSidebar }) => {
           window.innerWidth < 786 ? "flex" : "hidden"
         }`}
       >
-        <img src={closeIcon} alt="Close" className="w-[45px] h-[45px] ml-[5rem]" />
+        <img
+          src={closeIcon}
+          alt="Close"
+          className="w-[45px] h-[45px] ml-[5rem]"
+        />
       </button>
-
-      <Link to="/">
+      <Link onClick={scrollToTop} to="/">
         <img
           src={logo}
           className="flex justify-center items-center md:w-[133px] w-[160px] md:h-[39px]"
@@ -62,14 +69,13 @@ const Sidebar = ({ activeTab, setActiveTab, setShowSidebar }) => {
             to={side.path}
             key={side.id}
             onClick={() => {
+              scrollToTop();
               setActiveTab(side.title);
-              // handleSidebarTabClick(); 
+              handleSidebarTabClick(); // Close sidebar on mobile
             }}
-            className={`flex w-[260px] h-[74px] rounded-[16px] text-white flex-row 
-            cursor-pointer ${
+            className={`flex w-[260px] h-[74px] rounded-[16px] text-white flex-row cursor-pointer ${
               window.innerWidth >= 768 ? "md:ml-[-4rem] xl:ml-[-4rem]" : ""
-            } 
-            ${
+            } ${
               window.innerWidth >= 768 &&
               (activeTab === side.title
                 ? "tab-btn text-[#fff]"
@@ -91,12 +97,10 @@ const Sidebar = ({ activeTab, setActiveTab, setShowSidebar }) => {
           </Link>
         ))}
       </div>
-
       <button className="w-[110px] h-[30px] text-[14px] bg-white text-black rounded-[5px] mt-[4rem]">
         Logout
       </button>
     </div>
   );
 };
-
 export default Sidebar;

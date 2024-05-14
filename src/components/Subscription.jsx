@@ -54,7 +54,7 @@ const Subscription = () => {
         )}
       </div>
 
-      <div className="flex mt-[3rem]">
+      <div className="flex md:mt-[3rem] mt-1">
         {smallScreen ? (
           <div className="flex flex-wrap justify-center items-center ml-[-22px]">
             {subscriptionData.map((row, index) => (
@@ -111,7 +111,7 @@ const Subscription = () => {
               </div>
             ))}
 
-            <button className="md:w-[147px] md:h-[40px] md:flex items-center justify-center flex w-[110px] h-[30px] rounded-[6px] bg-lightWhite md:text-[14px] text-[10px] font-[500] md:leading-[16px] leading-[12px]">
+            <button className="mt-6 md:w-[147px] w-[95px] h-[20px] md:h-[40px] md:flex items-center justify-center flex w-[110px] h-[30px] rounded-[6px] bg-lightWhite md:text-[14px] text-[10px] font-[500] md:leading-[16px] leading-[12px]">
               Show More
             </button>
           </div>

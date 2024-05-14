@@ -36,24 +36,24 @@ const ProfileEdit = ({ closeDialog }) => {
       <div className="fixed inset-0 z-[999] flex items-center py-[8rem] justify-center bg-black bg-opacity-[40%]">
         <div className="bg-[#2E374B] rounded-lg md:w-[1084px] w-[378px] md:h-full h-[600px] overflow-auto p-8">
           <div className="flex items-center justify-between">
-            <h2 className="md:h-[52px] font-inter font-[700] md:text-[30px] text-[24px] md:leading-[51px] text-new">
+            <h2 className="md:h-[52px] font-inter font-[700] md:text-[30px] md:text-[24px] text-[18px] md:leading-[51px] text-new md:ml-0 ml-[-0.8rem]">
               Profile Edit
             </h2>
-            <button onClick={closeDialog}>
+            <button onClick={closeDialog} className="md:mr-0 mr-[-1.4rem]">
               <img
                 src={closeIcon}
                 alt="Close_Icon"
-                className="md:w-[35px] w-[50px] md:h-[35px] h-[50px]"
+                className="md:w-[35px] w-[40px] md:h-[35px] h-[40px]"
               />
             </button>
           </div>
-          <div className="flex flex-col mt-8 gap-2 md:flex hidden">
-            <span className="h-[23px] text-white text-[20px] font-inter font-[500] leading-[16px]">
+          <div className="flex flex-col mt-8 gap-2 md:ml-0 ml-[-1rem]">
+            <span className="h-[23px] text-white md:text-[20px] text-[18px] font-inter font-[500] leading-[16px]">
               Upload Profile Image
             </span>
             <label
               htmlFor="fileInput"
-              className="relative w-[482px] h-[142px] border-2 border-dotted border-[#ffffff] opacity-[50%] rounded-[10px] cursor-pointer"
+              className="relative md:w-[482px] w-[342px] h-[142px] border-2 border-dotted border-[#ffffff] opacity-[50%] rounded-[10px] cursor-pointer"
             >
               <input
                 id="fileInput"

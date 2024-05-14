@@ -74,7 +74,7 @@ const Setting = () => {
                   <span className="md:w-[331px] w-[152px] md:h-[67px] h-[31px] font-inter font-[700] md:text-[57px] text-[26px] md:leading-[66px] leading-[30px] text-gradient">
                     {expert.name}
                   </span>
-                  <span className="text-[#E4E4E7] opacity-[40%] font-inter font-[500] md:text-[17px] text-[12px] md:leading-[22px]">
+                  <span className="text-white font-inter font-[500] md:text-[17px] text-[12px] md:leading-[22px]">
                     {expert.title}
                   </span>
                 </div>
@@ -98,8 +98,42 @@ const Setting = () => {
                   </div>
                 </div>
 
-                <div className="flex md:flex-row flex-col mt-4 md:ml-0 ">
-                  <div className="absolute flex md:flex-row z-[9] flex-col md:gap-4 md:gap-2 justify-center md:items-center md:ml-0 ml-[-6px]">
+                <div className="flex md:flex-row flex-col md:gap-6 gap-0 justify-between md:pt-0 pt-[1rem]">
+                  <div className="flex flex-row items-center gap-2">
+                    <img
+                      src={mail}
+                      alt="Mail"
+                      className="md:w-[24px] w-[16px] md:h-[24px] h-[16px]"
+                    />
+                    <span className="text-white opacity-[50%] font-inter font-[500] md:text-[16px] text-[12px] leading-[28px]">
+                      Arunkumar@gmail.com
+                    </span>
+                  </div>
+                  <div className="flex flex-row items-center gap-2">
+                    <img
+                      src={phone}
+                      alt="Phone"
+                      className="md:w-[24px] w-[16px] md:h-[24px] h-[16px]"
+                    />
+                    <span className="text-white opacity-[50%] font-inter font-[500] md:text-[16px] text-[12px] leading-[28px]">
+                      9876545321
+                    </span>
+                  </div>
+                </div>
+
+                <div className="flex flex-row items-center gap-2 md:py-3 py-2">
+                  <img
+                    src={sebi}
+                    alt="SEDI_User"
+                    className="md:w-[24px] w-[16px] md:h-[24px] h-[16px]"
+                  />
+                  <span className="text-white opacity-[50%] font-[500] font-inter md:text-[16px] text-[12px] leading-[28px]">
+                    SEBI Registration Number
+                  </span>
+                </div>
+
+                <div className="flex md:flex-row flex-col md:ml-0 ">
+                  <div className="absolute flex md:flex-row z-[9] flex-col md:gap-4 justify-center md:items-center md:ml-0 ml-[-6px]">
                     <button className="md:w-[373px] w-[255px] md:h-[31px] h-[23px] flex items-center justify-center rounded-[21.5px] border-solid border-[1px] border-[#4e4e4ecc] mt-2 md:mt-0">
                       <button className="flex justify-center md:p-2 items-center gap-2">
                         <img
@@ -136,40 +170,8 @@ const Setting = () => {
                     </button>
                   </div>
                 </div>
-                <div className="flex md:flex-row flex-col justify-between md:mt-[3rem] md:pt-0 pt-[4rem]">
-                  <div className="flex flex-row items-center gap-2">
-                    <img
-                      src={mail}
-                      alt="Mail"
-                      className="md:w-[24px] w-[16px] md:h-[24px] h-[16px]"
-                    />
-                    <span className="text-white opacity-[50%] font-inter font-[500] md:text-[16px] text-[12px] leading-[28px]">
-                      Arunkumar@gmail.com
-                    </span>
-                  </div>
-                  <div className="flex flex-row items-center gap-2">
-                    <img
-                      src={phone}
-                      alt="Phone"
-                      className="md:w-[24px] w-[16px] md:h-[24px] h-[16px]"
-                    />
-                    <span className="text-white opacity-[50%] font-inter font-[500] md:text-[16px] text-[12px] leading-[28px]">
-                      9876545321
-                    </span>
-                  </div>
-                </div>
 
-                <div className="flex flex-row items-center gap-2 md:mt-2">
-                  <img
-                    src={sebi}
-                    alt="SEDI_User"
-                    className="md:w-[24px] w-[16px] md:h-[24px] h-[16px]"
-                  />
-                  <span className="text-white opacity-[50%] font-[500] font-inter md:text-[16px] text-[12px] leading-[28px]">
-                    SEBI Registration Number
-                  </span>
-                </div>
-                <span className="text-white opacity-[50%] font-[500] font-inter md:text-[20px] text-[18px] leading-[25px] md:mt-3 mt-2">
+                <span className="text-white opacity-[50%] font-[500] font-inter md:text-[20px] text-[14px] md:leading-[25px] md:mt-[3rem] mt-[5rem]">
                   Your Relationship Manager
                 </span>
 
@@ -254,7 +256,7 @@ const Setting = () => {
         ))}
       </div>
 
-      <div className="xl:w-[1520px] md:w-[1120px] md:h-[430px] w-[363px] h-full px-4 p-8 border-2 border-[#202F49] rounded-[30px] rounded-[30px] flex gap-4 flex-col mt-[4rem] md:ml-0 ml-[-0.5rem]">
+      <div className="xl:w-[1520px] md:w-[1120px] md:h-[430px] w-[363px] h-full px-4 p-8 border-2 border-[#202F49] rounded-[30px] rounded-[30px] flex gap-4 flex-col md:mt-[4rem] mt-[2rem] md:ml-0 ml-[-0.5rem]">
         <div className="flex flex-row items-center justify-between">
           <span className="text-white font-inter font-[600] text-[22px] leading-[26px]">
             About
@@ -265,15 +267,23 @@ const Setting = () => {
                 className="flex flex-row items-center gap-2 justify-center items-center w-[64px] md:h-[32px] h-[22px] rounded-[36px] bg-blue-600"
                 onClick={handleSaveClick}
               >
-                <button className="text-white md:text-[16px] text-[10px] md:leading-[26px] leading-[20px]">Save</button>
+                <button className="text-white md:text-[16px] text-[10px] md:leading-[26px] leading-[20px]">
+                  Save
+                </button>
               </button>
             ) : (
               <button
                 className="flex flex-row items-center md:w-[93px] w-[64px] md:h-[32px] h-[22px] rounded-[36px] border-solid border-[1px] border-white gap-2 justify-center items-center"
                 onClick={handleEditClick}
               >
-                <img src={edit} alt="Edit" className="md:w-[16px] w-[12px] h-[12px] md:h-[16px]" />
-                <button className="text-white md:text-[16px] text-[10px] md:leading-[26px] leading-[20px]">Edit</button>
+                <img
+                  src={edit}
+                  alt="Edit"
+                  className="md:w-[16px] w-[12px] h-[12px] md:h-[16px]"
+                />
+                <button className="text-white md:text-[16px] text-[10px] md:leading-[26px] leading-[20px]">
+                  Edit
+                </button>
               </button>
             )}
           </div>
@@ -287,19 +297,25 @@ const Setting = () => {
               style={{ height: "320px" }}
             />
           ) : (
-            <span className="md:text-[20px] md:leading-[26px] text-[14px] leading-[18px]">{aboutText}</span>
+            <span className="md:text-[20px] md:leading-[26px] text-[14px] leading-[18px]">
+              {aboutText}
+            </span>
           )}
         </div>
       </div>
 
-      <div className="xl:w-[1520px] md:w-[1120px] md:h-[352px] w-[360px] px-4 p-8 border-2 border-[#202F49] rounded-[30px] rounded-[30px] flex gap-4 flex-col mt-[4rem] md:ml-0 ml-[-0.5rem]">
+      <div className="xl:w-[1520px] md:w-[1120px] md:h-[352px] w-[360px] px-4 p-8 border-2 border-[#202F49] rounded-[30px] rounded-[30px] flex gap-4 flex-col md:mt-[4rem] mt-[2rem] md:ml-0 ml-[-0.5rem]">
         <div className="flex flex-row justify-between">
           <span className="text-white font-inter font-[600] text-[22px] leading-[26px]">
             Documents
           </span>
           <div className="md:w-[93px] w-[64px] md:h-[32px] h-[22px] rounded-[36px] border border-[#fffff] flex justify-center items-center">
             <button className="flex flex-row items-center gap-2 justify-center items-center">
-              <img src={edit} alt="Edit" className="md:w-[16px] w-[12px] h-[12px] md:h-[16px]" />
+              <img
+                src={edit}
+                alt="Edit"
+                className="md:w-[16px] w-[12px] h-[12px] md:h-[16px]"
+              />
               <span className="text-white md:text-[16px] text-[10px] md:leading-[26px] leading-[20px]">
                 Edit
               </span>
@@ -329,7 +345,7 @@ const Setting = () => {
         </label>
       </div>
 
-      <div className="xl:w-[1520px] md:w-[1120px] md:h-[397px] w-[360px] px-4 p-8 border-2 border-[#202F49] rounded-[30px] rounded-[30px] flex gap-4 flex-col mt-[4rem] md:ml-0 ml-[-0.5rem]">
+      <div className="xl:w-[1520px] md:w-[1120px] md:h-[397px] w-[360px] px-4 p-8 border-2 border-[#202F49] rounded-[30px] rounded-[30px] flex gap-4 flex-col md:mt-[4rem] mt-[2rem] md:ml-0 ml-[-0.5rem]">
         <div className="flex flex-row justify-between">
           <span className="text-white font-inter font-[600] md:text-[22px] text-[18px] leading-[21px] md:leading-[26px]">
             Bank Details

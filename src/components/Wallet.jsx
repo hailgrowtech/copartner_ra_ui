@@ -1,16 +1,26 @@
 import React, { useState, useEffect } from "react";
-import { filter, graph, graph1 } from "../assets";
+import { filter, notificationSlider } from "../assets";
 import { transcationData, withdrawalData } from "../constants";
 import WalletWithdrawal from "./WalletWithdrawal";
 import EarningAnalysis from "./EarningAnalysis";
 import UpiEditDialog from "./UpiEditDialog";
 import RejectUpiOpen from "./RejectUpiOpen";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
 const Wallet = () => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [showTransactions, setShowTransactions] = useState("transaction");
   const [isEditUpiOpen, setIsEditUpiOpen] = useState(false);
   const [smallScreen, setSmallScreen] = useState(false);
+  const [openFilter, setOpenFilter] = useState(false);
+  const [startDate, setStartDate] = useState(null);
+  const [endDate, setEndDate] = useState(null);
+
+  const handleOpenFilter = () => {
+    console.log("Open Filer Is Working");
+    setOpenFilter((cur) => !cur);
+  };
 
   useEffect(() => {
     const checkScreenSize = () => {
@@ -76,9 +86,93 @@ const Wallet = () => {
               <span className="text-white w-[210px] h-[27px] font-inter font-[600] text-[22px] leading-[27px]">
                 Transaction History
               </span>
-              <button className="border-solid border-[1px] border-white rounded-[8px] md:hidden block p-2 mr-2">
-                <img src={filter} alt="Filter" className="w-[20px] h-[20px]" />
-              </button>
+
+              <div className="relative md:mr-[-90px] ml-0 md:mb-[-4rem] mb-0">
+                <button
+                  onClick={handleOpenFilter}
+                  className="flex items-center justify-center w-[40px] h-[40px] rounded-[10px] border-solid border-[1px] border-white font-[600] font-inter text-[12px] md:mr-0 mr-[8px]"
+                >
+                  <img
+                    src={filter}
+                    alt="Filter"
+                    className="w-[20px] h-[20px]"
+                  />
+                </button>
+                {openFilter && (
+                  <div className="absolute top-full left-[-17rem] z-10 mt-2">
+                    <div className="w-[312px] h-[289px] bg-[#2E374B] rounded-lg overflow-auto p-4 flex flex-col items-center gap-4 overflow-hidden">
+                      <div className="w-[343px] flex items-center pl-[2rem]">
+                        <button
+                          className="text-white text-sm rounded hover:bg-gray-600"
+                          onClick={handleOpenFilter}
+                        >
+                          {/* Add button content here */}
+                        </button>
+                        <h2 className="text-white text-2xl">Filter</h2>
+                      </div>
+                      <div className="flex flex-col items-center gap-4">
+                        <div className="flex flex-row gap-2">
+                          <DatePicker
+                            selected={startDate}
+                            onChange={(date) => setStartDate(date)}
+                            selectsStart
+                            startDate={startDate}
+                            endDate={endDate}
+                            placeholderText="Start Date"
+                            className="w-[140px] p-2 rounded"
+                          />
+                          <DatePicker
+                            selected={endDate}
+                            onChange={(date) => setEndDate(date)}
+                            selectsEnd
+                            startDate={startDate}
+                            endDate={endDate}
+                            minDate={startDate}
+                            placeholderText="End Date"
+                            className="w-[140px] p-2 rounded"
+                          />
+                        </div>
+
+                        <div className="flex flex-col items-start mr-[10rem] gap-2">
+                          <h3 className="text-white text-lg">
+                            Filter By Price
+                          </h3>
+                          <label className="text-white">
+                            <input
+                              type="radio"
+                              name="priceFilter"
+                              value="lowToHigh"
+                              // checked={selectedPriceFilter === "lowToHigh"}
+                              // onChange={handleRadioChange}
+                              className="mr-2"
+                            />
+                            Low-To-High
+                          </label>
+                          <label className="text-white">
+                            <input
+                              type="radio"
+                              name="priceFilter"
+                              value="highToLow"
+                              // checked={selectedPriceFilter === "highToLow"}
+                              // onChange={handleRadioChange}
+                              className="mr-2"
+                            />
+                            High-To-Low
+                          </label>
+                        </div>
+                        <div className="flex gap-2">
+                          <button className="bg-white w-[147px] flex justify-center h-[40px] text-[14px] font-[500] text-black rounded-[10px] p-2">
+                            Apply
+                          </button>
+                          <button className="border-solid border-[1px] border-white text-white w-[147px] flex justify-center h-[40px] text-[14px] font-[500] text-black rounded-[10px] p-2">
+                            Clear
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
             </div>
             <div className="flex flex-row gap-4">
               <button
@@ -114,22 +208,37 @@ const Wallet = () => {
             </div>
           </div>
 
-          <div className="relative mr-[6rem]">
-            <button className="flex items-center justify-center w-[100px] h-[40px] rounded-[10px] border text-white font-[600] font-inter text-[12px] ml-[-12px] md:flex hidden">
-              <img
-                src={filter}
-                alt="Filter-Icon"
-                className="w-[20px] h-[20px] mr-2"
-              />
-              Filter
+          {/* <div className="relative">
+            <button
+              onClick={handleOpenFilter}
+              className="flex items-center justify-center w-[100px] h-[40px] rounded-[10px] border text-white font-[600] font-inter text-[12px] ml-[-12px]"
+            >
+              <img src={filter} alt="Filter" className="w-[20px] h-[20px]" />
             </button>
-          </div>
+            {openFilter && (
+              <div className="absolute top-full left-[-14rem] z-10 mt-2">
+                <div className="w-[312px] h-[409px] bg-[#2E374B] rounded-lg overflow-auto p-4 flex flex-col items-center gap-4">
+                  <div className="w-[343px] flex items-center pl-[2rem]">
+                    <button
+                      className="text-white text-sm rounded hover:bg-gray-600"
+                      onClick={handleOpenFilter}
+                    ></button>
+                    <h2 className="text-white text-2xl">Filter</h2>
+                  </div>
+
+                  <button className="bg-white w-[147px] flex justify-center h-[40px] text-black rounded-[10px] p-2">
+                    Apply
+                  </button>
+                </div>
+              </div>
+            )}
+          </div> */}
         </div>
 
         {showTransactions === "transaction" && (
           <>
             {smallScreen ? (
-              <div className="flex flex-col flex-wrap justify-center items-center">
+              <div className="flex flex-col pl-[5rem] flex-wrap justify-center items-center">
                 {transcationData.slice(0, 5).map((row, index) => (
                   <div
                     key={index}
@@ -226,7 +335,7 @@ const Wallet = () => {
         {showTransactions === "withdrawal" && (
           <>
             {smallScreen ? (
-              <div className="flex flex-col flex-wrap justify-center items-center">
+              <div className="flex flex-col pl-[5rem] flex-wrap justify-center items-center">
                 {withdrawalData.slice(0, 5).map((row, index) => (
                   <div
                     key={index}
@@ -316,7 +425,7 @@ const Wallet = () => {
         {showTransactions === "request" && (
           <>
             {smallScreen ? (
-              <div className="flex flex-col flex-wrap justify-center items-center">
+              <div className="flex flex-col pl-[5rem] flex-wrap justify-center items-center">
                 {withdrawalData.slice(0, 5).map((row, index) => (
                   <div
                     key={index}
@@ -336,7 +445,10 @@ const Wallet = () => {
                         {row.status === "Pending" ? (
                           <div>{row.status}</div>
                         ) : (
-                          <button className="text-[16px]" onClick={openEditUpiDialog}>
+                          <button
+                            className="text-[16px]"
+                            onClick={openEditUpiDialog}
+                          >
                             {row.status}
                           </button>
                         )}

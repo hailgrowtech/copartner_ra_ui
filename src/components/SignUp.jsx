@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { closeIcon, signup } from "../assets";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+// import Forgot from "./Forgot";
 
 const SignUp = ({ setIsSignedUp }) => {
   const [mobile, setMobile] = useState("");
@@ -44,7 +45,7 @@ const SignUp = ({ setIsSignedUp }) => {
       <div
         className={`fixed inset-0 flex items-center justify-center bg-black bg-opacity-10 z-50 w-screen h-screen`}
       >
-        <div className="bg-[#18181B] border-[1px] border-[#ffffff2a] m-4 p-6 rounded-lg w-96 relative text-center">
+        <div className="w-[342px] h-[349px] bg-[#18181B] border-[1px] border-[#ffffff2a] m-4 p-6 rounded-lg w-96 relative text-center">
           <div className="absolute top-3 right-0 text-right">
             <button
               onClick={() => {
@@ -53,7 +54,7 @@ const SignUp = ({ setIsSignedUp }) => {
               }}
               className="text-gray-400 w-8 text-[20px] cursor-pointer hover:text-white"
             >
-              <img src={closeIcon} alt="close" />
+              <img src={closeIcon} className="w-[32px] h-[32px] absolute top-2 right-6" alt="close" />
             </button>
           </div>
           <div className="mb-4">
