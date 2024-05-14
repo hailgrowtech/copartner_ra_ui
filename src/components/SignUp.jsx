@@ -45,7 +45,7 @@ const SignUp = ({ setIsSignedUp }) => {
       <div
         className={`fixed inset-0 flex items-center justify-center bg-black bg-opacity-10 z-50 w-screen h-screen`}
       >
-        <div className="w-[342px] h-[349px] bg-[#18181B] border-[1px] border-[#ffffff2a] m-4 p-6 rounded-lg w-96 relative text-center">
+        <div className="w-[342px] h-[389px] bg-[#18181B] border-[1px] border-[#ffffff2a] m-4 p-6 rounded-lg w-96 relative text-center">
           <div className="absolute top-3 right-0 text-right">
             <button
               onClick={() => {
@@ -80,9 +80,11 @@ const SignUp = ({ setIsSignedUp }) => {
                 className="bg-[#06030E] rounded-[10px] border border-[#18181B] w-full h-full text-white font-[400] text-[14px] p-2"
               />
             </div>
-            <button className="w-full text-[#0081F1] text-right">
+            <Link to='/reset'>
+            <button className="w-full text-[14px] text-[#0081F1] text-right">
               Forget Password?
             </button>
+            </Link>
             <button
               onClick={handleContinue}
               className="w-full h-[50px] bg-white font-[500] text-[16px] leading-[20px] text-center rounded-[10px]"
