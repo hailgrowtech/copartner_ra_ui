@@ -41,6 +41,8 @@ import phonepe from './phonepe.png';
 import arrowRight from './arrowRight.png';
 import menu from './menu.png';
 import signup from './signUpBck.png';
+import notificationSlider from './notificationslide.png';
+import customDrop from './customDown.png';
 
 export {
     availableIcon,
@@ -80,4 +82,6 @@ export {
     paytm, googlepay, phonepe,
     arrowRight,
     menu, signup,
+    notificationSlider,
+    customDrop,
 }

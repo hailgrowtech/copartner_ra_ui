@@ -45,22 +45,22 @@ const WalletWithdrawal = ({ closeDialog }) => {
       <div className="fixed inset-0 z-[999] flex items-center py-[8rem] justify-center bg-black bg-opacity-[40%]">
         <div className="bg-[#2E374B] rounded-lg md:w-[1084px] xl:h-[550px] md:h-full w-[378px] h-[600px] overflow-auto p-8">
           <div className="flex items-center justify-between">
-            <h2 className="md:h-[52px] font-inter font-[700] md:text-[30px] text-[24px] md:leading-[51px] text-new">
+            <h2 className="md:h-[52px] font-inter font-[700] md:text-[30px] text-[18px] md:leading-[51px] text-new md:ml-0 ml-[-0.8rem]">
               Withdrawal
             </h2>
-            <button onClick={closeDialog}>
+            <button onClick={closeDialog} className="md:mr-0 mr-[-1.4rem]">
               <img
                 src={closeIcon}
                 alt="Close_Icon"
-                className="md:w-[35px] w-[50px] md:h-[35px] h-[50px]"
+                className="md:w-[35px] w-[40px] md:h-[35px] h-[40px]"
               />
             </button>
           </div>
-          <div className="flex flex-row items-center mt-6 justify-between">
-            <span className="md:w-[184px] md:h-[23px] text-white md:text-[20px] text-[16px] font-inter font-[500] leading-[16px]">
+          <div className="flex flex-row items-center mt-4 justify-between">
+            <span className="md:w-[184px] md:h-[23px] text-white md:text-[20px] text-[16px] font-inter font-[500] leading-[16px] md:ml-0 ml-[-0.8rem]">
               Select Your Bank
             </span>
-            <button onClick={openAddBank} className="md:w-[100px] w-[90px] border-solid border-[1px] border-white md:h-[40px] h-[30px] rounded-[10px] border text-white font-[600] font-inter md:text-[12px] text-[10px]">
+            <button onClick={openAddBank} className="md:w-[100px] w-[90px] border-solid border-[1px] border-white md:h-[40px] h-[30px] rounded-[10px] border text-white font-[600] font-inter md:text-[12px] text-[10px] md:mr-0 mr-[-0.8rem]">
               +Add Bank
             </button>
             {isAddBankOpen && (
@@ -68,12 +68,12 @@ const WalletWithdrawal = ({ closeDialog }) => {
           )}
           </div>
 
-          <div className="flex md:flex-row flex-col md:gap-0 gap-2 items-center mt-6 justify-between">
+          <div className="flex md:flex-row flex-col md:gap-0 gap-2 items-center mt-4 justify-between">
             {withdrawalBank.map((wallet) => {
               return (
                 <div
                   key={wallet.id}
-                  className={`w-[310px] h-[76px] rounded-[16px] border border-[#40495C] p-2 ${selectedBank === wallet.id ? 'bg-[#282F3E]' : 'bg-transparent'}`}
+                  className={`md:w-[310px] w-[344px] h-[76px] rounded-[16px] border border-[#40495C] p-2 ${selectedBank === wallet.id ? 'bg-[#282F3E]' : 'bg-transparent'}`}
                   onClick={() => handleBankClick(wallet.id)}
                 >
                   <div className="flex flex-row items-center gap-2">
@@ -92,11 +92,11 @@ const WalletWithdrawal = ({ closeDialog }) => {
             })}
           </div>
 
-          <div className="flex flex-row items-center mt-6 justify-between">
-            <span className="md:w-[184px] md:h-[23px] text-white md:text-[20px] text-[16px] font-inter font-[500] leading-[16px]">
+          <div className="flex flex-row items-center mt-4 justify-between">
+            <span className="md:w-[184px] md:h-[23px] text-white md:text-[20px] text-[16px] font-inter font-[500] leading-[16px] md:ml-0 ml-[-0.8rem]">
               Select Your UPI ID
             </span>
-            <button onClick={openUpiBank} className="md:w-[100px] w-[90px] border-solid border-[1px] border-white md:h-[40px] h-[30px] rounded-[10px] border text-white font-[600] font-inter md:text-[12px] text-[10px]">
+            <button onClick={openUpiBank} className="md:w-[100px] w-[90px] border-solid border-[1px] border-white md:h-[40px] h-[30px] rounded-[10px] border text-white font-[600] font-inter md:text-[12px] text-[10px] md:mr-0 mr-[-0.8rem]">
               +Add UPI ID
             </button>
             {isUpiOpen && (
@@ -109,7 +109,7 @@ const WalletWithdrawal = ({ closeDialog }) => {
               return (
                 <div
                   key={wallet.id}
-                  className={`w-[310px] h-[40px] rounded-[8px] border border-[#40495C] ${selectedBank === wallet.id ? 'bg-[#282F3E]' : 'bg-transparent'}`}
+                  className={`md:w-[310px] w-[344px] h-[40px] rounded-[8px] border border-[#40495C] ${selectedBank === wallet.id ? 'bg-[#282F3E]' : 'bg-transparent'}`}
                   onClick={() => handleBankClick(wallet.id)}
                 >
                   <div className="flex flex-row items-center gap-2 p-1">
@@ -123,14 +123,14 @@ const WalletWithdrawal = ({ closeDialog }) => {
             })}
           </div>
 
-          <div className="md:h-[50px] flex md:flex-row flex-col md:justify-center md:items-center mt-6">
-            <span className="w-[82px] h-[27px] font-[500] text-[18px] leading-[27px] text-white">
+          <div className="md:h-[50px] flex md:flex-row flex-col md:gap-2 gap-0 md:justify-center md:items-center mt-4">
+            <span className="font-[500] text-[18px] leading-[27px] text-white">
               Amount:
             </span>
             <input
               type="number"
               id="wallet_withdrawal"
-              className="md:w-[287px] h-[50px] border border-[#40495C] bg-[#282F3E] rounded-[16px] text-white px-2"
+              className="md:w-[287px] w-[344px] h-[50px] border border-[#40495C] bg-[#282F3E] rounded-[16px] text-white px-2  md:ml-0 ml-[-0.8rem]"
               placeholder="Your Withdrawal Balance: 3000"
             />
           </div>
