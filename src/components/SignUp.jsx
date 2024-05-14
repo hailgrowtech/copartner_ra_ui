@@ -3,7 +3,7 @@ import { closeIcon, signup } from "../assets";
 import { Link, useNavigate } from "react-router-dom";
 // import Forgot from "./Forgot";
 
-const SignUp = ({setIsSignedUp}) => {
+const SignUp = ({ setIsSignedUp }) => {
   const [mobile, setMobile] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false); // Added loading state
@@ -27,19 +27,19 @@ const SignUp = ({setIsSignedUp}) => {
   };
 
   const handleContinue = () => {
-    console.log('Triggered Done...')
-    setIsSignedUp(true)
-  }
+    console.log("Triggered Done...");
+    setIsSignedUp(true);
+  };
 
   return (
     <>
       <div
-        className="h-screen w-screen ml-[-7rem]"
+        className="h-screen w-screen md:ml-[-7rem]"
         style={{
           backgroundImage: `url(${signup})`,
           backgroundSize: "cover",
           backgroundPosition: "center",
-          backgroundRepeat: 'no-repeat'
+          backgroundRepeat: "no-repeat",
         }}
       ></div>
       <div
@@ -58,32 +58,38 @@ const SignUp = ({setIsSignedUp}) => {
             </button>
           </div>
           <div className="mb-4">
-            <h2 className="text-[24px] font-[500] leading-[29px] text-white">Login</h2>
+            <h2 className="text-2xl font-semibold text-white">Login</h2>
           </div>
           <p className="text-gray-300 text-center mb-4">
-          Full access to in any of our products Full access to in any of.
+            Get access to daily free calls from varieties of India's SEBI
+            Registered Research Analysts.
           </p>
           {error && <p className="text-red-500 mb-4">{error}</p>}
-          <div className="w-[342px] h-[200px] flex flex-col gap-4">
-          <div className="w-[290px] h-[50px]">
-            <input
-              type="text"
-              placeholder="Enter Your Mail ID"
-              className="bg-[#06030E] rounded-[10px] border border-[#18181B] w-full h-full text-white font-[400] text-[14px] p-2"
-            />
+          <div className="w-full flex gap-2 flex-col justify-between">
+            <div className="w-full mx-auto h-[50px]">
+              <input
+                type="text"
+                placeholder="Enter your Mail ID"
+                className="bg-[#06030E] rounded-[10px] border border-[#18181B] w-full h-full text-white font-[400] text-[14px] p-2"
+              />
+            </div>
+            <div className="w-full mx-auto h-[50px]">
+              <input
+                type="text"
+                placeholder="Enter your Password"
+                className="bg-[#06030E] rounded-[10px] border border-[#18181B] w-full h-full text-white font-[400] text-[14px] p-2"
+              />
+            </div>
+            <button className="w-full text-[#0081F1] text-right">
+              Forget Password?
+            </button>
+            <button
+              onClick={handleContinue}
+              className="w-full h-[50px] bg-white font-[500] text-[16px] leading-[20px] text-center rounded-[10px]"
+            >
+              Continue
+            </button>
           </div>
-          <div className="w-[290px] h-[50px]">
-            <input
-              type="text"
-              placeholder="Enter Your Password"
-              className="bg-[#06030E] rounded-[10px] border border-[#18181B] w-full h-full text-white font-[400] text-[14px] p-2"
-            />
-          </div>
-
-          <button onClick={handleContinue} className="w-[290px] h-[50px] bg-white font-[500] text-[16px] leading-[20px] text-center rounded-[10px]">
-            Login
-          </button>
-        </div>
         </div>
       </div>
     </>
