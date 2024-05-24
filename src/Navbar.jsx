@@ -2,12 +2,24 @@ import React, { useState, useEffect } from "react";
 import styles from "./style";
 import { searchIcon, notificationSlider, notification, dummyUser, menu } from "./assets";
 import { Link } from "react-router-dom";
+import axios from "axios";
 
 const Navbar = ({ activeTab, toggleSidebar }) => {
   const [showTab, setShowTab] = useState("copartner");
   const [isScrolled, setIsScrolled] = useState(false);
   const [isSmallScreen, setIsSmallScreen] = useState(window.innerWidth < 768);
   const [openNotification, setOpenNotification] = useState(false);
+
+  const [myCard, setMyCard] = useState(null);
+
+  const stackholderId = sessionStorage.getItem('stackholderId')
+
+  useEffect(() => {
+    axios.get(`https://copartners.in:5132/api/Experts/${stackholderId}`)
+    .then((res) => {
+      setMyCard(res.data.data);
+    })
+  }, [])
 
   const handleOpenNotification = () => setOpenNotification((cur) => !cur);
 
@@ -218,9 +230,9 @@ const Navbar = ({ activeTab, toggleSidebar }) => {
 
               <Link to="/setting">
                 <img
-                  src={dummyUser}
+                  src={myCard && myCard.expertImagePath}
                   alt="LoginUser"
-                  className="w-[50px] h-[50px] rounded-full"
+                  className="bg-black flex items-center justify-center w-[50px] h-[50px] rounded-full"
                 />
               </Link>
             </div>

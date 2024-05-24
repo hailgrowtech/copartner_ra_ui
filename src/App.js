@@ -2,18 +2,19 @@ import React, { useState, useEffect } from "react";
 import styles from "./style";
 import Navbar from "./Navbar";
 import Sidebar from "./Sidebar";
-import { Routes, Route, useLocation } from "react-router-dom";
+import { Routes, Route, useLocation, Navigate } from "react-router-dom";
 import { Dashboard, Subscription, Wallet, Setting } from "./components";
 import SignUp from "./components/SignUp";
 import ForgetPassword from "./components/ForgetPassword";
 import ErrorPage from "./components/ErrorPage";
+import { ToastContainer } from "react-toastify";
 
 function App() {
   const [isSmallScreen, setIsSmallScreen] = useState(window.innerWidth < 768);
   const [activeTab, setActiveTab] = useState("dashboard");
   const [showSidebar, setShowSidebar] = useState(!isSmallScreen);
   const location = useLocation();
-  const [isSignedUp, setIsSignedUp] = useState(false);
+  const signUp = sessionStorage.getItem('visitedSignUp');
 
   const isSignUpPage = location.pathname === "/signup";
   const isResetPage = location.pathname === "/reset";
@@ -59,8 +60,9 @@ function App() {
             <Routes>
               <Route
                 path="/"
-                errorElement={<ErrorPage />}
-                element={<Dashboard />}
+                element={
+                  signUp ? <Dashboard /> : <Navigate to="/signup" replace={true} />
+                }
               />
               <Route path="/subscription" element={<Subscription />} />
               <Route path="/wallet" element={<Wallet />} />
@@ -69,11 +71,11 @@ function App() {
             <Routes>
               <Route
                 path="/signup"
-                element={<SignUp setIsSignedUp={setIsSignedUp} />}
+                element={<SignUp setIsSignedUp={() => sessionStorage.setItem('visitedSignUp', 'true')} />}
               />
               <Route
                 path="/reset"
-                element={<ForgetPassword setIsSignedUp={setIsSignedUp} />}
+                element={<ForgetPassword />}
               />
             </Routes>
           </>

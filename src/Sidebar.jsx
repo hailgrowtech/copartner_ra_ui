@@ -1,15 +1,22 @@
 import React, { useState, useEffect } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { sideBar } from "./constants";
-import { closeIcon, logo, menu } from "./assets";
+import { closeIcon, logo } from "./assets";
+
 const Sidebar = ({ activeTab, setActiveTab, setShowSidebar }) => {
   const location = useLocation();
+  const navigate = useNavigate();
 
   const scrollToTop = () => {
     window.scrollTo({
       top: 0,
       behavior: "smooth",
     });
+  };
+
+  const handleLogout = () => {
+    sessionStorage.clear();
+    navigate('/signup');
   };
 
   useEffect(() => {
@@ -24,7 +31,8 @@ const Sidebar = ({ activeTab, setActiveTab, setShowSidebar }) => {
     } else {
       setActiveTab(null);
     }
-  }, [location]);
+  }, [location, setActiveTab]);
+
   const handleClose = () => {
     setShowSidebar(false);
     setActiveTab("");
@@ -71,7 +79,7 @@ const Sidebar = ({ activeTab, setActiveTab, setShowSidebar }) => {
             onClick={() => {
               scrollToTop();
               setActiveTab(side.title);
-              handleSidebarTabClick(); // Close sidebar on mobile
+              handleSidebarTabClick();
             }}
             className={`flex w-[260px] h-[74px] rounded-[16px] text-white flex-row cursor-pointer ${
               window.innerWidth >= 768 ? "md:ml-[-4rem] xl:ml-[-4rem]" : ""
@@ -97,10 +105,14 @@ const Sidebar = ({ activeTab, setActiveTab, setShowSidebar }) => {
           </Link>
         ))}
       </div>
-      <button className="w-[110px] h-[30px] text-[14px] bg-white text-black rounded-[5px] mt-[4rem]">
+      <button
+        onClick={handleLogout}
+        className="w-[110px] h-[30px] text-[14px] bg-white text-black rounded-[5px] mt-[4rem]"
+      >
         Logout
       </button>
     </div>
   );
 };
+
 export default Sidebar;

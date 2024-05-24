@@ -43,6 +43,12 @@ import menu from './menu.png';
 import signup from './signUpBck.png';
 import notificationSlider from './notificationslide.png';
 import customDrop from './customDown.png';
+import tick from './tick.png';
+import location1 from './location1.png';
+import location from './loction.png';
+import clipboard from './Clipboard.png';
+import pancard from './PanCard.png';
+import card from './Card.png';
 
 export {
     availableIcon,
@@ -84,4 +90,9 @@ export {
     menu, signup,
     notificationSlider,
     customDrop,
+    tick,
+    clipboard,
+    location,
+    location1,
+    pancard, card,
 }

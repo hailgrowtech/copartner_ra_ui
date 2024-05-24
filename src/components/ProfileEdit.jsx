@@ -1,15 +1,133 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { closeIcon, dropdown, arrowRight } from "../assets";
+import axios from "axios";
 
-const ProfileEdit = ({ closeDialog }) => {
-  const [subscriptionType, setSubscriptionType] = useState("Select");
-  const [experienceType, setExperienceType] = useState("Total Experience");
-
+const ProfileEdit = ({ closeDialog, stackholderId, myCard, fetchDetails }) => {
+  const [expertTypeId, setexpertTypeId] = useState("");
+  const [experienceType, setExperienceType] = useState("");
   const [isSubscriptionOpen, setIsSubscriptionOpen] = useState(false);
   const [isExperienceOpen, setIsExperienceOpen] = useState(false);
 
+  const [name, setName] = useState("");
+  const [mobileNumber, setMobileNumber] = useState("");
+  const [email, setEmail] = useState("");
+  const [freeTelegramLink, setFreeTelegramLink] = useState("");
+  const [membersInTelegram, setMembersInTelegram] = useState("");
+  const [chatId, setChatId] = useState("");
+  const [premiumTelegramLink, setPremiumTelegramLink] = useState("");
+  const [imagePath, setImagePath] = useState("");
+  const [sebiRegNo, setSebiRegNo] = useState("");
+  const [error, setError] = useState(null);
+  const [success, setSuccess] = useState(null);
+
+  const [originalData, setOriginalData] = useState({});
+
+  const expertTypeOptions = {
+    Option: 1,
+    Commodity: 2,
+    Equity: 3,
+  };
+
+  const experienceOptions = {
+    "1+ Year": 1,
+    "2+ Years": 2,
+    "3+ Years": 3,
+    "4+ Years": 4,
+    "5+ Years": 5,
+  };
+
+  useEffect(() => {
+    if (myCard) {
+      setName(myCard.name);
+      setMobileNumber(myCard.mobileNumber);
+      setEmail(myCard.email);
+      setFreeTelegramLink(myCard.telegramChannel);
+      setMembersInTelegram(myCard.telegramFollower);
+      setChatId(myCard.chatId);
+      setPremiumTelegramLink(myCard.premiumTelegramChannel);
+      setImagePath(myCard.expertImagePath);
+      setSebiRegNo(myCard.sebiRegNo);
+      setexpertTypeId(myCard.expertTypeId);
+  
+      // Ensure proper handling of experienceType
+      const experienceTypeValue = myCard.experienceType !== null && myCard.experienceType !== undefined ? myCard.experienceType : "";
+      setExperienceType(experienceTypeValue);
+  
+      console.log("myCard.expertTypeId:", myCard.expertTypeId);
+      console.log("myCard.experienceType:", myCard.experienceType);
+  
+      setOriginalData({
+        name: myCard.name,
+        mobileNumber: myCard.mobileNumber,
+        email: myCard.email,
+        freeTelegramLink: myCard.telegramChannel,
+        membersInTelegram: myCard.telegramFollower,
+        chatId: myCard.chatId,
+        premiumTelegramLink: myCard.premiumTelegramChannel,
+        imagePath: myCard.expertImagePath,
+        sebiRegNo: myCard.sebiRegNo,
+        expertTypeId: myCard.expertTypeId,
+        experienceType: experienceTypeValue,
+      });
+    }
+  }, [myCard]);
+
+  const generatePatchOperations = (original, updated) => {
+    const operations = [];
+
+    for (const key in updated) {
+      if (original[key] !== updated[key]) {
+        operations.push({
+          path: `${key}`,
+          op: "replace",
+          value: updated[key],
+        });
+      }
+    }
+
+    return operations;
+  };
+
+  const handleChange = async () => {
+    const EDIT_PROFILE = `https://copartners.in:5132/api/Experts/${stackholderId}`;
+
+    const updatedData = {
+      name: name,
+      mobileNumber,
+      email,
+      freeTelegramLink,
+      membersInTelegram,
+      chatId,
+      premiumTelegramLink,
+      imagePath,
+      sebiRegNo,
+      expertTypeId: expertTypeOptions[expertTypeId],
+      experienceType: experienceOptions[experienceType],
+    };
+
+    const patchOperations = generatePatchOperations(originalData, updatedData);
+    console.log(patchOperations);
+
+    try {
+      const response = await axios.patch(`https://copartners.in:5132/api/Experts/${stackholderId}`, patchOperations, {
+        headers: {
+          "Content-Type": "application/json-patch+json",
+        },
+      });
+      console.log(response.data, "Editing Profile Info");
+      setSuccess("Profile updated successfully!");
+      fetchDetails();
+      setError(null);
+      setOriginalData(updatedData); // Update original data with the new data
+    } catch (error) {
+      console.error(error);
+      setError("An error occurred while updating the profile.");
+      setSuccess(null);
+    }
+  };
+
   const handleSubClick = (option) => {
-    setSubscriptionType(option);
+    setexpertTypeId(option);
     setIsSubscriptionOpen(false);
   };
 
@@ -64,6 +182,17 @@ const ProfileEdit = ({ closeDialog }) => {
                 Select
               </span>
             </label>
+
+            {imagePath && (
+              <div className="mt-4">
+                <img
+                  src={imagePath}
+
+                  alt="Profile Preview"
+                  className="w-[100px] h-[100px] rounded-full object-cover"
+                />
+              </div>
+            )}
           </div>
 
           <div className="flex md:flex-row flex-col md:justify-between md:mt-8 mt-4 md:ml-0 ml-[-16px] md:gap-0 gap-4">
@@ -76,10 +205,12 @@ const ProfileEdit = ({ closeDialog }) => {
                   Name
                 </label>
                 <input
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
                   onClick={closeSubscriptionDropdown}
                   type="text"
                   id="default-input"
-                  placeholder="Arun Kumar"
+                  placeholder="Name"
                   className="md:w-[482px] w-[345px] px-4 py-2 rounded-md text-white border border-[#40495C] bg-[#282F3E]"
                 />
               </div>
@@ -93,6 +224,8 @@ const ProfileEdit = ({ closeDialog }) => {
                   Mobile Number
                 </label>
                 <input
+                  value={mobileNumber}
+                  onChange={(e) => setMobileNumber(e.target.value)}
                   onClick={closeSubscriptionDropdown}
                   type="number"
                   id="default-input"
@@ -113,6 +246,8 @@ const ProfileEdit = ({ closeDialog }) => {
                   MAIL ID
                 </label>
                 <input
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
                   onClick={closeSubscriptionDropdown}
                   type="email"
                   id="default-input"
@@ -123,7 +258,7 @@ const ProfileEdit = ({ closeDialog }) => {
             </div>
             <div className="relative">
               <label
-                htmlFor="subscriptionType"
+                htmlFor="expertTypeId"
                 className="flex items-center justify-center bg-[#282F3E] text-white opacity-[50%]
                     md:w-[110px] w-[90px] md:h-[26px] h-[25px] rounded-[8px] font-[400] md:text-[14px] text-[13px] md:leading-[16px] leading-[15px] text-center"
               >
@@ -132,8 +267,9 @@ const ProfileEdit = ({ closeDialog }) => {
               <div className="relative">
                 <div className="relative">
                   <input
-                    id="subscriptionType"
-                    value={subscriptionType}
+                    id="expertTypeId"
+                    value={expertTypeId}
+                    onChange={(e) => setexpertTypeId(e.target.value)}
                     readOnly
                     onClick={toggleSubscriptionDropdown}
                     className="md:w-[482px] w-[345px] px-4 py-2 rounded-md text-white border border-[#40495C] bg-[#282F3E]"
@@ -175,7 +311,7 @@ const ProfileEdit = ({ closeDialog }) => {
           <div className="flex md:flex-row flex-col md:justify-between md:mt-8 mt-4 md:ml-0 ml-[-16px] md:gap-0 gap-4">
             <div className="relative">
               <label
-                htmlFor="subscriptionType"
+                htmlFor="expertTypeId"
                 className="flex items-center justify-center bg-[#282F3E] text-white opacity-[50%]
                     md:w-[100px] w-[80px] h-[26px] rounded-[8px] font-[400] md:text-[14px] text-[13px] md:leading-[16px] leading-[15px] text-center"
               >
@@ -186,6 +322,7 @@ const ProfileEdit = ({ closeDialog }) => {
                   <input
                     id="experienceType"
                     value={experienceType}
+                    onChange={(e) => setExperienceType(e.target.value)}
                     readOnly
                     onClick={toggleExpDropdown}
                     className="md:w-[482px] w-[345px] px-4 py-2 rounded-md text-white border border-[#40495C] bg-[#282F3E]"
@@ -203,31 +340,31 @@ const ProfileEdit = ({ closeDialog }) => {
                         onClick={() => handleExpClick("1+ Year")}
                         className="cursor-pointer px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                       >
-                        1+ Year
+                        1
                       </li>
                       <li
                         onClick={() => handleExpClick("2+ Years")}
                         className="cursor-pointer px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                       >
-                        2+ Year
+                        2
                       </li>
                       <li
                         onClick={() => handleExpClick("3+ Years")}
                         className="cursor-pointer px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                       >
-                        3+ Year
+                        3
                       </li>
                       <li
-                        onClick={() => handleExpClick("3+ Years")}
+                        onClick={() => handleExpClick("4+ Years")}
                         className="cursor-pointer px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                       >
-                        4+ Year
+                        4
                       </li>
                       <li
-                        onClick={() => handleExpClick("3+ Years")}
+                        onClick={() => handleExpClick("5+ Years")}
                         className="cursor-pointer px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                       >
-                        5+ Year
+                        5
                       </li>
                     </ul>
                   </div>
@@ -243,10 +380,12 @@ const ProfileEdit = ({ closeDialog }) => {
                   Free Telegram Channel Link
                 </label>
                 <input
+                  value={freeTelegramLink}
+                  onChange={(e) => setFreeTelegramLink(e.target.value)}
                   onClick={closeSubscriptionDropdown}
                   type="link"
                   id="default-input"
-                  placeholder="Enter your Mail ID"
+                  placeholder="Telegram Channel Link"
                   className="md:w-[482px] w-[345px] px-4 py-2 rounded-md text-white border border-[#40495C] bg-[#282F3E]"
                 />
               </div>
@@ -263,6 +402,8 @@ const ProfileEdit = ({ closeDialog }) => {
                   Members In Telegram Channel
                 </label>
                 <input
+                  value={membersInTelegram}
+                  onChange={(e) => setMembersInTelegram(e.target.value)}
                   onClick={closeSubscriptionDropdown}
                   type="text"
                   id="default-input"
@@ -280,6 +421,8 @@ const ProfileEdit = ({ closeDialog }) => {
                   SEBI Registration Number
                 </label>
                 <input
+                  value={sebiRegNo}
+                  onChange={(e) => setSebiRegNo(e.target.value)}
                   onClick={closeSubscriptionDropdown}
                   type="number"
                   id="default-input"
@@ -290,36 +433,64 @@ const ProfileEdit = ({ closeDialog }) => {
             </div>
           </div>
 
-          <div className="relative md:ml-0 ml-[-16px] md:mt-8 mt-4">
+          <div className="flex md:flex-row flex-col justify-between md:mt-8 mt-4 md:ml-0 ml-[-16px] md:gap-0 gap-4">
+            <div className="relative">
               <div className="mb-0">
                 <label
                   className="flex items-center justify-center bg-[#282F3E] text-white opacity-[50%]
-                  md:w-[232px] w-[210px] md:h-[26px] h-[25px] rounded-[8px] font-[400] md:text-[14px] text-[13px] md:leading-[16px] leading-[15px] text-center"
+                  md:w-[235px] w-[210px] md:h-[26px] h-[25px] rounded-[8px] font-[400] md:text-[14px] text-[13px] md:leading-[16px] leading-[15px] text-center"
                 >
                   Premium Telegram Channel Link
                 </label>
                 <input
+                  value={premiumTelegramLink}
+                  onChange={(e) => setPremiumTelegramLink(e.target.value)}
                   type="link"
                   id="default-input"
                   placeholder="Paste Link"
-                  className="md:w-[1012px] w-[345px] py-2 px-4 rounded-md text-white border border-[#40495C] bg-[#282F3E]"
+                  className="md:w-[482px] w-[345px] py-2 px-4 rounded-md text-white border border-[#40495C] bg-[#282F3E]"
                 />
               </div>
             </div>
-          <div className="flex justify-center items-center mt-6">
-            <button className="bg-white rounded-[10px] text-[14px] w-[147px] h-[40px]">
-              Change
-            </button>
+            <div className="relative">
+              <div className="mb-0">
+                <label
+                  className="flex items-center justify-center bg-[#282F3E] text-white opacity-[50%]
+                  md:w-[80px] w-[80px] h-[26px] rounded-[8px] font-[400] text-[14px] md:text-[14px] text-[13px] md:leading-[16px] leading-[15px] text-center"
+                >
+                  Chat ID
+                </label>
+                <input
+                  value={chatId}
+                  onChange={(e) => setChatId(e.target.value)}
+                  onClick={closeSubscriptionDropdown}
+                  type="number"
+                  id="default-input"
+                  placeholder="Enter ChatID"
+                  className="md:w-[482px] w-[345px] px-4 py-2 rounded-md text-white border border-[#40495C] bg-[#282F3E]"
+                />
+              </div>
+            </div>
           </div>
 
-          {/* <div className="flex justify-center items-center mt-6 gap-4">
-            <button className="text-white opacity-[50%] font-inter font-[400] text-[14px] leading-[26px]">
-            Know More About Copartner Process
+          {error && <div className="mt-4 text-red-500">{error}</div>}
+
+          {success && <div className="mt-4 text-green-500">{success}</div>}
+
+          <div className="flex md:flex-row flex-col justify-between items-center md:mt-8 mt-4 md:gap-0 gap-4">
+            <button
+              onClick={handleChange}
+              className="md:w-[200px] w-[150px] md:h-[40px] h-[35px] bg-blue-500 hover:bg-blue-700 text-white text-[14px] font-bold py-2 px-4 rounded"
+            >
+              Save Changes
             </button>
-            <button>
-            <img src={arrowRight} alt="ArrowIcon" className="w-[12px] h-[12px]" />
+            <button
+              onClick={closeDialog}
+              className="md:w-[200px] w-[150px] md:h-[40px] h-[35px] bg-gray-500 hover:bg-gray-700 text-white text-[14px] font-bold py-2 px-4 rounded"
+            >
+              Cancel
             </button>
-          </div> */}
+          </div>
         </div>
       </div>
     </div>

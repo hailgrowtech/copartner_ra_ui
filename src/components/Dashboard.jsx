@@ -3,6 +3,7 @@ import { userAnalysis, expertise_data } from "../constants";
 import { edit, customDrop } from "../assets";
 import BarGraph from "../graphs/BarGraph";
 import EarningAnalysis from "./EarningAnalysis";
+import ReferralLinkComponent from "./ReferralLinkComponent";
 
 const yTicks = [0, 100, 200, 300, 400, 500];
 
@@ -85,6 +86,8 @@ const Dashboard = () => {
           ))}
         </div>
       </div>
+
+      <ReferralLinkComponent />
 
       <EarningAnalysis />
 

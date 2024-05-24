@@ -1,7 +1,39 @@
-import React from "react";
+import React, { useState } from "react";
 import { closeIcon } from "../assets";
+import axios from "axios";
 
-const BankEditDialog = ({ closeDialog }) => {
+const BankEditDialog = ({
+  closeDialog,
+  selectedWithdrawal,
+  stackholderId,
+  fetchData,
+}) => {
+  console.log("My Bank Edit Info", selectedWithdrawal);
+  const [accNum, setAccNum] = useState(selectedWithdrawal.accountNumber);
+  const [ifscCode, setIfscCode] = useState(selectedWithdrawal.ifscCode);
+  const [bankName, setBankName] = useState(selectedWithdrawal.bankName);
+  const [holderName, setHolderName] = useState(
+    selectedWithdrawal.accountHolderName
+  );
+  const [deleteBankInfo, setdeleteBankInfo] = useState(selectedWithdrawal.id);
+
+  const deleteBankDetails_api = `https://copartners.in:5135/api/Withdrawal/${deleteBankInfo}`;
+
+  const deleteBankDetails = async () => {
+    try {
+      const response = await axios.delete(deleteBankDetails_api);
+      if (response.status === 200) {
+        console.log("Bank details deleted successfully");
+        fetchData();
+        closeDialog();
+      } else {
+        console.error("Failed to delete bank details");
+      }
+    } catch (error) {
+      console.error("Error deleting bank details:", error);
+    }
+  };
+
   return (
     <div className="fixed inset-0 z-[999] flex items-center py-[8rem] justify-center">
       <div className="fixed inset-0 z-[999] flex items-center py-[8rem] justify-center bg-black bg-opacity-[40%]">
@@ -18,7 +50,6 @@ const BankEditDialog = ({ closeDialog }) => {
               />
             </button>
           </div>
-
           <div className="flex md:flex-row flex-col md:ml-0 ml-[-16px] justify-between md:mt-8 mt-4 md:gap-0 gap-4">
             <div className="relative">
               <div className="mb-0">
@@ -26,34 +57,19 @@ const BankEditDialog = ({ closeDialog }) => {
                   className="flex items-center justify-center bg-[#282F3E] text-white opacity-[50%]
                   md:w-[140px] w-[120px] h-[25px] md:h-[26px] rounded-[8px] font-[400] md:text-[14px] text-[13px] md:leading-[16px] leading-[15px] text-center"
                 >
-                  Acoount Number
+                  Account Number
                 </label>
                 <input
+                  value={accNum}
                   type="number"
                   id="default-input"
-                  placeholder="Enter Acoount Number Here"
+                  placeholder=""
                   className="md:w-[482px] w-[345px] py-2 px-4 rounded-md text-white border border-[#40495C] bg-[#282F3E]"
-                />
-              </div>
-            </div>
-            <div className="relative">
-              <div className="mb-0">
-                <label
-                  className="flex items-center justify-center bg-[#282F3E] text-white opacity-[50%]
-                  md:w-[200px] w-[170px] md:h-[26px] h-[25px] rounded-[8px] font-[400] md:text-[14px] text-[13px] md:leading-[16px] leading-[15px] text-center"
-                >
-                  Confirm Acoount Number
-                </label>
-                <input
-                  type="number"
-                  id="default-input"
-                  placeholder="Enter Account Number Here"
-                  className="md:w-[482px] w-[345px] py-2 px-4 rounded-md text-white border border-[#40495C] bg-[#282F3E]"
+                  readOnly
                 />
               </div>
             </div>
           </div>
-
           <div className="flex md:flex-row flex-col md:ml-0 ml-[-16px] justify-between md:mt-8 mt-4 md:gap-0 gap-4">
             <div className="relative">
               <div className="mb-0">
@@ -64,10 +80,12 @@ const BankEditDialog = ({ closeDialog }) => {
                   IFSC Code
                 </label>
                 <input
+                  value={ifscCode}
                   type="text"
                   id="default-input"
                   placeholder="Enter IFSC Code Here"
                   className="md:w-[482px] w-[345px] py-2 px-4 rounded-md text-white border border-[#40495C] bg-[#282F3E]"
+                  readOnly
                 />
               </div>
             </div>
@@ -80,15 +98,16 @@ const BankEditDialog = ({ closeDialog }) => {
                   Bank Name
                 </label>
                 <input
+                  value={bankName}
                   type="text"
                   id="default-input"
                   placeholder="Enter Bank Here"
                   className="md:w-[482px] w-[345px] py-2 px-4 rounded-md text-white border border-[#40495C] bg-[#282F3E]"
+                  readOnly
                 />
               </div>
             </div>
           </div>
-
           <div className="relative md:ml-0 ml-[-16px]">
             <div className="md:mt-6 mt-4">
               <label
@@ -98,16 +117,20 @@ const BankEditDialog = ({ closeDialog }) => {
                 Account Holder Name
               </label>
               <input
+                value={holderName}
                 type="text"
                 id="default-input"
                 placeholder="Enter Name"
                 className="md:w-[482px] w-[345px] py-2 px-4 rounded-md text-white border border-[#40495C] bg-[#282F3E]"
+                readOnly
               />
             </div>
           </div>
-
           <div className="flex gap-6 justify-center items-center mt-6">
-            <button className="bg-red-500 text-white rounded-[10px] text-[14px] w-[117px] h-[40px]">
+            <button
+              onClick={deleteBankDetails}
+              className="bg-red-500 text-white rounded-[10px] text-[14px] w-[117px] h-[40px]"
+            >
               Delete
             </button>
           </div>

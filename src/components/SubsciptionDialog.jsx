@@ -1,20 +1,84 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { closeIcon, dropdown } from "../assets";
+import axios from "axios";
+import { toast } from "react-toastify";
 
 const SubscriptionDialog = ({ closeDialog }) => {
   const [subscriptionType, setSubscriptionType] = useState(
-    "Select Subscrption Type"
+    null
   );
   const [planType, setPlanType] = useState("Select Plan Type");
   const [durationType, setDurationType] = useState("Select Duration Type");
   const [keyPointsType, setKeyPointsType] = useState("Plan Key Points");
+  const [des, setDes] = useState('')
 
   const [isSubscriptionOpen, setIsSubscriptionOpen] = useState(false);
   const [isPlanOpen, setIsPlanOpen] = useState(false);
-  const [isDuration, setIsDuration] = useState(false);
+  const [isDuration, setIsDuration] = useState('');
+  const [amount, setAmount] = useState(null);
   const [isKeyPointsOpen, setIsKeyPointsOpen] = useState(false);
+  const [premiumTelegram, setPremiumTelegram] = useState('')
 
   const [selectedItems, setSelectedItems] = useState([]);
+
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  const inputClassName = subscriptionType === null ? "text-[#9BA3AF]" : "text-white";
+
+  const stackholderId = sessionStorage.getItem('stackholderId')
+  // console.log('My Stackholder ID--', stackholderId);
+
+  const handleSuccess = () => {
+    toast.success("Subscription saved!", {
+      position: "top-right",
+    });
+  }
+
+  const handleConfirm = async (e) => {
+    // e.preventDefault();
+    setError("");
+    setLoading(true);
+
+    const durationMonth =
+      planType === "Monthly" ? 1 :
+      planType === "Quarterly" ? 3 :
+      planType === "Half-Yearly" ? 6 :
+      planType === "Yearly" ? 12 : "";
+
+    const postData = {
+      expertsId: stackholderId,
+      imagePath: "www.google.com/userjkdjfa",
+      serviceType: subscriptionType,
+      planType: planType,
+      durationMonth: durationMonth,
+      amount: amount,
+      premiumTelegramLink: premiumTelegram,
+      description: des,
+    }
+
+    // console.log('Post Data value', postData)
+
+    try {
+      const response = await axios.post('https://copartners.in:5009/api/Subscription', postData);
+      console.log('Response:', response.data);
+      if (response.status !== 200) {
+        toast.error("Something Wrong happened!", {
+          position: "top-right",
+        });
+      }
+      handleSuccess();
+      closeDialog()
+    } catch (error) {
+      console.error('Error posting data:', error);
+      toast.error('Failed to submit data. Please try again.', {
+        position: "top-right",
+      });
+      setError('Failed to submit data. Please try again.');
+    } finally {
+      setLoading(false);
+    }
+  }
 
   const toggleKeyPointsDropdown = () => {
     setIsKeyPointsOpen(!isKeyPointsOpen);
@@ -43,8 +107,28 @@ const SubscriptionDialog = ({ closeDialog }) => {
   };
 
   const handleDurationClick = (month) => {
-    setDurationType(month);
+    if (month === "1 Month") {
+      setDurationType(1)
+    } else if (month === "3 Months") {
+      setDurationType(3)
+    } else if (month === "6 Months") {
+      setDurationType(6)
+    } else setDurationType(12);
+    setDurationType(month)
     setIsDuration(false);
+  };
+
+  const getSubscriptionTypeLabel = (type) => {
+    switch (type) {
+      case 1:
+        return "Future & Option";
+      case 2:
+        return "Commodity";
+      case 3:
+        return "Equity";
+      default:
+        return "Select Subscription Type";
+    }
   };
 
   const toggleSubscriptionDropdown = () => {
@@ -71,7 +155,7 @@ const SubscriptionDialog = ({ closeDialog }) => {
   return (
     <div className="fixed inset-0 z-[999] flex items-center py-[2rem] justify-center">
       <div className="fixed inset-0 z-[999] flex items-center py-[2rem] justify-center bg-black bg-opacity-[40%]">
-        <div className="bg-[#2E374B] rounded-lg md:w-[1084px] w-[378px] md:h-[680px] h-[600px] overflow-auto p-8">
+        <div className="bg-[#2E374B] rounded-lg md:w-[1084px] w-[378px] md:h-[620px] h-[600px] overflow-auto p-8">
           <div className="flex items-center justify-between">
             <h2 className="md:h-[52px] font-inter font-[700] md:text-[30px] text-[18px] md:leading-[51px] text-new md:ml-0 ml-[-0.8rem]">
               Add New Subscription
@@ -103,7 +187,7 @@ const SubscriptionDialog = ({ closeDialog }) => {
             </label>
           </div> */}
 
-          <div className="flex flex-col md:mt-0 mt-[1rem] gap-4 md:w-[1006px] md:h-[520px]">
+          <div className="flex flex-col md:mt-0 mt-[1rem] gap-4 md:w-[1006px] md:h-[470px]">
             <div className="flex md:flex-row flex-col md:gap-12 gap-4 md:mt-6 md:ml-0 ml-[-16px]">
               <div className="relative">
                 <label
@@ -117,10 +201,15 @@ const SubscriptionDialog = ({ closeDialog }) => {
                   <div className="relative">
                     <input
                       id="subscriptionType"
-                      value={subscriptionType}
+                      // value={
+                      //   subscriptionType === 1 ? "Future & Option" :
+                      //   subscriptionType === 2 ? "Commodity" :
+                      //   subscriptionType === 3 ? "Equity" : "Select Subscription Type"
+                      // }
+                      value={getSubscriptionTypeLabel(subscriptionType)}
                       readOnly
                       onClick={toggleSubscriptionDropdown}
-                      className="md:w-[482px] w-[345px] md:px-4 px-2 py-2 cursor-pointer rounded-md text-white border border-[#40495C] bg-[#282F3E]"
+                      className={`md:w-[482px] w-[345px] md:px-4 px-2 py-2 cursor-pointer rounded-md border border-[#40495C] bg-[#282F3E] ${inputClassName}`}
                     />
                     <img
                       src={dropdown}
@@ -132,19 +221,19 @@ const SubscriptionDialog = ({ closeDialog }) => {
                     <div className="absolute z-10 mt-2 md:w-[482px] w-[345px] rounded-md bg-white shadow-lg">
                       <ul className="py-1">
                         <li
-                          onClick={() => handleSubClick("Option")}
+                          onClick={() => handleSubClick(1)}
                           className="cursor-pointer px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                         >
-                          Option
+                          Future & Option
                         </li>
                         <li
-                          onClick={() => handleSubClick("Commodity")}
+                          onClick={() => handleSubClick(2)}
                           className="cursor-pointer px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                         >
                           Commodity
                         </li>
                         <li
-                          onClick={() => handleSubClick("Equity")}
+                          onClick={() => handleSubClick(3)}
                           className="cursor-pointer px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                         >
                           Equity
@@ -169,7 +258,7 @@ const SubscriptionDialog = ({ closeDialog }) => {
                       value={planType}
                       readOnly
                       onClick={togglePlanDropdown}
-                      className="md:w-[482px] w-[345px] md:px-4 px-2 py-2 rounded-md text-white border border-[#40495C] bg-[#282F3E]"
+                      className={`md:w-[482px] w-[345px] md:px-4 px-2 py-2 rounded-md text-white border border-[#40495C] bg-[#282F3E] ${inputClassName}`}
                     />
                     <img
                       src={dropdown}
@@ -223,8 +312,15 @@ const SubscriptionDialog = ({ closeDialog }) => {
                 <div className="relative">
                   <div className="relative">
                     <input
+                      disabled
                       id="durationType"
-                      value={durationType}
+                      // value={planType === "Monthly" ? 1 : 3}
+                      value={
+                        planType === "Monthly" ? 1 :
+                        planType === "Quarterly" ? 3 :
+                        planType === "Half-Yearly" ? 6 :
+                        planType === "Yearly" ? 12 : ''
+                      }
                       readOnly
                       onClick={toggleDurationDropdown}
                       className="md:w-[482px] w-[345px] px-4 py-2 cursor-pointer rounded-md text-white border border-[#40495C] bg-[#282F3E]"
@@ -277,6 +373,8 @@ const SubscriptionDialog = ({ closeDialog }) => {
                   </label>
                   <input
                     type="number"
+                    value={amount}
+                    onChange={(e) => setAmount(e.target.value)}
                     id="default-input"
                     className="md:w-[482px] w-[345px] px-4 py-2 rounded-md text-white border border-[#40495C] bg-[#282F3E]"
                   />
@@ -284,7 +382,7 @@ const SubscriptionDialog = ({ closeDialog }) => {
               </div>
             </div>
 
-            <div className="relative md:ml-0 ml-[-16px]">
+            {/* <div className="relative md:ml-0 ml-[-16px]">
               <label
                 htmlFor="keyPointsType"
                 className="flex items-center justify-center bg-[#282F3E] text-white opacity-[50%]
@@ -360,7 +458,7 @@ const SubscriptionDialog = ({ closeDialog }) => {
                   )}
                 </div>
               </div>
-            </div>
+            </div> */}
 
             <div className="relative md:ml-0 ml-[-16px]">
               <div className="mb-0">
@@ -371,6 +469,8 @@ const SubscriptionDialog = ({ closeDialog }) => {
                   Premium Telegram Channel Link
                 </label>
                 <input
+                onChange={(e) => setPremiumTelegram(e.target.value)}
+                value={premiumTelegram}
                   type="link"
                   id="default-input"
                   placeholder="Paste Link"
@@ -387,7 +487,10 @@ const SubscriptionDialog = ({ closeDialog }) => {
                 Description
               </label>
               <textarea
+              typeof="text"
+              onChange={(e) => setDes(e.target.value)}
                 id="des-input"
+                value={des}
                 rows="4"
                 className="block p-2 rounded-md text-white border border-[#40495C] bg-[#282F3E] md:w-full w-[105%]"
                 placeholder="Write something here"
@@ -397,7 +500,9 @@ const SubscriptionDialog = ({ closeDialog }) => {
 
           <div className="flex md:flex-row flex-col gap-2 justify-end md:mt-0 mt-4">
             <button
-              onClick={closeDialog}
+              onClick={() => {
+                handleConfirm();
+              }}
               className="px-4 w-[100%] py-2 bg-blue-500 text-white md:text-[14px] text-[14px] rounded-lg hover:bg-blue-600"
             >
               Confirm
@@ -411,6 +516,8 @@ const SubscriptionDialog = ({ closeDialog }) => {
           </div>
         </div>
       </div>
+      {loading && <p>Loading...</p>}
+      {error && <p className="text-red-500">{error}</p>}
     </div>
   );
 };

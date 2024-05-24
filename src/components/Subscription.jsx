@@ -1,13 +1,28 @@
 import React, { useState, useEffect } from "react";
-import { subscriptionData } from "../constants";
 import SubscriptionDialog from "./SubsciptionDialog";
-import { dropdown } from "../assets";
+import { deleteIcon, dropdown, edit } from "../assets";
 import SubscriptionEditService from "./SubscriptionEditService";
+import axios from "axios";
 
 const Subscription = () => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const [smallScreen, setSmallScreen] = useState(false);
+  const [subTable, setSubTable] = useState([]);
+  const [currentSubscription, setCurrentSubscription] = useState(null);
+
+  const stackholderId = sessionStorage.getItem('stackholderId')
+  const SUB_TABLE = `https://copartners.in:5009/api/Subscription/GetByExpertsId/${stackholderId}`;
+
+  useEffect(() => {
+    axios.get(SUB_TABLE).then((res) => {
+      console.log("I am calling sub. table", res.data);
+      setSubTable(res.data.data)
+    })
+    .catch((error) => {
+      console.log('Something went wrong', error)
+    })
+  }, [])
 
   useEffect(() => {
     const checkScreenSize = () => {
@@ -25,13 +40,22 @@ const Subscription = () => {
     setIsDialogOpen(true);
   };
 
-  const openEditDialog = () => {
+  const openEditDialog = (subscription) => {
+    setCurrentSubscription(subscription);
     setIsEditDialogOpen(true);
   };
 
   const closeDialog = () => {
     setIsDialogOpen(false);
     setIsEditDialogOpen(false);
+  };
+
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    const day = String(date.getDate()).padStart(2, '0');
+    const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are 0-based
+    const year = date.getFullYear();
+    return `${day}-${month}-${year}`;
   };
 
   return (
@@ -57,19 +81,19 @@ const Subscription = () => {
       <div className="flex md:mt-[3rem] mt-1">
         {smallScreen ? (
           <div className="flex flex-wrap justify-center items-center ml-[-22px]">
-            {subscriptionData.map((row, index) => (
+            {subTable.map((row, index) => (
               <div
                 key={index}
                 className="flex flex-col justify-around w-[361px] h-[248px] bg-[#18181B] bg-opacity-[50%] rounded-[30px] md:m-4 m-[10px] p-4 w-[90%] max-w-sm"
               >
                 <div className="flex flex-row justify-between">
                   <p className="w-[173px] h-[26px] font-[600] text-[16px] leading-[25px] text-lightWhite">
-                    {row.subType}
+                    {row.serviceType}
                   </p>
                   <div className="flex gap-3">
                     <button>
                       <img
-                        src={row.activeEdit}
+                        src={edit}
                         onClick={openEditDialog}
                         alt=""
                         className="w-[24px] h-[24px] text-white"
@@ -82,31 +106,31 @@ const Subscription = () => {
                       />
                     )}
                     <img
-                      src={row.activeDel}
+                      src={deleteIcon}
                       alt=""
                       className="w-[24px] h-[24px] text-white"
                     />
                   </div>
                 </div>
                 <span className="flex items-center justify-between sm:w-[305px] h-[13px] font-[500] text-[14px] leading-[12px] text-lightWhite">
-                  <span className="text-dimWhite">DATE:</span> {row.date}
+                  <span className="text-dimWhite">DATE:</span> {formatDate(row.createdOn)}
                 </span>
                 <span className="flex items-center justify-between sm:w-[305px] h-[34px] font-[500] text-[14px] leading-[12px] text-lightWhite">
                   <span className="text-dimWhite">SERVICE TYPE:</span>{" "}
-                  {row.subType}
+                  {row.serviceType}
                 </span>
                 <span className="flex items-center justify-between sm:w-[305px] h-[13px] font-[500] text-[14px] leading-[12px] text-lightWhite">
-                  <span className="text-dimWhite">PLAN NAME:</span> {row.plan}
+                  <span className="text-dimWhite">PLAN NAME:</span> {row.serviceType}
                 </span>
                 <span className="flex items-center justify-between sm:w-[305px] h-[13px] font-[500] text-[14px] leading-[12px] text-lightWhite">
-                  <span className="text-dimWhite">DURATION:</span> {row.amount}
+                  <span className="text-dimWhite">DURATION:</span> {row.durationMonth}
                 </span>
                 <span className="flex items-center justify-between sm:w-[305px] h-[13px] font-[500] text-[14px] leading-[12px] text-lightWhite">
                   <span className="text-dimWhite">AMOUNT:</span> {row.amount}
                 </span>
                 <span className="flex items-center justify-between sm:w-[305px] h-[13px] font-[500] text-[14px] leading-[12px] text-lightWhite">
                   <span className="text-dimWhite">ACTIVE USER:</span>{" "}
-                  {row.amount}
+                  {/* {row.amount} */}
                 </span>
               </div>
             ))}
@@ -129,23 +153,23 @@ const Subscription = () => {
               </tr>
             </thead>
             <tbody className="text-lightWhite h-[81px]">
-              {subscriptionData.map((row, index) => {
+              {subTable.map((row, index) => {
                 return (
                   <tr
                     key={index}
                     className={index % 2 === 0 ? "bg-[#1E1E22]" : ""}
                   >
                     <td className="font-[500] text-center text-[16px] leading-[18px]">
-                      {row.date}
+                    {formatDate(row.createdOn)}
                     </td>
                     <td className="font-[500] text-center text-[16px] leading-[18px]">
-                      {row.subType}
+                      {row.serviceType}
                     </td>
                     <td className="font-[500] text-center text-[16px] leading-[18px]">
-                      {row.plan}
+                      {row.planType}
                     </td>
                     <td className="py-2 text-center font-[500] text-[16px] leading-[18px]">
-                      {row.duration}
+                      {row.durationMonth}
                     </td>
                     <td className="font-[500] text-center text-[16px] leading-[18px]">
                       {row.amount}
@@ -156,7 +180,7 @@ const Subscription = () => {
                     <td className="flex flex-row items-center justify-center gap-2 py-[2rem]">
                       <button>
                         <img
-                          src={row.activeEdit}
+                          src={edit}
                           onClick={openEditDialog}
                           alt=""
                           className="w-[21px] h-[21px] mx-auto"
@@ -166,11 +190,12 @@ const Subscription = () => {
                         <SubscriptionEditService
                           isEditDialogOpen={isEditDialogOpen}
                           closeDialog={closeDialog}
+                          subTable={subTable}
                         />
                       )}
                       <button>
                         <img
-                          src={row.activeDel}
+                          src={deleteIcon}
                           alt=""
                           className="w-[21px] h-[21px] mx-auto"
                         />

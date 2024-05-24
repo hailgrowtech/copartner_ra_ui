@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { dropdown, closeIcon } from "../assets";
 
-const SubscriptionEditService = ({ closeDialog }) => {
+const SubscriptionEditService = ({ closeDialog, subscription }) => {
   const [subscriptionType, setSubscriptionType] = useState("Future & Option");
   const [planType, setPlanType] = useState("Basic");
   const [durationType, setDurationType] = useState("1 Month");

@@ -1,8 +1,27 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import PieCharts from "../graphs/PieCharts";
 import Charts from "../graphs/Charts";
+import axios from "axios";
 
-const EarningAnalysis = () => {
+const EarningAnalysis = ({ stackholderId }) => {
+  const [earingAnalysis, setEaringAnalysis] = useState(null);
+
+  const EARNING_URL = `https://copartners.in:5135/api/Wallet/GetWalletWithdrawalBalance/${stackholderId}?userType=RA`;
+
+  useEffect(() => {
+    const fetchWalletBalance = async () => {
+      try {
+        const response = await axios.get(EARNING_URL);
+        setEaringAnalysis(response.data.data);
+      } catch (error) {
+        console.error("Error fetching the wallet balance:", error);
+        setEaringAnalysis('Error');
+      }
+    };
+
+    fetchWalletBalance();
+  }, []);
+
   return (
     <div className="flex flex-col py-8">
       <div className="flex md:gap-[22rem] xl:gap-[33rem] mb-2">
@@ -23,7 +42,7 @@ const EarningAnalysis = () => {
                 Total Earning:
               </span>
               <span className="text-white font-[600] md:text-[24px] text-[19px] md:leading-[29px] leading-[19px]">
-                ₹63,000
+              ₹{(Number(earingAnalysis?.walletBalance) || 0) + 10}
               </span>
             </div>
             <div className="flex flex-col">
@@ -31,7 +50,7 @@ const EarningAnalysis = () => {
                 Copartner Earning:
               </span>
               <span className="text-white font-[600] md:text-[24px] text-[19px] md:leading-[29px] leading-[19px]">
-                ₹33,000
+              ₹{earingAnalysis?.walletBalance}
               </span>
             </div>
             <div className="flex flex-col">
@@ -39,7 +58,7 @@ const EarningAnalysis = () => {
                 Personal Earning:
               </span>
               <span className="text-white font-[600] md:text-[24px] text-[19px] md:leading-[29px] leading-[19px]">
-                ₹41,000
+                ₹10
               </span>
             </div>
           </div>

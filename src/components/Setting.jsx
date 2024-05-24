@@ -1,11 +1,22 @@
-import React, { useState } from "react";
-import { expertise_data, withdrawalBank, upiBank } from "../constants";
-import { edit, mail, phone, sebi, addDoc } from "../assets";
+import React, { useEffect, useState } from "react";
+import {
+  edit,
+  mail,
+  phone,
+  sebi,
+  addDoc,
+  telegramIcon,
+  arrow,
+  userBck,
+  stars,  card,
+  location, location1, pancard
+} from "../assets";
 import ProfileEdit from "./ProfileEdit";
 import BankEditDialog from "./BankEditDialog";
 import AddBankDialog from "./AddBankDialog";
 import AddUpiDialog from "./AddUpiDialog";
 import UpiEditDialog from "./UpiEditDialog";
+import axios from "axios";
 
 const handleFileChange = (event) => {
   const file = event.target.files[0];
@@ -17,10 +28,59 @@ const Setting = () => {
   const [isEditUpiOpen, setIsEditUpiOpen] = useState(false);
   const [isAddBankOpen, setIsAddBankOpen] = useState(false);
   const [isAddUpiOpen, setIsAddUpiOpen] = useState(false);
+  const [myCard, setMyCard] = useState(null);
+  const [relationId, setRelationId] = useState(null);
+  const [bankDetails, setBankDetails] = useState(null);
+  const [upiDetails, setUpiDetails] = useState(null);
+  const [withdrawalAmount, setWithDrawalAmount] = useState([]);
+  const [selectedWithdrawal, setSelectedWithdrawal] = useState(null);
+
+  const stackholderId = sessionStorage.getItem("stackholderId");
+
+  const withdrawal_api = `https://copartners.in:5135/api/Withdrawal/BankUPIByUserId/${stackholderId}?userType=RA&page=1&pageSize=10`;
+
+  const fetchData = async () => {
+    try {
+      const res = await axios.get(withdrawal_api);
+      console.log(res.data)
+      setWithDrawalAmount(res.data.data);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, [withdrawal_api]);
+
+  const deleteBankDetails = () => {
+    console.log("Delete it");
+  };
+
+  const fetchDetails = async () => {
+    try {
+      const { data: expertData } = await axios.get(
+        `https://copartners.in:5132/api/Experts/${stackholderId}`
+      );
+      setMyCard(expertData.data);
+
+      const relationId = expertData.data.relationshipManagerId;
+      const { data: relationshipManagerData } = await axios.get(
+        `https://copartners.in:5134/api/RelationshipManager/${relationId}`
+      );
+      setRelationId(relationshipManagerData.data);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchDetails();
+  }, [stackholderId]);
 
   const [isEditing, setIsEditing] = useState(false);
   const [aboutText, setAboutText] = useState(
-    "Lorem ipsum dolor sit amet consectetur. Et fames faucibus sed porttitor. In amet at et sit donec. Eleifend dui rhoncus sit non nunc vitae faucibus lectus molestie. Rhoncus mattis commodo ac lectus at egestas ipsum mi volutpat. Orci nisi vestibulum eu orci. Elit orci pellentesque ornare suscipit. Et quis placerat etiam nunc sed risus erat volutpat."
+    "Hello, I am your trusted guide in Equity Trading. As a SEBI-registered research analyst with over a decade of experience, I have a  specialisation in making the stock market easy to understand and navigate. With a keen eye for market trends and a deep understanding of financial analysis I provide clear and reliable advice, helping you make informed investment decisions. Whether you're just starting out or looking to improve your trading skills, I  am here to support you on your journey to financial success."
   );
 
   const handleEditClick = () => {
@@ -39,16 +99,25 @@ const Setting = () => {
     setIsDialogOpen(true);
   };
 
-  const openEditBankDialog = () => {
+  const openEditBankDialog = (withdrawal) => {
+    setSelectedWithdrawal(withdrawal);
     setIsEditBankOpen(true);
   };
 
-  const openEditUpiDialog = () => {
+  const openEditUpiDialog = (withdrawal) => {
+    setSelectedWithdrawal(withdrawal);
     setIsEditUpiOpen(true);
   };
 
   const openAddBankDialog = () => {
     setIsAddBankOpen(true);
+  };
+  const saveBankDetails = (details) => {
+    setBankDetails(details);
+  };
+
+  const saveUpiDetails = (details) => {
+    setUpiDetails(details);
   };
 
   const openUpiDialog = () => {
@@ -63,200 +132,241 @@ const Setting = () => {
     setIsAddUpiOpen(false);
   };
 
+  const getExpertType = (typeId) => {
+    switch (typeId) {
+      case 1:
+        return "Commodity";
+      case 2:
+        return "Equity";
+      case 3:
+        return "Options";
+      default:
+        return "Unknown";
+    }
+  };
+
   return (
     <div className="pb-[5rem] xl:pl-[12rem] md:pl-[10rem] pl-6 md:py-[6rem] pt-[8rem] bg-gradient min-h-screen">
-      <div className="xl:w-[1530px] md:w-[1122px] md:h-[420px] xl-h-[480px] w-[361px] h-[470px] md:ml-0 ml-[-8px] bg_cards p-4 rounded-[24px]">
-        {expertise_data.map((expert, index) => (
-          <div className="flex flex-col" key={index}>
-            <div className="flex flex-row">
-              <div className="flex flex-col">
-                <div className="flex flex-col">
-                  <span className="md:w-[331px] w-[152px] md:h-[67px] h-[31px] font-inter font-[700] md:text-[57px] text-[26px] md:leading-[66px] leading-[30px] text-gradient">
-                    {expert.name}
+      <div className="xl:w-[1530px] md:w-[1122px] md:h-[560px] xl-h-[480px] w-[361px] h-[470px] md:ml-0 ml-[-8px] bg_cards p-4 rounded-[24px]">
+        <div className="flex flex-col">
+          <div className="flex flex-row">
+            <div className="flex flex-col">
+              <div className="flex flex-col gap-2">
+                <span className="font-inter font-[700] md:text-[57px] text-[26px] md:leading-[66px] leading-[30px] text-gradient">
+                  {myCard && myCard.channelName}
+                </span>
+                <span className="text-white font-inter font-[500] md:text-[17px] text-[12px] md:leading-[22px]">
+                  {myCard && myCard.name} -{" "}
+                  {myCard && getExpertType(myCard.expertTypeId)}
+                </span>
+              </div>
+              <div className="md:w-[278px] w-[176px] mt-2 md:h-[53px] h-[25px] flex flex-row justify-between">
+                <div className="md:w-[84px] w-[54px] md:h-[53px] h-[25px] flex flex-col">
+                  <span className="text-[#E4E4E7] opacity-[40%] font-[400] md:text-[14px] text-[10px] md:leading-[17px] leading-[12px] font-inter md:w-[83px] w-[56px] md:h-[17px]">
+                    Experience
                   </span>
-                  <span className="text-white font-inter font-[500] md:text-[17px] text-[12px] md:leading-[22px]">
-                    {expert.title}
+                  <span className="text-white md:w-[83px] w-[54px] md:h-[20] h-[12px] font-[600] md:text-[16px] text-[10px] text-center leading-[20px]">
+                    {myCard && myCard.experience}
                   </span>
                 </div>
-                <div className="md:w-[278px] w-[176px] md:h-[53px] h-[25px] flex flex-row justify-between">
-                  <div className="md:w-[84px] w-[54px] md:h-[53px] h-[25px] flex flex-col">
-                    <span className="text-[#E4E4E7] opacity-[40%] font-[400] md:text-[14px] text-[10px] md:leading-[17px] leading-[12px] font-inter md:w-[83px] w-[56px] md:h-[17px]">
-                      {expert.experience}
-                    </span>
-                    <span className="text-white md:w-[83px] w-[54px] md:h-[20] h-[12px] font-[600] md:text-[16px] text-[10px] text-center leading-[20px]">
-                      {expert.totalExp}
-                    </span>
-                  </div>
-                  <div className="bg-white w-[1px] md:h-[35px] h-[22px]"></div>
-                  <div className="w-[84px] h-[53px] flex flex-col">
-                    <span className="text-[#E4E4E7] opacity-[40%] font-[400] md:text-[14px] text-[10px] md:leading-[17px] leading-[12px] font-inter md:w-[83px] w-[56px] md:h-[17px]">
-                      {expert.followers}
-                    </span>
-                    <span className="text-white md:w-[83px] w-[54px] md:h-[20] h-[12px] font-[600] md:text-[16px] text-[10px] text-center leading-[20px]">
-                      {expert.totalFollowers}
-                    </span>
-                  </div>
+                <div className="bg-white w-[1px] md:h-[35px] h-[22px]"></div>
+                <div className="w-[84px] h-[53px] flex flex-col">
+                  <span className="text-[#E4E4E7] opacity-[40%] font-[400] md:text-[14px] text-[10px] md:leading-[17px] leading-[12px] font-inter md:w-[83px] w-[56px] md:h-[17px]">
+                    Followers
+                  </span>
+                  <span className="text-white md:w-[83px] w-[54px] md:h-[20] h-[12px] font-[600] md:text-[16px] text-[10px] text-center leading-[20px]">
+                    {`${myCard && myCard.telegramFollower / 1000}k`}
+                  </span>
                 </div>
+              </div>
 
-                <div className="flex md:flex-row flex-col md:gap-6 gap-0 justify-between md:pt-0 pt-[1rem]">
-                  <div className="flex flex-row items-center gap-2">
-                    <img
-                      src={mail}
-                      alt="Mail"
-                      className="md:w-[24px] w-[16px] md:h-[24px] h-[16px]"
-                    />
-                    <span className="text-white opacity-[50%] font-inter font-[500] md:text-[16px] text-[12px] leading-[28px]">
-                      Arunkumar@gmail.com
-                    </span>
-                  </div>
-                  <div className="flex flex-row items-center gap-2">
-                    <img
-                      src={phone}
-                      alt="Phone"
-                      className="md:w-[24px] w-[16px] md:h-[24px] h-[16px]"
-                    />
-                    <span className="text-white opacity-[50%] font-inter font-[500] md:text-[16px] text-[12px] leading-[28px]">
-                      9876545321
-                    </span>
-                  </div>
-                </div>
-
-                <div className="flex flex-row items-center gap-2 md:py-3 py-2">
+              <div className="flex md:flex-row flex-col md:gap-6 gap-0 justify-between md:pt-0 pt-[1rem]">
+                <div className="flex flex-row items-center gap-2">
                   <img
-                    src={sebi}
-                    alt="SEDI_User"
+                    src={mail}
+                    alt="Mail"
                     className="md:w-[24px] w-[16px] md:h-[24px] h-[16px]"
                   />
-                  <span className="text-white opacity-[50%] font-[500] font-inter md:text-[16px] text-[12px] leading-[28px]">
-                    SEBI Registration Number
+                  <span className="text-white opacity-[50%] font-inter font-[500] md:text-[16px] text-[12px] leading-[28px]">
+                    {myCard && myCard.email}
                   </span>
                 </div>
-
-                <div className="flex md:flex-row flex-col md:ml-0 ">
-                  <div className="absolute flex md:flex-row z-[9] flex-col md:gap-4 justify-center md:items-center md:ml-0 ml-[-6px]">
-                    <button className="md:w-[373px] w-[255px] md:h-[31px] h-[23px] flex items-center justify-center rounded-[21.5px] border-solid border-[1px] border-[#4e4e4ecc] mt-2 md:mt-0">
-                      <button className="flex justify-center md:p-2 items-center gap-2">
-                        <img
-                          src={expert.telegram}
-                          alt="Telegram"
-                          className="md:w-[18.6px] w-[14px] h-[14px] md:h-[18.6px]"
-                        />
-                        <span className="md:w-[300px] h-[13px] md:h-[23px] text-white font-[400] md:text-[12px] text-[8px] md:leading-[22px] leading-[12px]">
-                          {expert.greet}
-                        </span>
-                        <img
-                          src={expert.arrowIcon}
-                          alt="arrow"
-                          className="md:w-[13px] w-[10px] h-[10px] md:h-[13px]"
-                        />
-                      </button>
-                    </button>
-                    <button className="md:w-[373px] w-[255px] md:h-[31px] h-[23px] flex items-center justify-center rounded-[21.5px] border-solid border-[1px] border-[#4e4e4ecc] mt-2 md:mt-0">
-                      <button className="flex justify-center items-center gap-2">
-                        <img
-                          src={expert.telegram}
-                          alt="Telegram"
-                          className="md:w-[18.6px] w-[14px] h-[14px] md:h-[18.6px]"
-                        />
-                        <span className="md:w-[300px] h-[13px] md:h-[23px] text-white font-[400] md:text-[12px] text-[8px] md:leading-[22px] leading-[12px]">
-                          {expert.greet}
-                        </span>
-                        <img
-                          src={expert.arrowIcon}
-                          alt="arrow"
-                          className="md:w-[13px] w-[10px] h-[10px] md:h-[13px]"
-                        />
-                      </button>
-                    </button>
-                  </div>
-                </div>
-
-                <span className="text-white opacity-[50%] font-[500] font-inter md:text-[20px] text-[14px] md:leading-[25px] md:mt-[3rem] mt-[5rem]">
-                  Your Relationship Manager
-                </span>
-
-                <div className="flex md:flex-row flex-col">
-                  <div className="flex absolute md:gap-6 gap-3 md:flex-row flex-col mt-4">
-                    <div className="flex flex-row items-center md:w-[245px] w-[147px] md:h-[50px] h-[30px]">
-                      <span className="text-white opacity-[50%] font-inter font-[500] md:text-[16px] text-[10px] md:leading-[28px] leading-[17px] md:w-[55px] w-[33px] md:h-[28px] h-[17px]">
-                        Name:
-                      </span>
-                      <span className="bg-[#22262F] md:w-[180px] w-[108px] md:ml-0 ml-2 md:h-[50px] h-[30px] rounded-[30px] text-white font-[500] md:text-[16px] text-[10px] md:leading-[28px] leading-[19px] md:p-2 p-1 text-center">
-                        Aditya Kumar
-                      </span>
-                    </div>
-                    <div className="flex flex-row items-center md:w-[317px] w-[192px] md:h-[50px] h-[30px]">
-                      <span className="text-white opacity-[50%] font-inter font-[500] md:text-[16px] text-[10px] md:leading-[28px] leading-[17px] md:w-[127px] w-[90px] md:h-[28px] h-[17px]">
-                        Mobile Number:
-                      </span>
-                      <span className="bg-[#22262F] md:w-[180px] w-[108px] md:h-[50px] h-[30px] rounded-[30px] text-white font-[500] md:text-[16px] text-[10px] md:leading-[28px] leading-[17px] p-2 text-center">
-                        987612540
-                      </span>
-                    </div>
-                    <div className="flex flex-row gap-1 items-center md:w-[330px] w-[198px] md:h-[50px] h-[30px]">
-                      <span className="text-white opacity-[50%] font-inter font-[500] md:text-[16px] text-[10px] md:leading-[28px] leading-[17px] md:w-[62px] w-[37px] md:h-[28px] h-[17px]">
-                        Mail ID:
-                      </span>
-                      <span className="bg-[#22262F] md:w-[258px] w-[155px] md:h-[50px] h-[30px] rounded-[30px] text-white font-[500] md:text-[16px] text-[10px] md:leading-[28px] leading-[28px] md:p-2 text-center">
-                        Adityakumar@gmail.com
-                      </span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <div className="md:h-[344px] sm:h-[240px] md:max-h-[250px] max-h-[180px] md:right-0 right-[2rem] relative profile-image_1 mb-4">
-                <img
-                  src={expert.icon}
-                  alt="background"
-                  className="absolute top-0 left-0 w-full h-full object-contain rounded-t-[11px]"
-                />
-                <img
-                  src={expert.userImg}
-                  alt="User"
-                  className="absolute top-0 left-0 w-full h-full object-contain rounded-t-[11px]"
-                />
-              </div>
-
-              <div className="flex md:ml-[0rem] ml-[-6rem] flex-col md:justify-between md:gap-0 gap-[10rem]">
-                <div className="flex flex-row gap-2 w-[70px] h-[32px]">
+                <div className="flex flex-row items-center gap-2">
                   <img
-                    src={expert.ratingIcon}
-                    alt={expert.rating}
-                    className="md:w-[25px] w-[14px] md:h-[25px] h-[14px]"
+                    src={phone}
+                    alt="Phone"
+                    className="md:w-[24px] w-[16px] md:h-[24px] h-[16px]"
                   />
-                  <span className="md:w-[38px] w-[22px] md:h-[32px] h-[19px] font-[600] md:text-[25px] text-[15px] md:leading-[31px] leading-[18px] text-[#E1E1E3]">
-                    {expert.rating}
+                  <span className="text-white opacity-[50%] font-inter font-[500] md:text-[16px] text-[12px] leading-[28px]">
+                    {myCard && myCard.mobileNumber}
                   </span>
                 </div>
-                <div className="md:w-[93px] w-[46px] md:h-[32px] h-[20px] rounded-[36px] border border-[#fffff] flex justify-center items-center">
-                  <button
-                    onClick={openDialog}
-                    className="flex flex-row items-center gap-2 justify-center items-center"
-                  >
-                    <img
-                      src={edit}
-                      alt="Edit"
-                      className="md:w-[16px] w-[8px] md:h-[16px] h-[8px]"
-                    />
-                    <span className="text-white font-[400] md:text-[15px] text-[7.5px] md:leading-[28px] leading-[14px]">
-                      Edit
-                    </span>
+              </div>
+
+              <div className="flex py-2">
+                <img
+                  src={sebi}
+                  alt="SEDI_User"
+                  className="md:w-[24px] w-[16px] md:h-[24px] h-[16px]"
+                />
+                <span className="text-white opacity-[50%] font-[500] font-inter md:text-[16px] text-[12px] leading-[28px]">
+                  SEBI - {myCard && myCard.sebiRegNo}
+                </span>
+              </div>
+
+              <div className="flex flex-row items-center gap-2 md:py-3 py-2">
+                <div className="flex flex-row gap-4">
+                  <div className="text-white flex items-center gap-2">
+                  <img src={card} alt="" className="w-[18px] h-[18px]" />
+                  <span>CIS80IS</span>
+                  </div>
+                  <div className="text-white flex items-center gap-2">
+                  <img src={location} alt=" " className="w-[18px] h-[18px]" />
+                  <span>JMD Megapolish</span>
+                  </div>
+                </div>
+              </div>
+
+              <div className="flex flex-row items-center gap-2 md:py-3 py-2">
+                <div className="flex flex-row gap-4">
+                  <div className="text-white flex items-center gap-2 justify-center">
+                  <img src={location1} alt="" className="w-[18px] h-[18px]" />
+                  <span>Gurgaon</span>
+                  </div>
+                  <div className="text-white flex items-center gap-2">
+                  <img src={pancard} alt="" className="w-[18px] h-[18px]" />
+                  <span>GST01038S</span>
+                  </div>
+                </div>
+              </div>
+
+              <div className="flex md:flex-row flex-col md:ml-0 ">
+                <div className="absolute flex md:flex-row z-[9] flex-col md:gap-4 justify-center md:items-center md:ml-0 ml-[-6px]">
+                  <button className="md:w-[373px] w-[255px] md:h-[31px] h-[23px] flex items-center justify-center rounded-[21.5px] border-solid border-[1px] border-[#4e4e4ecc] mt-2 md:mt-0">
+                    <button className="flex justify-center md:p-2 items-center gap-2">
+                      <img
+                        src={telegramIcon}
+                        alt="Telegram"
+                        className="md:w-[18.6px] w-[14px] h-[14px] md:h-[18.6px]"
+                      />
+                      <span className="md:w-[300px] h-[13px] md:h-[23px] text-white font-[400] md:text-[12px] text-[8px] md:leading-[22px] leading-[12px]">
+                        {myCard && myCard.telegramChannel}
+                      </span>
+                      <img
+                        src={arrow}
+                        alt="arrow"
+                        className="md:w-[13px] w-[10px] h-[10px] md:h-[13px]"
+                      />
+                    </button>
                   </button>
-                  {isDialogOpen && (
-                    <ProfileEdit
-                      isDialogOpen={isDialogOpen}
-                      closeDialog={closeDialog}
-                    />
-                  )}
+                  <button className="md:w-[373px] w-[255px] md:h-[31px] h-[23px] flex items-center justify-center rounded-[21.5px] border-solid border-[1px] border-[#4e4e4ecc] mt-2 md:mt-0">
+                    <button className="flex justify-center items-center gap-2">
+                      <img
+                        src={telegramIcon}
+                        alt="Telegram"
+                        className="md:w-[18.6px] w-[14px] h-[14px] md:h-[18.6px]"
+                      />
+                      <span className="md:w-[300px] h-[13px] md:h-[23px] text-white font-[400] md:text-[12px] text-[8px] md:leading-[22px] leading-[12px]">
+                        {myCard && myCard.premiumTelegramChannel}
+                      </span>
+                      <img
+                        src={arrow}
+                        alt="arrow"
+                        className="md:w-[13px] w-[10px] h-[10px] md:h-[13px]"
+                      />
+                    </button>
+                  </button>
+                </div>
+              </div>
+
+              <span className="text-white opacity-[50%] font-[500] font-inter md:text-[20px] text-[14px] md:leading-[25px] md:mt-[3rem] mt-[5rem]">
+                Your Relationship Manager
+              </span>
+
+              <div className="flex md:flex-row flex-col">
+                <div className="flex absolute md:gap-6 gap-3 md:flex-row flex-col mt-4">
+                  <div className="flex flex-row items-center md:w-[245px] w-[147px] md:h-[50px] h-[30px]">
+                    <span className="text-white opacity-[50%] font-inter font-[500] md:text-[16px] text-[10px] md:leading-[28px] leading-[17px] md:w-[55px] w-[33px] md:h-[28px] h-[17px]">
+                      Name:
+                    </span>
+                    <span className="bg-[#22262F] md:w-[180px] w-[108px] md:ml-0 ml-2 md:h-[50px] h-[30px] rounded-[30px] text-white font-[500] md:text-[16px] text-[10px] md:p-0 p-1 text-center flex items-center justify-center">
+                      {relationId && relationId.name}
+                    </span>
+                  </div>
+                  <div className="flex flex-row items-center md:w-[317px] w-[192px] md:h-[50px] h-[30px]">
+                    <span className="text-white opacity-[50%] font-inter font-[500] md:text-[16px] text-[10px] md:leading-[28px] leading-[17px] md:w-[127px] w-[90px] md:h-[28px] h-[17px]">
+                      Mobile Number:
+                    </span>
+                    <span className="bg-[#22262F] md:w-[180px] w-[108px] md:h-[50px] h-[30px] rounded-[30px] text-white font-[500] md:text-[16px] text-[10px] md:leading-[28px] leading-[17px] p-2 text-center">
+                      {relationId && relationId.mobile}
+                    </span>
+                  </div>
+                  <div className="flex flex-row gap-1 items-center md:w-[330px] w-[198px] md:h-[50px] h-[30px]">
+                    <span className="text-white opacity-[50%] font-inter font-[500] md:text-[16px] text-[10px] md:leading-[28px] leading-[17px] md:w-[62px] w-[37px] md:h-[28px] h-[17px]">
+                      Mail ID:
+                    </span>
+                    <span className="bg-[#22262F] md:w-[258px] w-[155px] md:h-[50px] h-[30px] rounded-[30px] text-white font-[500] md:text-[16px] text-[10px] md:leading-[28px] leading-[28px] md:p-2 text-center">
+                      {relationId && relationId.email}
+                    </span>
+                  </div>
                 </div>
               </div>
             </div>
+
+            <div className="md:h-[344px] sm:h-[240px] md:max-h-[250px] max-h-[180px] md:right-0 right-[4rem] relative profile-image_1 mb-4">
+              <img
+                src={userBck}
+                alt="background"
+                className="absolute top-0 left-0 w-full h-full object-contain rounded-t-[11px]"
+              />
+              <img
+                src={myCard && myCard.expertImagePath}
+                alt="User"
+                className="absolute top-0 left-0 w-full h-full object-contain rounded-t-[11px]"
+              />
+            </div>
+
+            <div className="flex md:ml-auto ml-[-8rem] flex-col items-start md:gap-[16rem] gap-[10rem]">
+              <div className="flex flex-row gap-2 w-[70px] h-[32px]">
+                <img
+                  src={stars}
+                  alt={myCard && myCard.rating}
+                  className="md:w-[25px] w-[14px] md:h-[25px] h-[14px]"
+                />
+                <span className="md:w-[38px] w-[22px] md:h-[32px] h-[19px] font-[600] md:text-[25px] text-[15px] md:leading-[31px] leading-[18px] text-[#E1E1E3]">
+                  {myCard && myCard.rating}
+                </span>
+              </div>
+              <div className="rounded-[36px] border border-[#fffff] flex justify-center items-center md:w-[80px] w-[50px]">
+                <button
+                  onClick={openDialog}
+                  className="flex flex-row items-center gap-2 justify-center items-center"
+                >
+                  <img
+                    src={edit}
+                    alt="Edit"
+                    className="md:w-[16px] w-[8px] md:h-[16px] h-[8px]"
+                  />
+                  <span className="text-white font-[400] md:text-[15px] text-[7.5px] md:leading-[28px] leading-[14px]">
+                    Edit
+                  </span>
+                </button>
+                {isDialogOpen && (
+                  <ProfileEdit
+                    isDialogOpen={isDialogOpen}
+                    closeDialog={closeDialog}
+                    fetchDetails={fetchDetails}
+                    stackholderId={stackholderId}
+                    myCard={myCard}
+                  />
+                )}
+              </div>
+            </div>
           </div>
-        ))}
+        </div>
       </div>
 
-      <div className="xl:w-[1520px] md:w-[1120px] md:h-[430px] w-[363px] h-full px-4 p-8 border-2 border-[#202F49] rounded-[30px] rounded-[30px] flex gap-4 flex-col md:mt-[4rem] mt-[2rem] md:ml-0 ml-[-0.5rem]">
+      <div className="xl:w-[1520px] md:w-[1120px] md:h-auto w-[363px] h-auto px-4 p-8 border-2 border-[#202F49] rounded-[30px] rounded-[30px] flex gap-4 flex-col md:mt-[4rem] mt-[2rem] md:ml-0 ml-[-0.5rem]">
         <div className="flex flex-row items-center justify-between">
           <span className="text-white font-inter font-[600] text-[22px] leading-[26px]">
             About
@@ -304,7 +414,7 @@ const Setting = () => {
         </div>
       </div>
 
-      <div className="xl:w-[1520px] md:w-[1120px] md:h-[352px] w-[360px] px-4 p-8 border-2 border-[#202F49] rounded-[30px] rounded-[30px] flex gap-4 flex-col md:mt-[4rem] mt-[2rem] md:ml-0 ml-[-0.5rem]">
+      <div className="xl:w-[1520px] md:w-[1120px] md:h-auto w-[360px] px-4 p-8 border-2 border-[#202F49] rounded-[30px] rounded-[30px] flex gap-4 flex-col md:mt-[4rem] mt-[2rem] md:ml-0 ml-[-0.5rem]">
         <div className="flex flex-row justify-between">
           <span className="text-white font-inter font-[600] text-[22px] leading-[26px]">
             Documents
@@ -359,41 +469,52 @@ const Setting = () => {
                 +Add Bank
               </span>
             </button>
+
             {isAddBankOpen && (
               <AddBankDialog
-                isAddBankOpen={isAddBankOpen}
+              fetchData={fetchData}
+                isOpen={isAddBankOpen}
                 onClose={closeDialog}
+                saveBankDetails={saveBankDetails}
               />
             )}
           </div>
         </div>
 
         <div className="flex flex-row items-center mt-4 justify-between">
-          {withdrawalBank.slice(0, 1).map((wallet) => {
-            return (
-              <button
-                onClick={openEditBankDialog}
-                key={wallet.id}
-                className="w-[310px] h-[76px] rounded-[16px] border border-[#40495C] bg-[#282F3E] p-2"
-              >
-                <div className="flex flex-row items-center gap-2">
-                  <img src={wallet.bankImg} className="w-[74px] h-[59px]" />
-                  <div className="flex flex-col gap-2">
-                    <span className="font-[500] text-[18px] leading-[21px] text-white">
-                      {wallet.bankName}
-                    </span>
-                    <span className="font-[400] text-[14px] leading-[16px] text-white opacity-[50%]">
-                      {wallet.accNum}
-                    </span>
-                  </div>
-                </div>
-              </button>
-            );
-          })}
+          <button
+            className="md:w-full w-[260px] md:h-[76px] rounded-[16px] border-[#40495C] flex md:flex-row flex-col gap-4"
+          >
+            {withdrawalAmount.map((withdrawal, index) => {
+              if (withdrawal.paymentMode === "Bank") {
+                return (
+                  <button
+                    key={index}
+                    onClick={() => openEditBankDialog(withdrawal)}
+                    className="md:w-[310px] w-[200px] md:h-[70px] h-[70px] text-white rounded-[16px] border border-[#40495C] bg-[#282F3E]"
+                  >
+                    <div className="flex md:ml-8 ml-6 items-start md:flex-col flex">
+                      <div className="flex flex-col md:items-start items-center">
+                      <span className="text-[16px] font-[600]">{withdrawal.bankName}</span>
+                      <span className="text-[14px]">{withdrawal.accountNumber}</span>
+                      </div>
+                    </div>
+                  </button>
+                );
+              } else {
+                return null;
+              }
+            })}
+          </button>
           {isEditBankOpen && (
             <BankEditDialog
               isEditBankOpen={isEditBankOpen}
               closeDialog={closeDialog}
+              saveBankDetails={saveBankDetails}
+              selectedWithdrawal={selectedWithdrawal}
+              deleteBankDetails={deleteBankDetails}
+              stackholderId={stackholderId}
+              fetchData={fetchData}
             />
           )}
         </div>
@@ -413,29 +534,38 @@ const Setting = () => {
             </span>
           </button>
           {isAddUpiOpen && (
-            <AddUpiDialog isOpen={isAddUpiOpen} onClose={closeDialog} />
+            <AddUpiDialog
+              isOpen={isAddUpiOpen}
+              onClose={closeDialog}
+              saveUpiDetails={saveUpiDetails}
+            />
           )}
         </div>
 
-        <div className="flex flex-row items-center mt-2 justify-between">
-          {upiBank.slice(0, 1).map((wallet) => {
-            return (
-              <button
-                onClick={openEditUpiDialog}
-                key={wallet.id}
-                className="w-[310px] h-[40px] rounded-[8px] border border-[#40495C] bg-[#282F3E]"
-              >
-                <div className="flex flex-row items-center gap-2 p-1">
-                  <img src={wallet.upiImg} className="w-[32px] h-[28px]" />
-                  <span className="font-[500] text-[18px] leading-[21px] text-white">
-                    {wallet.upiId}
-                  </span>
-                </div>
-              </button>
-            );
-          })}
+        <div className="md:px-0 px-0 md:w-full w-[310px] md:h-[76px] rounded-[16px] border-[#40495C] flex md:flex-row flex-col gap-4">
+          <button
+            className="rounded-[16px] flex gap-4"
+          >
+            {withdrawalAmount.map((withdrawal, index) => {
+              if (withdrawal.paymentMode === "UPI") {
+                return (
+                  <button
+                    key={index}
+                    onClick={() => openEditUpiDialog(withdrawal)}
+                    className="md:w-[310px] w-[200px]  h-[50px] text-white rounded-[16px] border border-[#40495C] bg-[#282F3E]"
+                  >
+                    <div className="flex justify-center items-start md:ml-4 md:flex-col flex">
+                      <span className="text-[16px] font-[600]">{withdrawal.upI_ID}</span>
+                      </div>
+                  </button>
+                );
+              } else {
+                return null;
+              }
+            })}
+          </button>
           {isEditUpiOpen && (
-            <UpiEditDialog isOpen={isEditUpiOpen} onClose={closeDialog} />
+            <UpiEditDialog isOpen={isEditUpiOpen} onClose={closeDialog} selectedWithdrawal={selectedWithdrawal} fetchData={fetchData} />
           )}
         </div>
       </div>
