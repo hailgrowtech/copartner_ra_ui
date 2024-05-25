@@ -42,7 +42,7 @@ function App() {
 
   return (
     <div
-      className={`bg-gradient overflow-hidden ${styles.boxWidth} ${styles.paddingX}`}
+      className={`bg-gradient overflow-hidden ${styles.boxWidth} ${styles.paddingX} overflow-hidden`}
     >
       <div className="flex">
         <div className="flex-grow">

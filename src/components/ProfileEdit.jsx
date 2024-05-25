@@ -69,18 +69,46 @@ const ProfileEdit = ({ closeDialog, stackholderId, myCard, fetchDetails }) => {
     return operations;
   };
 
+  const uploadImage = async (file) => {
+    const formData = new FormData();
+    formData.append("file", file);
+
+    try {
+      const response = await axios.post("https://copartners.in:5134/api/AWSStorage?prefix=expertImagePath", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+      return response.data.fileUrl; // Assuming the response contains the URL of the uploaded image
+    } catch (error) {
+      console.error("Image upload failed:", error);
+      throw new Error("Image upload failed");
+    }
+  };
+
   const handleChange = async () => {
     const EDIT_PROFILE = `https://copartners.in:5132/api/Experts?Id=${stackholderId}`;
+
+    let uploadedImagePath = imagePath;
+
+    if (typeof imagePath === "object") {
+      try {
+        uploadedImagePath = await uploadImage(imagePath);
+      } catch (error) {
+        setError("An error occurred while uploading the image.");
+        return;
+      }
+    }
 
     const updatedData = {
       name: name,
       mobileNumber: mobileNumber,
       email: email,
-      freeTelegramLink: freeTelegramLink,
-      membersInTelegram: membersInTelegram,
+      telegramChannel: freeTelegramLink,
+      telegramFollower: parseInt(membersInTelegram),
       chatId: chatId,
-      premiumTelegramLink: premiumTelegramLink,
-      imagePath: imagePath,
+      premiumTelegramChannel: premiumTelegramLink,
+      expertImagePath: uploadedImagePath,
       sebiRegNo: sebiRegNo,
       expertTypeId: expertTypeOptions.indexOf(expertTypeId) + 1,
       experience: experienceOptions.indexOf(experienceType) + 1,
@@ -89,7 +117,7 @@ const ProfileEdit = ({ closeDialog, stackholderId, myCard, fetchDetails }) => {
     const patchOperations = generatePatchOperations(originalData, updatedData);
 
     try {
-      const response = await axios.patch(EDIT_PROFILE, patchOperations, {
+      await axios.patch(EDIT_PROFILE, patchOperations, {
         headers: {
           "Content-Type": "application/json-patch+json",
         },
@@ -127,6 +155,18 @@ const ProfileEdit = ({ closeDialog, stackholderId, myCard, fetchDetails }) => {
     setIsExperienceOpen(false);
   };
 
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setImagePath(file);
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setImagePath(reader.result);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
   return (
     <div className="fixed inset-0 z-[999] flex items-center py-[8rem] justify-center">
       <div className="fixed inset-0 z-[999] flex items-center py-[8rem] justify-center bg-black bg-opacity-[40%]">
@@ -155,13 +195,14 @@ const ProfileEdit = ({ closeDialog, stackholderId, myCard, fetchDetails }) => {
                 id="fileInput"
                 type="file"
                 className="absolute inset-0 opacity-0 w-full h-full"
+                onChange={handleFileChange}
               />
               <span className="flex items-center justify-center py-14 font-inter font-[400] text-[13px] leading-[16px] text-white opacity-[50%]">
                 Select
               </span>
             </label>
 
-            {imagePath && (
+            {imagePath && typeof imagePath === "string" && (
               <div className="mt-4">
                 <img
                   src={imagePath}
@@ -420,24 +461,17 @@ const ProfileEdit = ({ closeDialog, stackholderId, myCard, fetchDetails }) => {
             </div>
           </div>
 
-          {error && <div className="mt-4 text-red-500">{error}</div>}
-
-          {success && <div className="mt-4 text-green-500">{success}</div>}
-
-          <div className="flex md:flex-row flex-col justify-between items-center md:mt-8 mt-4 md:gap-0 gap-4">
+          <div className="flex md:flex-row flex-col justify-between md:mt-8 mt-4 md:ml-0 ml-[-16px] md:gap-0 gap-4">
             <button
               onClick={handleChange}
-              className="md:w-[200px] w-[150px] md:h-[40px] h-[35px] bg-blue-500 hover:bg-blue-700 text-white text-[14px] font-bold py-2 px-4 rounded"
+              className="w-full md:w-auto bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
             >
               Save Changes
             </button>
-            <button
-              onClick={closeDialog}
-              className="md:w-[200px] w-[150px] md:h-[40px] h-[35px] bg-gray-500 hover:bg-gray-700 text-white text-[14px] font-bold py-2 px-4 rounded"
-            >
-              Cancel
-            </button>
           </div>
+
+          {error && <div className="text-red-500 mt-4">{error}</div>}
+          {success && <div className="text-green-500 mt-4">{success}</div>}
         </div>
       </div>
     </div>

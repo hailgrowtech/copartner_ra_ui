@@ -1,16 +1,16 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { closeIcon, signup } from "../assets";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import { toast } from "react-toastify";
 
 const ForgetPassword = ({ setIsSignedUp }) => {
-  const [mobile, setMobile] = useState("");
+  const [oldPassword, setOldPassword] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [confirm, setConfirm] = useState(null);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false); // Added loading state
   const navigate = useNavigate();
-
-  const isFormEmpty = () => {
-    return !mobile;
-  };
 
   const handleClose = () => {
     sessionStorage.setItem("visitedSignUp", "true");
@@ -25,9 +25,39 @@ const ForgetPassword = ({ setIsSignedUp }) => {
     });
   };
 
-  const handleContinue = () => {
-    console.log("Triggered Done...");
-    setIsSignedUp(true);
+  const handleContinue = async (e) => {
+    e.preventDefault();
+
+    setError("");
+    setLoading(true);
+
+    const postData = {
+      oldPassword: "oldPassword",
+      newPassword: "newPassword",
+    };
+
+    try {
+      const response = await axios.post(
+        "https://copartners.in:5130/api/Users/ResetPassword",
+        postData
+      );
+
+      if (response.status !== 200) {
+        toast.error("Something wrong happened!", {
+          position: "top-right",
+        });
+      } else {
+        setConfirm(response.data.data.id);
+      }
+    } catch (error) {
+      console.error("Error posting data:", error);
+      toast.error("Failed to submit data. Please try again.", {
+        position: "top-right",
+      });
+      setError("Failed to submit data. Please try again.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -57,7 +87,9 @@ const ForgetPassword = ({ setIsSignedUp }) => {
             </button>
           </div>
           <div className="mb-4">
-            <h2 className="text-2xl font-semibold text-white">Confirm Your Mail ID</h2>
+            <h2 className="text-2xl font-semibold text-white">
+              Confirm Your Mail ID
+            </h2>
           </div>
           <p className="text-gray-300 text-center mb-4">
             Get access to daily free calls from varieties of India's SEBI
@@ -67,8 +99,19 @@ const ForgetPassword = ({ setIsSignedUp }) => {
           <div className="w-full flex gap-2 flex-col justify-between">
             <div className="w-full mx-auto h-[50px]">
               <input
+                value={oldPassword}
+                onChange={(e) => setOldPassword(e.target.value)}
                 type="text"
-                placeholder="Enter your Mail ID"
+                placeholder="Old Password"
+                className="bg-[#06030E] rounded-[10px] border border-[#18181B] w-full h-full text-white font-[400] text-[14px] p-2"
+              />
+            </div>
+            <div className="w-full mx-auto h-[50px]">
+              <input
+                value={newPassword}
+                onChange={(e) => setNewPassword(e.target.value)}
+                type="text"
+                placeholder="Confirm New Password"
                 className="bg-[#06030E] rounded-[10px] border border-[#18181B] w-full h-full text-white font-[400] text-[14px] p-2"
               />
             </div>

@@ -3,8 +3,10 @@ import PieCharts from "../graphs/PieCharts";
 import Charts from "../graphs/Charts";
 import axios from "axios";
 
-const EarningAnalysis = ({ stackholderId }) => {
+const EarningAnalysis = () => {
   const [earingAnalysis, setEaringAnalysis] = useState(null);
+
+  const stackholderId = sessionStorage.getItem("stackholderId");
 
   const EARNING_URL = `https://copartners.in:5135/api/Wallet/GetWalletWithdrawalBalance/${stackholderId}?userType=RA`;
 
@@ -34,30 +36,30 @@ const EarningAnalysis = ({ stackholderId }) => {
       </div>
 
       <div className="md:w-[1000px] xl:w-[1500px] w-[345px] xl:justify-around sm:w-[380px] md:flex-row flex-col md:gap-10 gap-8 flex md-ml-0 ml-[-6px]">
-        <div className="flex flex-row bg_cards rounded-[10px] md:w-[100%] w-[358px] px-2">
-          <PieCharts /> 
-          <div className="flex flex-col item-center justify-center gap-6 md:w-[150px] w-[119px]">
+        <div className="flex flex-row bg_cards rounded-[10px] md:w-[100%] w-[358px] px-12">
+          {/* <PieCharts />  */}
+          <div className="grid grid-col-3 md:flex flex-col md:item-center item-start md:justify-center md:gap-10 gap-7 md:w-[360px] md:h-auto w-[219px] h-[190px] md:py-0 py-4">
             <div className="flex flex-col">
-              <span className="text-white opacity-[50%] font-[500] md:text-[13px] text-[10px] md:leading-[16px] leading-[12px]">
+              <span className="text-white font-[500] md:text-[16px] text-[10px] md:leading-[24px] leading-[12px]">
                 Total Earning:
               </span>
-              <span className="text-white font-[600] md:text-[24px] text-[19px] md:leading-[29px] leading-[19px]">
+              <span className="text-gradient  text-white font-[600] md:text-[65px] text-[29px] md:leading-[55px] leading-[24px]">
               ₹{(Number(earingAnalysis?.walletBalance) || 0) + 10}
               </span>
             </div>
             <div className="flex flex-col">
-              <span className="text-white opacity-[50%] font-[500] md:text-[13px] text-[10px] md:leading-[16px] leading-[12px]">
+              <span className="text-white font-[500] md:text-[16px] text-[10px] md:leading-[24px] leading-[12px]">
                 Copartner Earning:
               </span>
-              <span className="text-white font-[600] md:text-[24px] text-[19px] md:leading-[29px] leading-[19px]">
+              <span className="text-gradient  text-white font-[600] md:text-[65px] text-[29px] md:leading-[55px] leading-[24px]">
               ₹{earingAnalysis?.walletBalance}
               </span>
             </div>
             <div className="flex flex-col">
-              <span className="text-white opacity-[50%] font-[500] md:text-[13px] text-[10px] md:leading-[16px] leading-[12px]">
+              <span className="text-white font-[500] md:text-[16px] text-[10px] md:leading-[24px] leading-[12px]">
                 Personal Earning:
               </span>
-              <span className="text-white font-[600] md:text-[24px] text-[19px] md:leading-[29px] leading-[19px]">
+              <span className="text-gradient  text-white font-[600] md:text-[65px] text-[29px] md:leading-[55px] leading-[24px]">
                 ₹10
               </span>
             </div>
@@ -68,7 +70,7 @@ const EarningAnalysis = ({ stackholderId }) => {
           Earning Analysis Graph
         </span>
 
-        <div className="flex flex-row bg_cards rounded-[10px] md:w-[100%] md:h-[100%] w-[358px] h-[245px]">
+        <div className="flex flex-row bg_cards rounded-[10px] md:w-[100%] md:h-[400px] w-[358px] h-[405px]">
           <Charts />
         </div>
       </div>

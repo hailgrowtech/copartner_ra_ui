@@ -72,7 +72,7 @@ const ReferralLinkComponent = () => {
   };
 
   return (
-    <div className="flex gap-4 flex-col">
+    <div className="flex gap-4 flex-col md:py-0 py-6 mr-8">
       <div className="flex bg-[#282E3C] text-white flex-row md:flex-row items-center gap-3 w-full md:w-[1120px] rounded-[16px] p-2 px-8">
         <span className="md:text-lg text-sm">Referral Link</span>
         <div className="p-1 px-3 flex rounded-[30px] bg-transparent border-[1px]">

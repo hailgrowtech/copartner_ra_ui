@@ -35,6 +35,21 @@ const Setting = () => {
   const [withdrawalAmount, setWithDrawalAmount] = useState([]);
   const [selectedWithdrawal, setSelectedWithdrawal] = useState(null);
 
+  const [selectedFile, setSelectedFile] = useState(null);
+  const [filePreview, setFilePreview] = useState(null);
+
+  const handleFileChange = (event) => {
+    const file = event.target.files[0];
+    setSelectedFile(file);
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setFilePreview(reader.result);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
   const stackholderId = sessionStorage.getItem("stackholderId");
 
   const withdrawal_api = `https://copartners.in:5135/api/Withdrawal/BankUPIByUserId/${stackholderId}?userType=RA&page=1&pageSize=10`;
@@ -147,12 +162,12 @@ const Setting = () => {
 
   return (
     <div className="pb-[5rem] xl:pl-[12rem] md:pl-[10rem] pl-6 md:py-[6rem] pt-[8rem] bg-gradient min-h-screen">
-      <div className="xl:w-[1530px] md:w-[1122px] md:h-[560px] xl-h-[480px] w-[361px] h-[470px] md:ml-0 ml-[-8px] bg_cards p-4 rounded-[24px]">
+      <div className="xl:w-[1530px] md:w-[1122px] md:h-[520px] xl-h-[480px] w-[361px] h-[570px] md:ml-0 ml-[-8px] bg_cards p-4 rounded-[24px]">
         <div className="flex flex-col">
           <div className="flex flex-row">
             <div className="flex flex-col">
               <div className="flex flex-col gap-2">
-                <span className="font-inter font-[700] md:text-[57px] text-[26px] md:leading-[66px] leading-[30px] text-gradient">
+                <span className="font-inter font-[700] md:text-[54px] text-[26px] md:leading-[66px] leading-[30px] text-gradient">
                   {myCard && myCard.channelName}
                 </span>
                 <span className="text-white font-inter font-[500] md:text-[17px] text-[12px] md:leading-[22px]">
@@ -414,46 +429,57 @@ const Setting = () => {
         </div>
       </div>
 
-      <div className="xl:w-[1520px] md:w-[1120px] md:h-auto w-[360px] px-4 p-8 border-2 border-[#202F49] rounded-[30px] rounded-[30px] flex gap-4 flex-col md:mt-[4rem] mt-[2rem] md:ml-0 ml-[-0.5rem]">
-        <div className="flex flex-row justify-between">
-          <span className="text-white font-inter font-[600] text-[22px] leading-[26px]">
-            Documents
-          </span>
-          <div className="md:w-[93px] w-[64px] md:h-[32px] h-[22px] rounded-[36px] border border-[#fffff] flex justify-center items-center">
-            <button className="flex flex-row items-center gap-2 justify-center items-center">
-              <img
-                src={edit}
-                alt="Edit"
-                className="md:w-[16px] w-[12px] h-[12px] md:h-[16px]"
-              />
-              <span className="text-white md:text-[16px] text-[10px] md:leading-[26px] leading-[20px]">
-                Edit
-              </span>
-            </button>
-          </div>
+      <div className="xl:w-[1520px] md:w-[1120px] md:h-auto w-[360px] px-4 p-8 border-2 border-[#202F49] rounded-[30px] flex gap-4 flex-col md:mt-[4rem] mt-[2rem] md:ml-0 ml-[-0.5rem]">
+      <div className="flex flex-row justify-between">
+        <span className="text-white font-inter font-[600] text-[22px] leading-[26px]">
+          Documents
+        </span>
+        <div className="md:w-[93px] w-[64px] md:h-[32px] h-[22px] rounded-[36px] border border-[#fffff] flex justify-center items-center">
+          <button className="flex flex-row items-center gap-2 justify-center items-center">
+            <img
+              src="/path/to/edit-icon"  // Replace with your edit icon path
+              alt="Edit"
+              className="md:w-[16px] w-[12px] h-[12px] md:h-[16px]"
+            />
+            <span className="text-white md:text-[16px] text-[10px] md:leading-[26px] leading-[20px]">
+              Edit
+            </span>
+          </button>
         </div>
-
-        <label
-          htmlFor="fileInput"
-          className="relative w-[236px] h-[238px] border-2 border-dotted border-[#ffffff] cursor-pointer"
-        >
-          <input
-            id="fileInput"
-            type="file"
-            className="absolute inset-0 opacity-0 w-full h-full"
-            onChange={handleFileChange}
-          />
-
-          <img
-            src={addDoc}
-            alt="Add_Doc"
-            className="w-[95px] h-[95px] ml-16 mt-[2rem]"
-          />
-          <span className="absolute bottom-4 left-0 right-0 text-center w-full font-inter font-[400] text-[13px] leading-[16px] text-white opacity-[50%] mb-[2rem]">
-            Upload Documents
-          </span>
-        </label>
       </div>
+
+      <label
+        htmlFor="fileInput"
+        className="relative w-[236px] h-[238px] border-2 border-dotted border-[#ffffff] cursor-pointer"
+      >
+        <input
+          id="fileInput"
+          type="file"
+          className="absolute inset-0 opacity-0 w-full h-full"
+          onChange={handleFileChange}
+        />
+        {!filePreview ? (
+          <>
+            <img
+              src="/path/to/addDoc-icon"  // Replace with your addDoc icon path
+              alt=""
+              className="w-[95px] h-[95px] ml-16 mt-[2rem]"
+            />
+            <span className="absolute bottom-4 left-0 right-0 text-center w-full font-inter font-[400] text-[13px] leading-[16px] text-white opacity-[50%] mb-[2rem]">
+              Upload Documents
+            </span>
+          </>
+        ) : (
+          <div className="relative w-full h-full flex justify-center items-center">
+            <img
+              src={filePreview}
+              alt="Preview"
+              className="max-w-full max-h-full"
+            />
+          </div>
+        )}
+      </label>
+    </div>
 
       <div className="xl:w-[1520px] md:w-[1120px] md:h-[397px] w-[360px] px-4 p-8 border-2 border-[#202F49] rounded-[30px] rounded-[30px] flex gap-4 flex-col md:mt-[4rem] mt-[2rem] md:ml-0 ml-[-0.5rem]">
         <div className="flex flex-row justify-between">

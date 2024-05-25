@@ -1,110 +1,3 @@
-// import React, { useState, useEffect } from "react";
-// import {
-//   BarChart,
-//   Bar,
-//   XAxis,
-//   YAxis,
-//   CartesianGrid,
-//   Tooltip,
-//   Legend,
-//   ResponsiveContainer,
-// } from "recharts";
-// import axios from "axios";
-// import { parseISO, format, isWithinInterval } from "date-fns";
-
-// const BarGraph = ({ timeRange, customStartDate, customEndDate }) => {
-//   const [userAnalysis, setUserAnalysis] = useState([]);
-//   const stackholderId = sessionStorage.getItem('stackholderId');
-//   const USER_ANALYSIS = `https://copartners.in:5132/api/RADashboard/GetDashboardRAListingData/${stackholderId}?page=1&pageSize=10`;
-
-//   useEffect(() => {
-//     axios.get(USER_ANALYSIS).then((res) => {
-//       const daysOfWeek = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
-//       const monthsOfYear = [
-//         'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
-//         'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
-//       ];
-
-//       const fetchedData = res.data.data.map((item, index) => {
-//         const userVisit = item.arrows ? item.arrows.length : 0;
-//         const userBuy = item.subscription !== "No Subscription" ? item.userBuy : 7;
-
-//         let name = '';
-//         if (timeRange === 'Today') {
-//           name = `Hour ${index + 1}`;
-//         } else if (timeRange === 'Weekly') {
-//           name = daysOfWeek[index % 7];
-//         } else if (timeRange === 'Monthly') {
-//           name = `Day ${index + 1}`;
-//         } else if (timeRange === 'Yearly') {
-//           name = monthsOfYear[index % 12];
-//         }
-
-//         return {
-//           name,
-//           "User Visit": userVisit,
-//           "User Buy": userBuy,
-//         };
-//       });
-
-//       setUserAnalysis(fetchedData);
-//     });
-//   }, [USER_ANALYSIS, timeRange]);
-
-//   useEffect(() => {
-//     if (timeRange === 'Custom' && customStartDate && customEndDate) {
-//       axios.get(USER_ANALYSIS).then((res) => {
-//         const filteredData = res.data.data.filter((item) => {
-//           const date = parseISO(item.date);
-//           return isWithinInterval(date, { start: customStartDate, end: customEndDate });
-//         }).map((item, index) => {
-//           const userVisit = item.arrows ? item.arrows.length : 0;
-//           const userBuy = item.subscription !== "No Subscription" ? item.userBuy : 0;
-//           const name = format(parseISO(item.date), 'yyyy-MM-dd');
-
-//           return {
-//             name,
-//             "User Visit": userVisit,
-//             "User Buy": userBuy,
-//           };
-//         });
-
-//         setUserAnalysis(filteredData);
-//       });
-//     }
-//   }, [USER_ANALYSIS, timeRange, customStartDate, customEndDate]);
-
-//   const yTicks = [0, 5, 10, 15, 20, 25];
-
-//   return (
-//     <ResponsiveContainer
-//       className="bg_cards rounded-[10px] ml-[-3.8rem] md:flex hidden"
-//       width="102%"
-//       height={300}
-//     >
-//       <BarChart
-//         data={userAnalysis}
-//         margin={{
-//           top: 5,
-//           right: 20,
-//           left: 0,
-//           bottom: 5,
-//         }}
-//       >
-//         <CartesianGrid strokeDasharray="5 5" stroke="transparent" />
-//         <XAxis dataKey="name" />
-//         <YAxis ticks={yTicks} />
-//         <Tooltip />
-//         <Legend />
-//         <Bar dataKey="User Visit" fill="#8884d8" barSize={10} />
-//         <Bar dataKey="User Buy" fill="#82ca9d" barSize={10} />
-//       </BarChart>
-//     </ResponsiveContainer>
-//   );
-// };
-
-// export default BarGraph;
-
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import {
@@ -166,11 +59,11 @@ const BarGraph = ({
             const dayLabel = date ? format(date, "yyyy-MM-dd") : "Unknown Date";
             const totalVisit = 1;
             const paidUser =
-              item.subscription && item.subscription !== "No Subscrption"
+              item.subscription && item.subscription !== "No Subscription"
                 ? 1
                 : 0;
             const notInterested =
-              item.subscription && item.subscription == "No Subscrption"
+              item.subscription && item.subscription === "No Subscription"
                 ? 1
                 : 0;
 
@@ -244,12 +137,13 @@ const BarGraph = ({
         return data.monthly;
       case "custom":
         if (customStartDate && customEndDate) {
-          return data.daily.filter((d) =>
-            isWithinInterval(new Date(d.name), {
+          return data.daily.filter((d) => {
+            const currentDate = parseISO(d.name);
+            return isWithinInterval(currentDate, {
               start: customStartDate,
               end: customEndDate,
-            })
-          );
+            });
+          });
         }
         return [];
       default:
@@ -316,3 +210,4 @@ const BarGraph = ({
 };
 
 export default BarGraph;
+

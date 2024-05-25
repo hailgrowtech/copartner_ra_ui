@@ -151,7 +151,7 @@ const Navbar = ({ activeTab, toggleSidebar }) => {
                 />
               </div>
 
-              <div className="relative">
+              {/* <div className="relative">
                 <button
                   onClick={handleOpenNotification}
                   className="flex items-center justify-center w-[36px] h-[40px] border-solid border-[1px] border-white p-1 rounded-[10px] md-mr-0 mr-[-8px]"
@@ -180,10 +180,10 @@ const Navbar = ({ activeTab, toggleSidebar }) => {
                     </div>
                   </div>
                 )}
-              </div>
+              </div> */}
             </div>
           ) : (
-            <div className="flex w-[540px] ml-[4rem] gap-[2rem]">
+            <div className="flex w-[540px] ml-[8rem] gap-[2rem]">
               <div className="relative">
                 <img
                   src={searchIcon}
@@ -197,7 +197,7 @@ const Navbar = ({ activeTab, toggleSidebar }) => {
                 />
               </div>
 
-              <div className="relative">
+              {/* <div className="relative">
                 <button
                   className="flex items-center justify-center w-[46px] h-[50px]  border-solid border-[1px] border-white p-1 rounded-[10px]"
                   onClick={handleOpenNotification}
@@ -226,7 +226,7 @@ const Navbar = ({ activeTab, toggleSidebar }) => {
                     </div>
                   </div>
                 )}
-              </div>
+              </div> */}
 
               <Link to="/setting">
                 <img
