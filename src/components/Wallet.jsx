@@ -23,6 +23,8 @@ const Wallet = () => {
   const [walletBalance, setWalletBalance] = useState(null);
   const [transactionTable, setTransactionTable] = useState("");
   const [withdrawalReq, setWithdrawalReq] = useState("");
+  const [getBankID, setGetBankID] = useState("");
+  const [selectedRow, setSelectedRow] = useState(null);
 
   const stackholderId = sessionStorage.getItem("stackholderId");
 
@@ -31,6 +33,9 @@ const Wallet = () => {
   const TRANSACTION_API = `https://copartners.in:5132/api/RADashboard/GetDashboardRAListingData/${stackholderId}?page=1&pageSize=10`;
 
   const WITHDRAWAL_REQ_API = `https://copartners.in:5135/api/Withdrawal/GetWithdrawalByUserId/${stackholderId}?userType=RA&page=1&pageSize=10`;
+
+  const BANK_API = `https://copartners.in:5135/api/Withdrawal/GetBankUPIById/${getBankID}`;
+  console.log("ABCD", BANK_API);
 
   useEffect(() => {
     const fetchWalletBalance = async () => {
@@ -59,7 +64,7 @@ const Wallet = () => {
     };
 
     fetchWalletReqBalance();
-  }, []);
+  }, [WITHDRAWAL_REQ_API]);
 
   useEffect(() => {
     const fetchTransactionTable = async () => {
@@ -75,6 +80,15 @@ const Wallet = () => {
 
     fetchTransactionTable();
   }, []);
+
+  useEffect(() => {
+    if (getBankID) {
+      axios.get(BANK_API).then((res) => {
+        console.log("MY value is showing", res.data);
+        setWithdrawalReq(res.data.data);
+      });
+    }
+  }, [getBankID, BANK_API]);
 
   const handleOpenFilter = () => {
     console.log("Open Filer Is Working");
@@ -93,7 +107,8 @@ const Wallet = () => {
     return () => window.removeEventListener("resize", checkScreenSize);
   }, []);
 
-  const openEditUpiDialog = () => {
+  const openEditUpiDialog = (row) => {
+    setSelectedRow(row);
     setIsEditUpiOpen(true);
   };
 
@@ -104,6 +119,7 @@ const Wallet = () => {
   const closeDialog = () => {
     setIsDialogOpen(false);
     setIsEditUpiOpen(false);
+    setSelectedRow(null);
   };
 
   const handleTab = (id) => {
@@ -244,26 +260,26 @@ const Wallet = () => {
                 )}
               </div>
             </div>
-            <div className="flex flex-row gap-4">
+            <div className="flex flex-row md:gap-4 gap-2">
               <button
                 onClick={() => setShowTransactions("transaction")}
-                className={`w-[95px] h-[40px] rounded-[10px] border-solid border-[1px] border-white text-black ${
+                className={`w-[120px] h-[40px] rounded-[10px] border-solid border-[1px] border-white text-black ${
                   showTransactions === "transaction"
                     ? "bg-[#ffffff] font-[600] font-inter text-[12px]"
                     : "bg-transparent text-white font-[600] font-inter text-[12px]"
                 }`}
               >
-                Transaction
+                User Statement
               </button>
               <button
                 onClick={() => setShowTransactions("withdrawal")}
-                className={`w-[100px] h-[40px] rounded-[10px] border-solid border-[1px] border-white text-black ${
+                className={`w-[90px] h-[40px] rounded-[10px] border-solid border-[1px] border-white text-black ${
                   showTransactions === "withdrawal"
                     ? "bg-[#ffffff] font-[600] font-inter text-[12px]"
                     : "bg-transparent text-white font-[600] font-inter text-[12px]"
                 }`}
               >
-                Withdrawal
+                Transaction
               </button>
               <button
                 onClick={() => setShowTransactions("request")}
@@ -284,98 +300,99 @@ const Wallet = () => {
             {smallScreen ? (
               <div className="flex flex-col pl-[5rem] flex-wrap justify-center items-center">
                 {transactionTable &&
-                  transactionTable.slice(0, 5).map((row, index) => (
-                    <div
-                      key={index}
-                      className="flex flex-col justify-around w-[358px] ml-[-6rem] h-[248px] bg-[#18181B] bg-opacity-[50%] rounded-[30px] md:m-4 m-[10px] p-4"
-                    >
-                      <div className="flex flex-row justify-between">
-                        <p className="w-[173px] h-[26px] font-[600] text-[16px] leading-[25px] text-lightWhite">
-                          {row.transcationId}
-                        </p>
-                        <img
-                          src={invoiceImg}
-                          alt=""
-                          className="w-[24px] h-[24px] text-white"
-                        />
+                  transactionTable
+                    .slice(0, 5)
+                    .filter((row) => row.subscription !== "No Subscrption")
+                    .map((row, index) => (
+                      <div
+                        key={index}
+                        className="flex flex-col justify-around w-[358px] ml-[-6rem] h-[248px] bg-[#18181B] bg-opacity-[50%] rounded-[30px] md:m-4 m-[10px] p-4"
+                      >
+                        <div className="flex flex-row justify-between">
+                          <p className="w-[173px] h-[26px] font-[600] text-[16px] leading-[25px] text-lightWhite">
+                            {row.transactionId}
+                          </p>
+                          <img
+                            src={invoiceImg}
+                            alt=""
+                            className="w-[24px] h-[24px] text-white"
+                          />
+                        </div>
+                        <span className="flex items-center justify-between sm:w-[305px] h-[13px] font-[500] text-[14px] leading-[12px] text-lightWhite">
+                          <span className="text-dimWhite">DATE:</span>{" "}
+                          {formatDate(row.date)}
+                        </span>
+                        <span className="flex items-center justify-between sm:w-[305px] h-[34px] font-[500] text-[14px] leading-[12px] text-lightWhite">
+                          <span className="text-dimWhite">SUBSCRIPTION:</span>{" "}
+                          {row.subscription}
+                        </span>
+                        <span className="flex items-center justify-between sm:w-[305px] h-[13px] font-[500] text-[14px] leading-[12px] text-lightWhite">
+                          <span className="text-dimWhite">PLAN NAME:</span>{" "}
+                          {row.planType}
+                        </span>
+                        <span className="flex items-center justify-between sm:w-[305px] h-[13px] font-[500] text-[14px] leading-[12px] text-lightWhite">
+                          <span className="text-dimWhite">User Number:</span>{" "}
+                          {row.userMobileNo}
+                        </span>
+                        <span className="flex items-center justify-between sm:w-[305px] h-[13px] font-[500] text-[14px] leading-[12px] text-lightWhite">
+                          <span className="text-dimWhite">AMOUNT:</span>{" "}
+                          {row.amount}
+                        </span>
                       </div>
-                      <span className="flex items-center justify-between sm:w-[305px] h-[13px] font-[500] text-[14px] leading-[12px] text-lightWhite">
-                        <span className="text-dimWhite">DATE:</span>{" "}
-                        {formatDate(row.date)}
-                      </span>
-                      <span className="flex items-center justify-between sm:w-[305px] h-[34px] font-[500] text-[14px] leading-[12px] text-lightWhite">
-                        <span className="text-dimWhite">SUBSCRIPTION:</span>{" "}
-                        {row.subscription}
-                      </span>
-                      <span className="flex items-center justify-between sm:w-[305px] h-[13px] font-[500] text-[14px] leading-[12px] text-lightWhite">
-                        <span className="text-dimWhite">PLAN NAME:</span>{" "}
-                        {row.subscription}
-                      </span>
-                      <span className="flex items-center justify-between sm:w-[305px] h-[13px] font-[500] text-[14px] leading-[12px] text-lightWhite">
-                        <span className="text-dimWhite">User Number:</span>{" "}
-                        {row.userMobileNo}
-                      </span>
-                      <span className="flex items-center justify-between sm:w-[305px] h-[13px] font-[500] text-[14px] leading-[12px] text-lightWhite">
-                        <span className="text-dimWhite">AMOUNT:</span>{" "}
-                        {row.amount}
-                      </span>
-                    </div>
-                  ))}
+                    ))}
                 <button className="items-center mr-[6rem] mt-2 justify-center flex w-[110px] h-[30px] rounded-[6px] bg-lightWhite text-[10px] font-[500] leading-[12px]">
                   Show More
                 </button>
               </div>
             ) : (
               <table className="xl:w-[1520px] md:w-[1130px] md:h-auto h-[497px] px-[1rem] bg-[#29303F] rounded-[30px]">
-                <thead className="text-dimWhite w-[1084px] h-[51px]">
+                <thead className="text-dimWhite">
                   <tr>
-                    <th className="text-center">Transaction ID</th>
-                    <th className="text-start pl-[4rem]">Date</th>
-                    <th className="text-start">Subscription</th>
-                    <th className="text-end">Plan Name</th>
-                    <th className="text-center pl-[4rem]">User Number</th>
-                    <th className="text-start pl-[4rem]">Amount</th>
-                    <th className="text-center">Invoice</th>
+                    <th className="text-center px-4">Transaction ID</th>
+                    <th className="text-center px-4">Date</th>
+                    <th className="text-center px-4">Subscription</th>
+                    <th className="text-center px-4">Plan Name</th>
+                    <th className="text-center px-4">User Number</th>
+                    <th className="text-start px-4">Amount</th>
+                    <th className="text-center px-4">Invoice</th>
                   </tr>
                 </thead>
-                <tbody className="text-lightWhite w-[1084px] h-[81px]">
+                <tbody className="text-lightWhite">
                   {transactionTable &&
                     transactionTable
-                      .filter((row) => row.subscription !== "0")
-                      .map((row, index) => {
-                        return (
-                          <tr
-                            key={index}
-                            className={index % 2 === 0 ? "bg-[#1E1E22]" : ""}
-                          >
-                            <td className="text-center font-[500] text-[16px] leading-[18px]">
-                              {row.transcationId}
-                            </td>
-                            <td className="pl-[2rem] font-[500] text-[16px] leading-[18px]">
-                              {formatDate(row.date)}
-                            </td>
-                            <td className="pl-[1rem] w-[143px] h-[36px] font-[500] text-[16px] leading-[18px]">
-                              {row.subscription}
-                            </td>
-                            <td className="pl-[4rem] text-center w-[143px] h-[36px] font-[500] text-[16px] leading-[18px]">
-                              {/* {row.subscription} */}
-                            </td>
-                            <td className="pl-[4rem] text-center font-[500] text-[16px] leading-[18px]">
-                              {row.userMobileNo}
-                            </td>
-                            <td className="pl-[4rem] w-[105px] h-[18px] font-[500] text-[16px] leading-[18px]">
-                              {row.amount}
-                            </td>
-                            <td className="py-2">
-                              <img
-                                src={invoiceImg}
-                                alt=""
-                                className="w-[21px] h-[21px] text-white mx-auto"
-                              />
-                            </td>
-                          </tr>
-                        );
-                      })}
+                      .filter((row) => row.subscription !== "No Subscrption")
+                      .map((row, index) => (
+                        <tr
+                          key={index}
+                          className={index % 2 === 0 ? "bg-[#1E1E22]" : ""}
+                        >
+                          <td className="text-center font-[500] text-[16px] leading-[18px] px-4">
+                            {row.transactionId}
+                          </td>
+                          <td className="text-center font-[500] text-[16px] leading-[18px] px-4">
+                            {formatDate(row.date)}
+                          </td>
+                          <td className="text-center font-[500] text-[16px] leading-[18px] px-4">
+                            {row.subscription}
+                          </td>
+                          <td className="text-center font-[500] text-[16px] leading-[18px] px-4">
+                            {row.planType}
+                          </td>
+                          <td className="text-center font-[500] text-[16px] leading-[18px] px-4">
+                            {row.userMobileNo}
+                          </td>
+                          <td className="text-start font-[500] text-[16px] leading-[18px] px-4">
+                            {row.amount}
+                          </td>
+                          <td className="text-center py-2">
+                            <img
+                              src={invoiceImg}
+                              alt="Invoice"
+                              className="w-[21px] h-[21px] mx-auto"
+                            />
+                          </td>
+                        </tr>
+                      ))}
                 </tbody>
               </table>
             )}
@@ -386,7 +403,7 @@ const Wallet = () => {
           <>
             {smallScreen ? (
               <div className="flex flex-col pl-[5rem] flex-wrap justify-center items-center">
-                {withdrawalData.slice(0, 5).map((row, index) => (
+                {withdrawalReq.slice(0, 5).map((row, index) => (
                   <div
                     key={index}
                     className="flex flex-col justify-around w-[358px] ml-[-6rem] h-[248px] bg-[#18181B] bg-opacity-[50%] rounded-[30px] md:m-4 m-[10px] p-4"
@@ -402,7 +419,8 @@ const Wallet = () => {
                       />
                     </div>
                     <span className="flex items-center justify-between sm:w-[305px] h-[13px] font-[500] text-[14px] leading-[12px] text-lightWhite">
-                      <span className="text-dimWhite">DATE:</span> {row.date}
+                      <span className="text-dimWhite">DATE:</span>{" "}
+                      {formatDate(row.withdrawalRequestDate)}
                     </span>
                     <span className="flex items-center justify-between sm:w-[305px] h-[34px] font-[500] text-[14px] leading-[12px] text-lightWhite">
                       <span className="text-dimWhite">BANK:</span>{" "}
@@ -423,48 +441,53 @@ const Wallet = () => {
                 </button>
               </div>
             ) : (
-              <table className="xl:w-[1520px] md:w-[1130px] h-[497px] px-[1rem] bg-[#29303F] rounded-[30px]">
+              <table className="xl:w-[1520px] md:w-[1130px] md:h-auto h-[497px] px-[1rem] bg-[#29303F] rounded-[30px]">
                 <thead className="text-dimWhite w-[1084px] h-[51px]">
                   <tr>
                     <th className="text-start pl-[4rem]">Transaction ID</th>
                     <th className="text-start pl-[4rem]">Date</th>
                     <th className="text-start pl-[4rem]">Bank</th>
-                    <th className="text-start pl-[4rem]">Account Number</th>
+                    <th className="text-start pl-[0rem]">Account Number</th>
                     <th className="text-start pl-[4rem]">Amount</th>
                     <th className="text-start pl-[4rem]">Invoice</th>
                   </tr>
                 </thead>
                 <tbody className="text-lightWhite w-[1084px] h-[81px]">
-                  {withdrawalData.map((row, index) => {
+                  {withdrawalReq.map((row, index) => {
                     return (
-                      <tr
-                        key={index}
-                        className={index % 2 === 0 ? "bg-[#1E1E22]" : ""}
-                      >
-                        <td className="pl-[4rem] font-[500] text-[16px] leading-[18px]">
-                          {/* {row.transcationId} */}
-                        </td>
-                        <td className="pl-[4rem] font-[500] text-[16px] leading-[18px]">
-                          {/* {row.date} */}
-                        </td>
-                        <td className="pl-[4rem] w-[143px] h-[36px] font-[500] text-[16px] leading-[18px]">
-                          {row.paymentMode}
-                        </td>
-                        <td className="pl-[4rem] w-[143px] h-[36px] font-[500] text-[16px] leading-[18px]">
-                          {/* {row.accountNumber} */}
-                          {row.paymentMode === "Bank" ? row.accountNumber : row.upI_ID}
-                        </td>
-                        <td className="pl-[4rem] w-[105px] h-[18px] font-[500] text-[16px] leading-[18px]">
-                          {row.amount}
-                        </td>
-                        <td className="pl-[5rem]">
-                          <img
-                            src={invoiceImg}
-                            alt=""
-                            className="w-[21px] h-[21px] text-white"
-                          />
-                        </td>
-                      </tr>
+                      row.requestAction === "A" && (
+                        <tr
+                          key={index}
+                          className={index % 2 === 0 ? "bg-[#1E1E22]" : ""}
+                        >
+                          <td className="pl-[4rem] font-[500] text-[16px] leading-[18px]">
+                            {/* {row.transcationId} */}
+                          </td>
+                          <td className="pl-[4rem] font-[500] text-[16px] leading-[18px]">
+                            {/* {row.date} */}
+                            {formatDate(row.withdrawalRequestDate)}
+                          </td>
+                          <td className="pl-[4rem] w-[143px] h-[36px] font-[500] text-[16px] leading-[18px]">
+                            {row.paymentMode}
+                          </td>
+                          <td className="pl-[4rem] w-[143px] h-[36px] font-[500] text-[16px] leading-[18px]">
+                            {/* {row.accountNumber} */}
+                            {row.paymentMode === "Bank"
+                              ? row.accountNumber
+                              : row.upI_ID}
+                          </td>
+                          <td className="pl-[4rem] w-[105px] h-[18px] font-[500] text-[16px] leading-[18px]">
+                            {row.amount}
+                          </td>
+                          <td className="pl-[5rem]">
+                            <img
+                              src={invoiceImg}
+                              alt=""
+                              className="w-[21px] h-[21px] text-white"
+                            />
+                          </td>
+                        </tr>
+                      )
                     );
                   })}
                 </tbody>
@@ -477,57 +500,61 @@ const Wallet = () => {
           <>
             {smallScreen ? (
               <div className="flex flex-col pl-[5rem] flex-wrap justify-center items-center">
-                {withdrawalData.slice(0, 5).map((row, index) => (
-                  <div
-                    key={index}
-                    className="flex flex-col justify-around w-[358px] ml-[-6rem] ml- h-[248px] bg-[#18181B] bg-opacity-[50%] rounded-[30px] md:m-4 m-[10px] p-4"
-                  >
-                    <div className="flex flex-row justify-between">
-                      <p className="w-[173px] h-[26px] font-[600] text-[16px] leading-[25px] text-lightWhite">
-                        {row.transcationId}
-                      </p>
-                      <div
-                        className="font-[600] text-[16px] leading-[25px] text-lightWhite pl-[4rem]"
-                        style={{
-                          color:
-                            row.status === "Pending" ? "#FB923C" : "#E24966",
-                        }}
-                      >
-                        {row.status === "Pending" ? (
-                          <div>{row.status}</div>
-                        ) : (
-                          <button
-                            className="text-[16px]"
-                            onClick={openEditUpiDialog}
-                          >
-                            {row.status}
-                          </button>
-                        )}
-                        {isEditUpiOpen && (
-                          <RejectUpiOpen
-                            isOpen={isEditUpiOpen}
-                            onClose={closeDialog}
-                          />
-                        )}
+                {withdrawalReq
+                  .filter((row) => String(row.requestAction).trim() !== "A")
+                  .slice(0, 5)
+                  .map((row, index) => (
+                    <div
+                      key={index}
+                      className="flex flex-col justify-around w-[358px] ml-[-6rem] ml- h-[248px] bg-[#18181B] bg-opacity-[50%] rounded-[30px] md:m-4 m-[10px] p-4"
+                    >
+                      <div className="flex flex-row justify-between">
+                        <p className="w-[173px] h-[26px] font-[600] text-[16px] leading-[25px] text-lightWhite">
+                          {row.transcationId}
+                        </p>
+                        <div
+                          className="font-[600] text-[16px] leading-[25px] text-lightWhite pl-[4rem]"
+                          style={{
+                            color:
+                              row.status === "Pending" ? "#FB923C" : "#E24966",
+                          }}
+                        >
+                          {row.status === "Pending" ? (
+                            <div>{row.requestAction}</div>
+                          ) : (
+                            <button
+                              className="text-[16px]"
+                              onClick={openEditUpiDialog}
+                            >
+                              {row.requestAction}
+                            </button>
+                          )}
+                          {isEditUpiOpen && (
+                            <RejectUpiOpen
+                              isOpen={isEditUpiOpen}
+                              onClose={closeDialog}
+                            />
+                          )}
+                        </div>
                       </div>
+                      <span className="flex items-center justify-between sm:w-[305px] h-[13px] font-[500] text-[14px] leading-[12px] text-lightWhite">
+                        <span className="text-dimWhite">DATE:</span>{" "}
+                        {formatDate(row.withdrawalRequestDate)}
+                      </span>
+                      <span className="flex items-center justify-between sm:w-[305px] h-[13px] font-[500] text-[14px] leading-[12px] text-lightWhite">
+                        <span className="text-dimWhite">BANK:</span>{" "}
+                        {row.paymentMode}
+                      </span>
+                      <span className="flex items-center justify-between sm:w-[305px] h-[13px] font-[500] text-[14px] leading-[12px] text-lightWhite">
+                        <span className="text-dimWhite">ACCOUNT NUMBER:</span>{" "}
+                        {row.accNum}
+                      </span>
+                      <span className="flex items-center justify-between sm:w-[305px] h-[13px] font-[500] text-[14px] leading-[12px] text-lightWhite">
+                        <span className="text-dimWhite">AMOUNT:</span>{" "}
+                        {row.amount}
+                      </span>
                     </div>
-                    <span className="flex items-center justify-between sm:w-[305px] h-[13px] font-[500] text-[14px] leading-[12px] text-lightWhite">
-                      <span className="text-dimWhite">DATE:</span> {row.date}
-                    </span>
-                    <span className="flex items-center justify-between sm:w-[305px] h-[13px] font-[500] text-[14px] leading-[12px] text-lightWhite">
-                      <span className="text-dimWhite">BANK:</span>{" "}
-                      {row.withdrawal}
-                    </span>
-                    <span className="flex items-center justify-between sm:w-[305px] h-[13px] font-[500] text-[14px] leading-[12px] text-lightWhite">
-                      <span className="text-dimWhite">ACCOUNT NUMBER:</span>{" "}
-                      {row.accNum}
-                    </span>
-                    <span className="flex items-center justify-between sm:w-[305px] h-[13px] font-[500] text-[14px] leading-[12px] text-lightWhite">
-                      <span className="text-dimWhite">AMOUNT:</span>{" "}
-                      {row.amount}
-                    </span>
-                  </div>
-                ))}
+                  ))}
                 <button className="items-center mr-[6rem] mt-2 justify-center flex w-[110px] h-[30px] rounded-[6px] bg-lightWhite text-[10px] font-[500] leading-[12px]">
                   Show More
                 </button>
@@ -546,52 +573,55 @@ const Wallet = () => {
                 </thead>
                 <tbody className="text-lightWhite w-[1084px] h-[81px]">
                   {withdrawalReq &&
-                    withdrawalReq.map((row, index) => {
-                      return (
-                        <tr
-                          key={index}
-                          className={index % 2 === 0 ? "bg-[#1E1E22]" : ""}
-                        >
-                          <td className="pl-[4rem] font-[500] text-[16px] leading-[18px]">
-                            {/* {row.transcationId} */}
-                          </td>
-                          <td className="pl-[4rem] font-[500] text-[16px] leading-[18px]">
-                            {formatDate(row.createdOn)}
-                          </td>
-                          <td className="w-[143px] h-[36px] font-[500] text-[16px] leading-[18px]">
-                            {row.paymentMode}
-                          </td>
-                          <td className="px-[4rem] w-[143px] h-[36px] font-[500] text-[16px] leading-[18px]">
-                            {/* {row.accountNumber} */}
-                            {row.paymentMode === "Bank" ? row.accountNumber : row.upI_ID}
-                          </td>
-                          <td className="pl-[4rem] w-[105px] h-[18px] font-[500] text-[16px] leading-[18px]">
-                            {row.amount}
-                          </td>
-                          <td
-                            className={`pl-[4rem] ${
-                              row.status === "Pending"
-                                ? "text-[#FB923C]"
-                                : "text-[#E24966]"
-                            }`}
+                    withdrawalReq.map(
+                      (row, index) =>
+                        row.requestAction !== "A" && (
+                          <tr
+                            key={index}
+                            className={index % 2 === 0 ? "bg-[#1E1E22]" : ""}
                           >
-                            {row.status === "Pending" ? (
-                              <div>{row.status}</div>
-                            ) : (
-                              <button onClick={openEditUpiDialog}>
-                                {row.status}
-                              </button>
-                            )}
-                          </td>
-                          {isEditUpiOpen && (
-                            <RejectUpiOpen
-                              isOpen={isEditUpiOpen}
-                              onClose={closeDialog}
-                            />
-                          )}
-                        </tr>
-                      );
-                    })}
+                            <td className="pl-[4rem] font-[500] text-[16px] leading-[18px]">
+                              {/* {row.transcationId} */}
+                            </td>
+                            <td className="pl-[4rem] font-[500] text-[16px] leading-[18px]">
+                              {formatDate(row.withdrawalRequestDate)}
+                            </td>
+                            <td className="w-[143px] h-[36px] font-[500] text-[16px] leading-[18px]">
+                              {row.paymentMode}
+                            </td>
+                            <td className="px-[4rem] w-[143px] h-[36px] font-[500] text-[16px] leading-[18px]">
+                              {row.paymentMode === "Bank"
+                                ? row.accountNumber
+                                : row.upI_ID}
+                            </td>
+                            <td className="pl-[4rem] w-[105px] h-[18px] font-[500] text-[16px] leading-[18px]">
+                              {row.amount}
+                            </td>
+                            <td
+                              className={`pl-[4rem] ${
+                                row.status === "Pending"
+                                  ? "text-[#FB923C]"
+                                  : "text-[#E24966]"
+                              }`}
+                            >
+                              {row.status === "Pending" ? (
+                                <div>{row.requestAction}</div>
+                              ) : (
+                                <button onClick={() => openEditUpiDialog(row)}>
+                                  {row.requestAction}
+                                </button>
+                              )}
+                            </td>
+                          </tr>
+                        )
+                    )}
+                  {isEditUpiOpen && selectedRow && (
+                    <RejectUpiOpen
+                      isOpen={isEditUpiOpen}
+                      onClose={closeDialog}
+                      withdrawalReq={selectedRow}
+                    />
+                  )}
                 </tbody>
               </table>
             )}

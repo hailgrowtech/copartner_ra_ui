@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
-import { closeIcon, dropdown, arrowRight } from "../assets";
+import { closeIcon, dropdown } from "../assets";
 import axios from "axios";
 
 const ProfileEdit = ({ closeDialog, stackholderId, myCard, fetchDetails }) => {
-  const [expertTypeId, setexpertTypeId] = useState("");
+  const [expertTypeId, setExpertTypeId] = useState("");
   const [experienceType, setExperienceType] = useState("");
   const [isSubscriptionOpen, setIsSubscriptionOpen] = useState(false);
   const [isExperienceOpen, setIsExperienceOpen] = useState(false);
@@ -22,19 +22,8 @@ const ProfileEdit = ({ closeDialog, stackholderId, myCard, fetchDetails }) => {
 
   const [originalData, setOriginalData] = useState({});
 
-  const expertTypeOptions = {
-    Option: 1,
-    Commodity: 2,
-    Equity: 3,
-  };
-
-  const experienceOptions = {
-    "1+ Year": 1,
-    "2+ Years": 2,
-    "3+ Years": 3,
-    "4+ Years": 4,
-    "5+ Years": 5,
-  };
+  const expertTypeOptions = ["Option", "Commodity", "Equity"];
+  const experienceOptions = ["1+ Year", "2+ Years", "3+ Years", "4+ Years", "5+ Years"];
 
   useEffect(() => {
     if (myCard) {
@@ -47,15 +36,9 @@ const ProfileEdit = ({ closeDialog, stackholderId, myCard, fetchDetails }) => {
       setPremiumTelegramLink(myCard.premiumTelegramChannel);
       setImagePath(myCard.expertImagePath);
       setSebiRegNo(myCard.sebiRegNo);
-      setexpertTypeId(myCard.expertTypeId);
-  
-      // Ensure proper handling of experienceType
-      const experienceTypeValue = myCard.experienceType !== null && myCard.experienceType !== undefined ? myCard.experienceType : "";
-      setExperienceType(experienceTypeValue);
-  
-      console.log("myCard.expertTypeId:", myCard.expertTypeId);
-      console.log("myCard.experienceType:", myCard.experienceType);
-  
+      setExpertTypeId(myCard.expertTypeId);
+      setExperienceType(myCard.experience || "");
+
       setOriginalData({
         name: myCard.name,
         mobileNumber: myCard.mobileNumber,
@@ -67,67 +50,62 @@ const ProfileEdit = ({ closeDialog, stackholderId, myCard, fetchDetails }) => {
         imagePath: myCard.expertImagePath,
         sebiRegNo: myCard.sebiRegNo,
         expertTypeId: myCard.expertTypeId,
-        experienceType: experienceTypeValue,
+        experienceType: myCard.experience || "",
       });
     }
   }, [myCard]);
 
   const generatePatchOperations = (original, updated) => {
     const operations = [];
-
     for (const key in updated) {
       if (original[key] !== updated[key]) {
         operations.push({
-          path: `${key}`,
           op: "replace",
+          path: `/${key}`,
           value: updated[key],
         });
       }
     }
-
     return operations;
   };
 
   const handleChange = async () => {
-    const EDIT_PROFILE = `https://copartners.in:5132/api/Experts/${stackholderId}`;
+    const EDIT_PROFILE = `https://copartners.in:5132/api/Experts?Id=${stackholderId}`;
 
     const updatedData = {
       name: name,
-      mobileNumber,
-      email,
-      freeTelegramLink,
-      membersInTelegram,
-      chatId,
-      premiumTelegramLink,
-      imagePath,
-      sebiRegNo,
-      expertTypeId: expertTypeOptions[expertTypeId],
-      experienceType: experienceOptions[experienceType],
+      mobileNumber: mobileNumber,
+      email: email,
+      freeTelegramLink: freeTelegramLink,
+      membersInTelegram: membersInTelegram,
+      chatId: chatId,
+      premiumTelegramLink: premiumTelegramLink,
+      imagePath: imagePath,
+      sebiRegNo: sebiRegNo,
+      expertTypeId: expertTypeOptions.indexOf(expertTypeId) + 1,
+      experience: experienceOptions.indexOf(experienceType) + 1,
     };
 
     const patchOperations = generatePatchOperations(originalData, updatedData);
-    console.log(patchOperations);
 
     try {
-      const response = await axios.patch(`https://copartners.in:5132/api/Experts/${stackholderId}`, patchOperations, {
+      const response = await axios.patch(EDIT_PROFILE, patchOperations, {
         headers: {
           "Content-Type": "application/json-patch+json",
         },
       });
-      console.log(response.data, "Editing Profile Info");
       setSuccess("Profile updated successfully!");
       fetchDetails();
       setError(null);
-      setOriginalData(updatedData); // Update original data with the new data
+      setOriginalData(updatedData);
     } catch (error) {
-      console.error(error);
       setError("An error occurred while updating the profile.");
       setSuccess(null);
     }
   };
 
   const handleSubClick = (option) => {
-    setexpertTypeId(option);
+    setExpertTypeId(option);
     setIsSubscriptionOpen(false);
   };
 
@@ -187,7 +165,6 @@ const ProfileEdit = ({ closeDialog, stackholderId, myCard, fetchDetails }) => {
               <div className="mt-4">
                 <img
                   src={imagePath}
-
                   alt="Profile Preview"
                   className="w-[100px] h-[100px] rounded-full object-cover"
                 />
@@ -269,7 +246,7 @@ const ProfileEdit = ({ closeDialog, stackholderId, myCard, fetchDetails }) => {
                   <input
                     id="expertTypeId"
                     value={expertTypeId}
-                    onChange={(e) => setexpertTypeId(e.target.value)}
+                    onChange={(e) => setExpertTypeId(e.target.value)}
                     readOnly
                     onClick={toggleSubscriptionDropdown}
                     className="md:w-[482px] w-[345px] px-4 py-2 rounded-md text-white border border-[#40495C] bg-[#282F3E]"
@@ -283,24 +260,15 @@ const ProfileEdit = ({ closeDialog, stackholderId, myCard, fetchDetails }) => {
                 {isSubscriptionOpen && (
                   <div className="absolute z-10 mt-2 w-[482px] rounded-md bg-white shadow-lg">
                     <ul className="py-1">
-                      <li
-                        onClick={() => handleSubClick("Option")}
-                        className="cursor-pointer px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                      >
-                        Option
-                      </li>
-                      <li
-                        onClick={() => handleSubClick("Commodity")}
-                        className="cursor-pointer px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                      >
-                        Commodity
-                      </li>
-                      <li
-                        onClick={() => handleSubClick("Equity")}
-                        className="cursor-pointer px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                      >
-                        Equity
-                      </li>
+                      {expertTypeOptions.map((option) => (
+                        <li
+                          key={option}
+                          onClick={() => handleSubClick(option)}
+                          className="cursor-pointer px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                        >
+                          {option}
+                        </li>
+                      ))}
                     </ul>
                   </div>
                 )}
@@ -336,43 +304,22 @@ const ProfileEdit = ({ closeDialog, stackholderId, myCard, fetchDetails }) => {
                 {isExperienceOpen && (
                   <div className="absolute z-10 mt-2 w-[482px] rounded-md bg-white shadow-lg">
                     <ul className="py-1">
-                      <li
-                        onClick={() => handleExpClick("1+ Year")}
-                        className="cursor-pointer px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                      >
-                        1
-                      </li>
-                      <li
-                        onClick={() => handleExpClick("2+ Years")}
-                        className="cursor-pointer px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                      >
-                        2
-                      </li>
-                      <li
-                        onClick={() => handleExpClick("3+ Years")}
-                        className="cursor-pointer px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                      >
-                        3
-                      </li>
-                      <li
-                        onClick={() => handleExpClick("4+ Years")}
-                        className="cursor-pointer px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                      >
-                        4
-                      </li>
-                      <li
-                        onClick={() => handleExpClick("5+ Years")}
-                        className="cursor-pointer px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                      >
-                        5
-                      </li>
+                      {experienceOptions.map((year) => (
+                        <li
+                          key={year}
+                          onClick={() => handleExpClick(year)}
+                          className="cursor-pointer px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                        >
+                          {year}
+                        </li>
+                      ))}
                     </ul>
                   </div>
                 )}
               </div>
             </div>
             <div className="relative">
-              <div class="mb-0">
+              <div className="mb-0">
                 <label
                   className="flex items-center justify-center bg-[#282F3E] text-white opacity-[50%]
                   md:w-[220px] w-[190px] md:h-[26px] h-[25px] rounded-[8px] font-[400] md:text-[14px] text-[13px] md:leading-[16px] leading-[15px] text-center"

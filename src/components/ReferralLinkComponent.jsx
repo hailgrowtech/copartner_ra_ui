@@ -3,9 +3,12 @@ import { tick, clipboard } from "../assets";
 
 const ReferralLinkComponent = () => {
   const [referralLink, setReferralLink] = useState("");
+  const [paymentLink, setPaymentLink] = useState("")
   const [copiedReferralLink, setCopiedReferralLink] = useState(false);
+  const [copiedPaymentLink, setCopiedPaymentLink] = useState(false);
   const [loading, setLoading] = useState(false);
   const referralLinkRef = useRef(null);
+  const paymentLinkRef = useRef(null);
 
   const stackholderId = sessionStorage.getItem("stackholderId");
 
@@ -27,6 +30,25 @@ const ReferralLinkComponent = () => {
     setLoading(false);
   };
 
+  const generatePaymentLink = async () => {
+    setLoading(true);
+    try {
+      const response = await fetch(
+        `https://copartners.in:5132/api/Experts/GenerateExpertPaymentLink/${stackholderId}`
+      );
+      const result = await response.json();
+      if (result.isSuccess) {
+        console.log('Payment Link', result.data)
+        setPaymentLink(result.data);
+      } else {
+        console.error("Failed to generate referral link");
+      }
+    } catch (error) {
+      console.error("Error fetching referral link:", error);
+    }
+    setLoading(false);
+  };
+
   const copyReferralLinkToClipboard = () => {
     if (referralLinkRef.current) {
       navigator.clipboard
@@ -34,6 +56,17 @@ const ReferralLinkComponent = () => {
         .then(() => {
           setCopiedReferralLink(true);
           setTimeout(() => setCopiedReferralLink(false), 2000);
+        });
+    }
+  };
+
+  const copyPaymentLinkToClipboard = () => {
+    if (paymentLinkRef.current) {
+      navigator.clipboard
+        .writeText(paymentLinkRef.current.innerText)
+        .then(() => {
+          setCopiedPaymentLink(true);
+          setTimeout(() => setCopiedPaymentLink(false), 2000);
         });
     }
   };
@@ -77,20 +110,20 @@ const ReferralLinkComponent = () => {
       <div className="flex bg-[#282E3C] text-white flex-row md:flex-row items-center gap-3 w-full md:w-[1120px] rounded-[16px] p-2 px-8">
         <span className="md:text-lg text-sm">Payment Link</span>
         <div className="p-1 px-3 flex rounded-[30px] bg-transparent border-[1px]">
-          {referralLink ? (
+          {paymentLink ? (
             <>
               <span
-                ref={referralLinkRef}
+                ref={paymentLinkRef}
                 className="mr-1 md:block truncate-link"
               >
-                {referralLink}
+                {paymentLink}
               </span>
               <button
-                onClick={copyReferralLinkToClipboard}
+                onClick={copyPaymentLinkToClipboard}
                 className="flex items-center mt-[2px]"
               >
                 |
-                {copiedReferralLink ? (
+                {copiedPaymentLink ? (
                   <img src={tick} alt="Copied" className="w-5" />
                 ) : (
                   <img src={clipboard} alt="Copy" className="w-5" />
@@ -99,7 +132,7 @@ const ReferralLinkComponent = () => {
             </>
           ) : (
             <button
-              onClick={generateReferralLink}
+              onClick={generatePaymentLink}
               className="flex items-center mt-[2px]"
               disabled={loading}
             >

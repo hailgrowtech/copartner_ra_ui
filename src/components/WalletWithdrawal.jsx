@@ -205,7 +205,7 @@ const WalletWithdrawal = ({ closeDialog, walletBalance }) => {
           <div className="flex justify-center items-center mt-6">
             <button
               className={`rounded-[10px] w-[147px] h-[40px] md:text-[18px] text-[14px] ${
-                isButtonDisabled ? "bg-red-500 text-white" : "bg-white"
+                isButtonDisabled ? "bg-[#D2D2D2] text-black" : "bg-white"
               }`}
               disabled={isButtonDisabled}
             >

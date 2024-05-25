@@ -15,7 +15,7 @@ const Navbar = ({ activeTab, toggleSidebar }) => {
   const stackholderId = sessionStorage.getItem('stackholderId')
 
   useEffect(() => {
-    axios.get(`https://copartners.in:5132/api/Experts/${stackholderId}`)
+    stackholderId && axios.get(`https://copartners.in:5132/api/Experts/${stackholderId}`)
     .then((res) => {
       setMyCard(res.data.data);
     })

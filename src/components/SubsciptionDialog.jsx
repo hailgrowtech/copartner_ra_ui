@@ -3,7 +3,7 @@ import { closeIcon, dropdown } from "../assets";
 import axios from "axios";
 import { toast } from "react-toastify";
 
-const SubscriptionDialog = ({ closeDialog }) => {
+const SubscriptionDialog = ({ closeDialog, axiosServiceData }) => {
   const [subscriptionType, setSubscriptionType] = useState(
     null
   );
@@ -68,7 +68,8 @@ const SubscriptionDialog = ({ closeDialog }) => {
         });
       }
       handleSuccess();
-      closeDialog()
+      closeDialog();
+      axiosServiceData();
     } catch (error) {
       console.error('Error posting data:', error);
       toast.error('Failed to submit data. Please try again.', {

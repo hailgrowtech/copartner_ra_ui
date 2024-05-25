@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import SubscriptionDialog from "./SubsciptionDialog";
-import { deleteIcon, dropdown, edit } from "../assets";
+import { deleteIcon, edit } from "../assets";
 import SubscriptionEditService from "./SubscriptionEditService";
 import axios from "axios";
 
@@ -11,18 +11,19 @@ const Subscription = () => {
   const [subTable, setSubTable] = useState([]);
   const [currentSubscription, setCurrentSubscription] = useState(null);
 
-  const stackholderId = sessionStorage.getItem('stackholderId')
+  const stackholderId = sessionStorage.getItem('stackholderId');
   const SUB_TABLE = `https://copartners.in:5009/api/Subscription/GetByExpertsId/${stackholderId}`;
 
+  const axiosServiceData = () => axios.get(SUB_TABLE)
+      .then((res) => {
+        setSubTable(res.data.data);
+      })
+      .catch((error) => {
+        console.log('Something went wrong', error);
+      });
   useEffect(() => {
-    axios.get(SUB_TABLE).then((res) => {
-      console.log("I am calling sub. table", res.data);
-      setSubTable(res.data.data)
-    })
-    .catch((error) => {
-      console.log('Something went wrong', error)
-    })
-  }, [])
+    axiosServiceData()
+  }, []);
 
   useEffect(() => {
     const checkScreenSize = () => {
@@ -30,7 +31,6 @@ const Subscription = () => {
     };
 
     checkScreenSize();
-
     window.addEventListener("resize", checkScreenSize);
 
     return () => window.removeEventListener("resize", checkScreenSize);
@@ -50,12 +50,42 @@ const Subscription = () => {
     setIsEditDialogOpen(false);
   };
 
+  const handleDeleteTable = async (id) => {
+    const DELETE_TABLE = `https://copartners.in:5009/api/Subscription/${id}`;
+    console.log("Deleting subscription with URL:", DELETE_TABLE);
+
+    try {
+      const response = await axios.delete(DELETE_TABLE);
+      if (response.status === 200) {
+        console.log("Subscription deleted successfully");
+        setSubTable(subTable.filter(subscription => subscription.id !== id));
+      } else {
+        console.error("Failed to delete subscription, status:", response.status);
+      }
+    } catch (error) {
+      console.error("Error deleting subscription:", error);
+    }
+  };
+
   const formatDate = (dateString) => {
     const date = new Date(dateString);
     const day = String(date.getDate()).padStart(2, '0');
     const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are 0-based
     const year = date.getFullYear();
     return `${day}-${month}-${year}`;
+  };
+
+  const getSubscriptionTypeLabel = (type) => {
+    switch (type) {
+      case '1':
+        return "Future & Option";
+      case '2':
+        return "Commodity";
+      case '3':
+        return "Equity";
+      default:
+        return "Select Subscription Type";
+    }
   };
 
   return (
@@ -72,6 +102,7 @@ const Subscription = () => {
         </button>
         {isDialogOpen && (
           <SubscriptionDialog
+          axiosServiceData={axiosServiceData}
             isDialogOpen={isDialogOpen}
             closeDialog={closeDialog}
           />
@@ -81,64 +112,67 @@ const Subscription = () => {
       <div className="flex md:mt-[3rem] mt-1">
         {smallScreen ? (
           <div className="flex flex-wrap justify-center items-center ml-[-22px]">
-            {subTable.map((row, index) => (
-              <div
-                key={index}
-                className="flex flex-col justify-around w-[361px] h-[248px] bg-[#18181B] bg-opacity-[50%] rounded-[30px] md:m-4 m-[10px] p-4 w-[90%] max-w-sm"
-              >
-                <div className="flex flex-row justify-between">
-                  <p className="w-[173px] h-[26px] font-[600] text-[16px] leading-[25px] text-lightWhite">
-                    {row.serviceType}
-                  </p>
-                  <div className="flex gap-3">
-                    <button>
-                      <img
-                        src={edit}
-                        onClick={openEditDialog}
-                        alt=""
-                        className="w-[24px] h-[24px] text-white"
-                      />
-                    </button>
-                    {isEditDialogOpen && (
-                      <SubscriptionEditService
-                        isEditDialogOpen={isEditDialogOpen}
-                        closeDialog={closeDialog}
-                      />
-                    )}
+          {subTable.map((row, index) => (
+            <div
+              key={index}
+              className="flex flex-col justify-around w-[361px] h-[248px] bg-[#18181B] bg-opacity-[50%] rounded-[30px] md:m-4 m-[10px] p-4 w-[90%] max-w-sm"
+            >
+              <div className="flex flex-row justify-between">
+                <p className="w-[173px] h-[26px] font-[600] text-[16px] leading-[25px] text-lightWhite">
+                  {getSubscriptionTypeLabel(row.serviceType)}
+                </p>
+                <div className="flex gap-3">
+                  <button onClick={() => openEditDialog(row)}>
+                    <img
+                      src={edit}
+                      alt=""
+                      className="w-[24px] h-[24px] text-white"
+                    />
+                  </button>
+                  {isEditDialogOpen && (
+                    <SubscriptionEditService
+                      isEditDialogOpen={isEditDialogOpen}
+                      closeDialog={closeDialog}
+                    />
+                  )}
+                  <button onClick={() => handleDeleteTable(row.id)}>
                     <img
                       src={deleteIcon}
                       alt=""
                       className="w-[24px] h-[24px] text-white"
                     />
-                  </div>
+                  </button>
                 </div>
-                <span className="flex items-center justify-between sm:w-[305px] h-[13px] font-[500] text-[14px] leading-[12px] text-lightWhite">
-                  <span className="text-dimWhite">DATE:</span> {formatDate(row.createdOn)}
-                </span>
-                <span className="flex items-center justify-between sm:w-[305px] h-[34px] font-[500] text-[14px] leading-[12px] text-lightWhite">
-                  <span className="text-dimWhite">SERVICE TYPE:</span>{" "}
-                  {row.serviceType}
-                </span>
-                <span className="flex items-center justify-between sm:w-[305px] h-[13px] font-[500] text-[14px] leading-[12px] text-lightWhite">
-                  <span className="text-dimWhite">PLAN NAME:</span> {row.serviceType}
-                </span>
-                <span className="flex items-center justify-between sm:w-[305px] h-[13px] font-[500] text-[14px] leading-[12px] text-lightWhite">
-                  <span className="text-dimWhite">DURATION:</span> {row.durationMonth}
-                </span>
-                <span className="flex items-center justify-between sm:w-[305px] h-[13px] font-[500] text-[14px] leading-[12px] text-lightWhite">
-                  <span className="text-dimWhite">AMOUNT:</span> {row.amount}
-                </span>
-                <span className="flex items-center justify-between sm:w-[305px] h-[13px] font-[500] text-[14px] leading-[12px] text-lightWhite">
-                  <span className="text-dimWhite">ACTIVE USER:</span>{" "}
-                  {/* {row.amount} */}
-                </span>
               </div>
-            ))}
-
+              <span className="flex items-center justify-between sm:w-[305px] h-[13px] font-[500] text-[14px] leading-[12px] text-lightWhite">
+                <span className="text-dimWhite">DATE:</span> {formatDate(row.createdOn)}
+              </span>
+              <span className="flex items-center justify-between sm:w-[305px] h-[34px] font-[500] text-[14px] leading-[12px] text-lightWhite">
+                <span className="text-dimWhite">SERVICE TYPE:</span>{" "}
+                {getSubscriptionTypeLabel(row.serviceType)}
+              </span>
+              <span className="flex items-center justify-between sm:w-[305px] h-[13px] font-[500] text-[14px] leading-[12px] text-lightWhite">
+                <span className="text-dimWhite">PLAN NAME:</span> {row.planType}
+              </span>
+              <span className="flex items-center justify-between sm:w-[305px] h-[13px] font-[500] text-[14px] leading-[12px] text-lightWhite">
+                <span className="text-dimWhite">DURATION:</span> {row.durationMonth}
+              </span>
+              <span className="flex items-center justify-between sm:w-[305px] h-[13px] font-[500] text-[14px] leading-[12px] text-lightWhite">
+                <span className="text-dimWhite">AMOUNT:</span> {row.amount}
+              </span>
+              <span className="flex items-center justify-between sm:w-[305px] h-[13px] font-[500] text-[14px] leading-[12px] text-lightWhite">
+                <span className="text-dimWhite">ACTIVE USER:</span>{" "}
+                {/* {row.activeUser} */}
+              </span>
+            </div>
+          ))}
+        
+          {subTable.length > 0 && (
             <button className="mt-6 md:w-[147px] w-[95px] h-[20px] md:h-[40px] md:flex items-center justify-center flex w-[110px] h-[30px] rounded-[6px] bg-lightWhite md:text-[14px] text-[10px] font-[500] md:leading-[16px] leading-[12px]">
               Show More
             </button>
-          </div>
+          )}
+        </div>
         ) : (
           <table className="xl:w-[1520px] md:w-[1130px] h-[230px] bg-[#29303F] rounded-[30px]">
             <thead className="text-[#BABABA] font-inter font-[600] text-[14px] leading-[20px] h-[51px]">
@@ -160,10 +194,10 @@ const Subscription = () => {
                     className={index % 2 === 0 ? "bg-[#1E1E22]" : ""}
                   >
                     <td className="font-[500] text-center text-[16px] leading-[18px]">
-                    {formatDate(row.createdOn)}
+                      {formatDate(row.createdOn)}
                     </td>
                     <td className="font-[500] text-center text-[16px] leading-[18px]">
-                      {row.serviceType}
+                      {getSubscriptionTypeLabel(row.serviceType)}
                     </td>
                     <td className="font-[500] text-center text-[16px] leading-[18px]">
                       {row.planType}
@@ -178,10 +212,9 @@ const Subscription = () => {
                       {row.activeUser}
                     </td>
                     <td className="flex flex-row items-center justify-center gap-2 py-[2rem]">
-                      <button>
+                      <button onClick={() => openEditDialog(row)}>
                         <img
                           src={edit}
-                          onClick={openEditDialog}
                           alt=""
                           className="w-[21px] h-[21px] mx-auto"
                         />
@@ -193,7 +226,7 @@ const Subscription = () => {
                           subTable={subTable}
                         />
                       )}
-                      <button>
+                      <button onClick={() => handleDeleteTable(row.id)}>
                         <img
                           src={deleteIcon}
                           alt=""
