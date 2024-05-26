@@ -23,7 +23,13 @@ const ProfileEdit = ({ closeDialog, stackholderId, myCard, fetchDetails }) => {
   const [originalData, setOriginalData] = useState({});
 
   const expertTypeOptions = ["Option", "Commodity", "Equity"];
-  const experienceOptions = ["1+ Year", "2+ Years", "3+ Years", "4+ Years", "5+ Years"];
+  const experienceOptions = [
+    "1+ Year",
+    "2+ Years",
+    "3+ Years",
+    "4+ Years",
+    "5+ Years",
+  ];
 
   useEffect(() => {
     if (myCard) {
@@ -36,8 +42,8 @@ const ProfileEdit = ({ closeDialog, stackholderId, myCard, fetchDetails }) => {
       setPremiumTelegramLink(myCard.premiumTelegramChannel);
       setImagePath(myCard.expertImagePath);
       setSebiRegNo(myCard.sebiRegNo);
-      setExpertTypeId(myCard.expertTypeId);
-      setExperienceType(myCard.experience || "");
+      setExpertTypeId(expertTypeOptions[myCard.expertTypeId - 1] || "");
+      setExperienceType(experienceOptions[myCard.experience - 1] || "");
 
       setOriginalData({
         name: myCard.name,
@@ -50,7 +56,7 @@ const ProfileEdit = ({ closeDialog, stackholderId, myCard, fetchDetails }) => {
         imagePath: myCard.expertImagePath,
         sebiRegNo: myCard.sebiRegNo,
         expertTypeId: myCard.expertTypeId,
-        experienceType: myCard.experience || "",
+        experienceType: myCard.experience,
       });
     }
   }, [myCard]);
@@ -74,11 +80,15 @@ const ProfileEdit = ({ closeDialog, stackholderId, myCard, fetchDetails }) => {
     formData.append("file", file);
 
     try {
-      const response = await axios.post("https://copartners.in:5134/api/AWSStorage?prefix=expertImagePath", formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      });
+      const response = await axios.post(
+        "https://copartners.in:5134/api/AWSStorage?prefix=expertImagePath",
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
       return response.data.fileUrl; // Assuming the response contains the URL of the uploaded image
     } catch (error) {
       console.error("Image upload failed:", error);
@@ -126,6 +136,7 @@ const ProfileEdit = ({ closeDialog, stackholderId, myCard, fetchDetails }) => {
       fetchDetails();
       setError(null);
       setOriginalData(updatedData);
+      closeDialog();
     } catch (error) {
       setError("An error occurred while updating the profile.");
       setSuccess(null);
@@ -287,7 +298,6 @@ const ProfileEdit = ({ closeDialog, stackholderId, myCard, fetchDetails }) => {
                   <input
                     id="expertTypeId"
                     value={expertTypeId}
-                    onChange={(e) => setExpertTypeId(e.target.value)}
                     readOnly
                     onClick={toggleSubscriptionDropdown}
                     className="md:w-[482px] w-[345px] px-4 py-2 rounded-md text-white border border-[#40495C] bg-[#282F3E]"
@@ -320,7 +330,7 @@ const ProfileEdit = ({ closeDialog, stackholderId, myCard, fetchDetails }) => {
           <div className="flex md:flex-row flex-col md:justify-between md:mt-8 mt-4 md:ml-0 ml-[-16px] md:gap-0 gap-4">
             <div className="relative">
               <label
-                htmlFor="expertTypeId"
+                htmlFor="experienceType"
                 className="flex items-center justify-center bg-[#282F3E] text-white opacity-[50%]
                     md:w-[100px] w-[80px] h-[26px] rounded-[8px] font-[400] md:text-[14px] text-[13px] md:leading-[16px] leading-[15px] text-center"
               >
@@ -331,7 +341,6 @@ const ProfileEdit = ({ closeDialog, stackholderId, myCard, fetchDetails }) => {
                   <input
                     id="experienceType"
                     value={experienceType}
-                    onChange={(e) => setExperienceType(e.target.value)}
                     readOnly
                     onClick={toggleExpDropdown}
                     className="md:w-[482px] w-[345px] px-4 py-2 rounded-md text-white border border-[#40495C] bg-[#282F3E]"
