@@ -17,10 +17,7 @@ import AddBankDialog from "./AddBankDialog";
 import AddUpiDialog from "./AddUpiDialog";
 import UpiEditDialog from "./UpiEditDialog";
 import axios from "axios";
-
-const handleFileChange = (event) => {
-  const file = event.target.files[0];
-};
+import DocumentEditPopup from "./DocumentEditPopup";
 
 const Setting = () => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -34,6 +31,8 @@ const Setting = () => {
   const [upiDetails, setUpiDetails] = useState(null);
   const [withdrawalAmount, setWithDrawalAmount] = useState([]);
   const [selectedWithdrawal, setSelectedWithdrawal] = useState(null);
+  const [documentEdit, setDocumentEdit] = useState(false);
+  console.log(myCard);
 
   const [selectedFile, setSelectedFile] = useState(null);
   const [filePreview, setFilePreview] = useState(null);
@@ -57,7 +56,6 @@ const Setting = () => {
   const fetchData = async () => {
     try {
       const res = await axios.get(withdrawal_api);
-      console.log(res.data)
       setWithDrawalAmount(res.data.data);
     } catch (error) {
       console.error("Error fetching data:", error);
@@ -147,6 +145,14 @@ const Setting = () => {
     setIsAddUpiOpen(false);
   };
 
+  const openEditPopup = () => {
+    setDocumentEdit(true);
+  };
+
+  const closeEditPopup = () => {
+    setDocumentEdit(false);
+  };
+
   const getExpertType = (typeId) => {
     switch (typeId) {
       case 1:
@@ -162,7 +168,7 @@ const Setting = () => {
 
   return (
     <div className="pb-[5rem] xl:pl-[12rem] md:pl-[10rem] pl-6 md:py-[6rem] pt-[8rem] bg-gradient min-h-screen">
-      <div className="xl:w-[1530px] md:w-[1122px] md:h-[520px] xl-h-[480px] w-[361px] h-[570px] md:ml-0 ml-[-8px] bg_cards p-4 rounded-[24px]">
+      <div className="xl:w-[1530px] md:w-[1122px] xl-h-[480px] w-[361px] h-[570px] md:ml-0 ml-[-8px] bg_cards p-4 rounded-[24px]">
         <div className="flex flex-col">
           <div className="flex flex-row">
             <div className="flex flex-col">
@@ -337,7 +343,7 @@ const Setting = () => {
               <img
                 src={myCard && myCard.expertImagePath}
                 alt="User"
-                className="absolute top-0 left-0 w-full h-full object-contain rounded-t-[11px]"
+                className="absolute top-0 w-32 right-0 md:w-full h-full object-contain rounded-t-[11px]"
               />
             </div>
 
@@ -435,9 +441,9 @@ const Setting = () => {
           Documents
         </span>
         <div className="md:w-[93px] w-[64px] md:h-[32px] h-[22px] rounded-[36px] border border-[#fffff] flex justify-center items-center">
-          <button className="flex flex-row items-center gap-2 justify-center items-center">
+          <button className="flex flex-row items-center gap-2 justify-center items-center" onClick={openEditPopup}>
             <img
-              src="/path/to/edit-icon"  // Replace with your edit icon path
+              src={edit}
               alt="Edit"
               className="md:w-[16px] w-[12px] h-[12px] md:h-[16px]"
             />
@@ -450,24 +456,15 @@ const Setting = () => {
 
       <label
         htmlFor="fileInput"
-        className="relative w-[236px] h-[238px] border-2 border-dotted border-[#ffffff] cursor-pointer"
+        className="relative w-[236px] h-[180px] border-2 border-dotted border-[#ffffff]"
       >
-        <input
-          id="fileInput"
-          type="file"
-          className="absolute inset-0 opacity-0 w-full h-full"
-          onChange={handleFileChange}
-        />
         {!filePreview ? (
           <>
             <img
-              src="/path/to/addDoc-icon"  // Replace with your addDoc icon path
+              src={myCard?.signatureImage}  // Replace with your addDoc icon path
               alt=""
               className="w-[95px] h-[95px] ml-16 mt-[2rem]"
             />
-            <span className="absolute bottom-4 left-0 right-0 text-center w-full font-inter font-[400] text-[13px] leading-[16px] text-white opacity-[50%] mb-[2rem]">
-              Upload Documents
-            </span>
           </>
         ) : (
           <div className="relative w-full h-full flex justify-center items-center">
@@ -479,6 +476,13 @@ const Setting = () => {
           </div>
         )}
       </label>
+
+      {documentEdit && (
+        <DocumentEditPopup
+          onClose={closeEditPopup}
+          stackholderId={stackholderId}
+        />
+      )}
     </div>
 
       <div className="xl:w-[1520px] md:w-[1120px] md:h-[397px] w-[360px] px-4 p-8 border-2 border-[#202F49] rounded-[30px] rounded-[30px] flex gap-4 flex-col md:mt-[4rem] mt-[2rem] md:ml-0 ml-[-0.5rem]">

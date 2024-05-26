@@ -49,6 +49,7 @@ import location from './loction.png';
 import clipboard from './Clipboard.png';
 import pancard from './PanCard.png';
 import card from './Card.png';
+import editDocument from "./editpopup.png";
 
 export {
     availableIcon,
@@ -95,4 +96,5 @@ export {
     location,
     location1,
     pancard, card,
+    editDocument
 }

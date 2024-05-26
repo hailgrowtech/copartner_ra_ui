@@ -74,7 +74,7 @@ const Navbar = ({ activeTab, toggleSidebar }) => {
             <div className="flex gap-12 items-center md:w-[360px] w-[380px] h-[50px]">
               <Link to="/setting">
                 <img
-                  src={dummyUser}
+                  src={myCard && myCard.expertImagePath}
                   alt="LoginUser"
                   className="w-[40px] h-[40px] rounded-full"
                 />

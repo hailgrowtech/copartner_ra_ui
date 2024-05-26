@@ -75,11 +75,11 @@ const SignUp = ({ setIsSignedUp }) => {
         sessionStorage.setItem("visitedSignUp", "true");
         navigate("/");
       } else {
-        setError("Email ID does not match.");
+        setError("Email ID or Password does not match.");
       }
     } catch (error) {
       console.error("There was a problem with your fetch operation:", error);
-      setError("Email ID does not match.");
+      setError("Email ID or Password does not match.");
     } finally {
       setLoading(false);
     }

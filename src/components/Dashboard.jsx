@@ -421,12 +421,12 @@ const Dashboard = () => {
                     <img
                       src={myCard && myCard.expertImagePath}
                       alt="User"
-                      className="absolute top-0 left-0 w-full h-full object-contain rounded-t-[11px]"
+                      className="absolute top-0 right-0 md:w-full h-full object-contain rounded-t-[11px]"
                     />
                   </div>
 
-                  <div className="flex md:ml-auto ml-[-8rem] flex-col items-start md:gap-[16rem] gap-[10rem]">
-                    <div className="flex flex-row gap-2 w-[70px] h-[32px]">
+                  <div className="flex md:ml-auto ml-[-4rem] flex-col items-start md:gap-[16rem] gap-[10rem]">
+                    <div className="flex flex-row w-[70px] h-[32px]">
                       <img
                         src={stars}
                         alt={myCard && myCard.rating}
@@ -438,7 +438,7 @@ const Dashboard = () => {
                     </div>
                   </div>
                 </div>
-                <div className="md:flex md:flex-row grid grid-cols-2 md:gap-[4rem] gap-0 md:px-[1rem] md:mt-[0rem] mt-16 items-center justify-center">
+                <div className="md:flex md:flex-row grid grid-cols-2 md:gap-[4rem] gap-0 md:px-[1rem] md:mt-[2rem] mt-16 items-center justify-center">
                   {
                     subTable && subTable.map((subUnit) => (
                       <div className="flex gap-[4rem] md:w-[165px] w-[150px] h-[38px] flex md:flex-col">
