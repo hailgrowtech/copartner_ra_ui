@@ -32,11 +32,6 @@ const Dashboard = () => {
   const [notInterested, setNotInterested] = useState(0);
   const [subTable, setSubTable] = useState([]);
   const [myCard, setMyCard] = useState(null);
-  const [relationId, setRelationId] = useState(null);
-  const [bankDetails, setBankDetails] = useState(null);
-  const [upiDetails, setUpiDetails] = useState(null);
-  const [withdrawalAmount, setWithDrawalAmount] = useState([]);
-  const [selectedWithdrawal, setSelectedWithdrawal] = useState(null);
 
   const stackholderId = sessionStorage.getItem("stackholderId");
 
@@ -100,7 +95,7 @@ const Dashboard = () => {
   };
 
   return (
-    <div className="xl:pl-[12rem] md:pl-[10rem] pl-6 md:py-[6rem] xl:py-[6rem] pt-[8rem]">
+    <div className="xl:pl-[12rem] md:pl-[10rem] pl-6 md:py-[6rem] xl:py-[6rem] md:pt-[8rem] pt-[6rem]">
       <div className="flex xl:w-[1580px] md:w-[1180px] items-center">
         <div className="">
           <div className="flex items-center md:gap-0 gap-10">

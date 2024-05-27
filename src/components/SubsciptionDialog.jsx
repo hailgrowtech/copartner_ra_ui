@@ -122,7 +122,7 @@ const SubscriptionDialog = ({ closeDialog, axiosServiceData }) => {
   const getSubscriptionTypeLabel = (type) => {
     switch (type) {
       case 1:
-        return "Future & Option";
+        return "Futures & Options";
       case 2:
         return "Commodity";
       case 3:
@@ -203,7 +203,7 @@ const SubscriptionDialog = ({ closeDialog, axiosServiceData }) => {
                     <input
                       id="subscriptionType"
                       // value={
-                      //   subscriptionType === 1 ? "Future & Option" :
+                      //   subscriptionType === 1 ? "Futures & Options" :
                       //   subscriptionType === 2 ? "Commodity" :
                       //   subscriptionType === 3 ? "Equity" : "Select Subscription Type"
                       // }
@@ -225,7 +225,7 @@ const SubscriptionDialog = ({ closeDialog, axiosServiceData }) => {
                           onClick={() => handleSubClick(1)}
                           className="cursor-pointer px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                         >
-                          Future & Option
+                          Futures & Options
                         </li>
                         <li
                           onClick={() => handleSubClick(2)}

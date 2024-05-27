@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { filter, invoiceImg, notificationSlider } from "../assets";
+import { filter, notificationSlider, searchIcon } from "../assets";
 import {
   subscriptionData,
   transcationData,
@@ -21,10 +21,12 @@ const Wallet = () => {
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
   const [walletBalance, setWalletBalance] = useState(null);
-  const [transactionTable, setTransactionTable] = useState("");
-  const [withdrawalReq, setWithdrawalReq] = useState("");
+  const [transactionTable, setTransactionTable] = useState([]);
+  const [withdrawalReq, setWithdrawalReq] = useState([]);
   const [getBankID, setGetBankID] = useState("");
   const [selectedRow, setSelectedRow] = useState(null);
+  const [searchInput, setSearchInput] = useState("");
+  const [filteredTransactions, setFilteredTransactions] = useState([]);
 
   const stackholderId = sessionStorage.getItem("stackholderId");
 
@@ -35,7 +37,6 @@ const Wallet = () => {
   const WITHDRAWAL_REQ_API = `https://copartners.in:5135/api/Withdrawal/GetWithdrawalByUserId/${stackholderId}?userType=RA&page=1&pageSize=10`;
 
   const BANK_API = `https://copartners.in:5135/api/Withdrawal/GetBankUPIById/${getBankID}`;
-  console.log("ABCD", BANK_API);
 
   useEffect(() => {
     const fetchWalletBalance = async () => {
@@ -56,7 +57,6 @@ const Wallet = () => {
       try {
         const response = await axios.get(WITHDRAWAL_REQ_API);
         setWithdrawalReq(response.data.data);
-        console.log("My Withdrawal Req-", response.data);
       } catch (error) {
         console.error("Error fetching the wallet balance:", error);
         setWithdrawalReq("Error");
@@ -70,8 +70,11 @@ const Wallet = () => {
     const fetchTransactionTable = async () => {
       try {
         const response = await axios.get(TRANSACTION_API);
-        console.log("Transaction Table-", response.data);
-        setTransactionTable(response.data.data);
+        const sortedData = response.data.data.sort(
+          (a, b) => new Date(b.date) - new Date(a.date)
+        );
+        setTransactionTable(sortedData);
+        setFilteredTransactions(sortedData);
       } catch (error) {
         console.error("Error fetching the wallet balance:", error);
         setTransactionTable("Error");
@@ -84,16 +87,10 @@ const Wallet = () => {
   useEffect(() => {
     if (getBankID) {
       axios.get(BANK_API).then((res) => {
-        console.log("MY value is showing", res.data);
         setWithdrawalReq(res.data.data);
       });
     }
   }, [getBankID, BANK_API]);
-
-  const handleOpenFilter = () => {
-    console.log("Open Filer Is Working");
-    setOpenFilter((cur) => !cur);
-  };
 
   useEffect(() => {
     const checkScreenSize = () => {
@@ -134,6 +131,51 @@ const Wallet = () => {
     return `${day}-${month}-${year}`;
   };
 
+  const getStatusText = (action) => {
+    switch (action) {
+      case "A":
+        return "Success";
+      case "P":
+        return "Pending";
+      case "R":
+        return "Rejected";
+      default:
+        return action;
+    }
+  };
+
+  const handleSearchChange = (e) => {
+    const value = e.target.value;
+    setSearchInput(value);
+    filterTransactions(value, startDate, endDate);
+  };
+
+  const handleDateChange = (dates) => {
+    const [start, end] = dates;
+    setStartDate(start);
+    setEndDate(end);
+    filterTransactions(searchInput, start, end);
+  };
+
+  const filterTransactions = (searchValue, startDate, endDate) => {
+    let filtered = transactionTable;
+
+    if (searchValue) {
+      filtered = filtered.filter((row) =>
+        row.userMobileNo.includes(searchValue)
+      );
+    }
+
+    if (startDate && endDate) {
+      filtered = filtered.filter((row) => {
+        const date = new Date(row.date);
+        return date >= startDate && date <= endDate;
+      });
+    }
+
+    setFilteredTransactions(filtered);
+  };
+
   return (
     <div className="pb-[5rem] xl:pl-[12rem] md:pl-[10rem] pl-6 md:py-[6rem] pt-[8rem] bg-gradient min-h-screen">
       <div className="xl:w-[1520px] md:w-[1130px] w-[350px] flex md:flex-row flex-col justify-between">
@@ -141,7 +183,7 @@ const Wallet = () => {
           Wallet
         </span>
         <div className="flex flex-row justify-between items-center md:mr-4 mr-0">
-          <span className="md:w-[320px] w-[233px] md:h-[27px] h-[19px] text-white font-inter font-[600] md:text-[22px] text-[16px] md:leading-[27px] leading-[19px]">
+          <span className="md:w-[320px] w-[233px] md:h-[27px] h-[19px] text-white font-inter font-[600] md:text-[22px] text-[16px] md:leading-[27px] leading-[19px] md:mr-[3rem] mr-0">
             Withdrawal Balance :{" "}
             <span className="text-white opacity-[40%]">
               ₹{walletBalance?.withdrawalBalance}
@@ -168,97 +210,40 @@ const Wallet = () => {
       <div className="flex flex-col md:gap-6 gap-3">
         <div className="flex flex-row items-center justify-between md:ml-0 ml-[-8px]">
           <div className="xl:w-[1420px] md:w-[1030px] flex flex-col gap-4 mt-4">
-            <div className="flex justify-between items-center">
-              <span className="text-white w-[210px] h-[27px] font-inter font-[600] text-[22px] leading-[27px]">
+            <div className="flex md:justify-between items-center">
+              <span className="text-white md:w-[210px] w-[140px] h-[27px] font-inter font-[600] text-[22px] md:leading-[27px] leading-[22px] md:mt-0 mt-[-1rem]">
                 Transaction History
               </span>
-
-              {/* <div className="relative md:mr-[-90px] ml-0 md:mb-[-4rem] mb-0">
-                <button
-                  onClick={handleOpenFilter}
-                  className="flex items-center justify-center w-[40px] h-[40px] rounded-[10px] border-solid border-[1px] border-white font-[600] font-inter text-[12px] md:mr-0 mr-[8px]"
-                >
-                  <img
-                    src={filter}
-                    alt="Filter"
-                    className="w-[20px] h-[20px]"
-                  />
-                </button>
-                {openFilter && (
-                  <div className="absolute top-full left-[-17rem] z-10 mt-2">
-                    <div className="w-[312px] h-[289px] bg-[#2E374B] rounded-lg overflow-auto p-4 flex flex-col items-center gap-4 overflow-hidden">
-                      <div className="w-[343px] flex items-center pl-[2rem]">
-                        <button
-                          className="text-white text-sm rounded hover:bg-gray-600"
-                          onClick={handleOpenFilter}
-                        >
-                          
-                        </button>
-                        <h2 className="text-white text-2xl">Filter</h2>
-                      </div>
-                      <div className="flex flex-col items-center gap-4">
-                        <div className="flex flex-row gap-2">
-                          <DatePicker
-                            selected={startDate}
-                            onChange={(date) => setStartDate(date)}
-                            selectsStart
-                            startDate={startDate}
-                            endDate={endDate}
-                            placeholderText="Start Date"
-                            className="w-[140px] p-2 rounded"
-                          />
-                          <DatePicker
-                            selected={endDate}
-                            onChange={(date) => setEndDate(date)}
-                            selectsEnd
-                            startDate={startDate}
-                            endDate={endDate}
-                            minDate={startDate}
-                            placeholderText="End Date"
-                            className="w-[140px] p-2 rounded"
-                          />
-                        </div>
-
-                        <div className="flex flex-col items-start mr-[10rem] gap-2">
-                          <h3 className="text-white text-lg">
-                            Filter By Price
-                          </h3>
-                          <label className="text-white">
-                            <input
-                              type="radio"
-                              name="priceFilter"
-                              value="lowToHigh"
-                              checked={selectedPriceFilter === "lowToHigh"}
-                              onChange={handleRadioChange}
-                              className="mr-2"
-                            />
-                            Low-To-High
-                          </label>
-                          <label className="text-white">
-                            <input
-                              type="radio"
-                              name="priceFilter"
-                              value="highToLow"
-                              checked={selectedPriceFilter === "highToLow"}
-                              onChange={handleRadioChange}
-                              className="mr-2"
-                            />
-                            High-To-Low
-                          </label>
-                        </div>
-                        <div className="flex gap-2">
-                          <button className="bg-white w-[147px] flex justify-center h-[40px] text-[14px] font-[500] text-black rounded-[10px] p-2">
-                            Apply
-                          </button>
-                          <button className="border-solid border-[1px] border-white text-white w-[147px] flex justify-center h-[40px] text-[14px] font-[500] text-black rounded-[10px] p-2">
-                            Clear
-                          </button>
-                        </div>
-                      </div>
-                    </div>
+              {showTransactions === "transaction" && (
+                <div className="flex md:flex-row flex-col md:gap-0 gap-2 items-center md:mr-[-6rem]">
+                  <div className="relative md:mr-4 mr-0">
+                    <img
+                      src={searchIcon}
+                      alt=""
+                      className="cursor-pointer absolute top-1/2 left-4 transform -translate-y-1/2 w-[19px] h-[19px]"
+                    />
+                    <input
+                      type="text"
+                      value={searchInput}
+                      onChange={handleSearchChange}
+                      placeholder="Search"
+                      className="pl-10 md:pr-4 bg-[#2E323C] md:w-[252px] h-[55px] text-white rounded-[10px]"
+                    />
                   </div>
-                )}
-              </div> */}
+                  <div className="ml-0">
+                    <DatePicker
+                      selected={startDate}
+                      onChange={handleDateChange}
+                      startDate={startDate}
+                      endDate={endDate}
+                      selectsRange
+                      isClearable
+                      placeholderText="Select Date range"
+                      className="bg-[#2E323C] md:w-[252px] h-[55px] text-white rounded-[10px] px-4"
+                    />
+                  </div>
+                </div>
+              )}
             </div>
             <div className="flex flex-row md:gap-4 gap-2">
               <button
@@ -299,10 +284,10 @@ const Wallet = () => {
           <>
             {smallScreen ? (
               <div className="flex flex-col pl-[5rem] flex-wrap justify-center items-center">
-                {transactionTable &&
-                  transactionTable
+                {filteredTransactions &&
+                  filteredTransactions
                     .slice(0, 5)
-                    .filter((row) => row.subscription !== "No Subscrption")
+                    .filter((row) => row.subscription.trim() !== "No Subscrption")
                     .map((row, index) => (
                       <div
                         key={index}
@@ -312,11 +297,6 @@ const Wallet = () => {
                           <p className="w-[173px] h-[26px] font-[600] text-[16px] leading-[25px] text-lightWhite">
                             {row.transactionId}
                           </p>
-                          <img
-                            src={invoiceImg}
-                            alt=""
-                            className="w-[24px] h-[24px] text-white"
-                          />
                         </div>
                         <span className="flex items-center justify-between sm:w-[305px] h-[13px] font-[500] text-[14px] leading-[12px] text-lightWhite">
                           <span className="text-dimWhite">DATE:</span>{" "}
@@ -345,7 +325,7 @@ const Wallet = () => {
                 </button>
               </div>
             ) : (
-              <table className="xl:w-[1520px] md:w-[1130px] md:h-[500px] h-[497px] px-[1rem] bg-[#29303F] rounded-[30px]">
+              <table className="xl:w-[1520px] md:w-[1130px] md:h-full p-8 h-[497px] px-[1rem] bg-[#29303F] rounded-[30px]">
                 <thead className="text-dimWhite md:h-[60px] h-0">
                   <tr>
                     <th className="text-center px-4">Transaction ID</th>
@@ -354,13 +334,12 @@ const Wallet = () => {
                     <th className="text-center px-4">Plan Name</th>
                     <th className="text-center px-4">User Number</th>
                     <th className="text-start px-4">Amount</th>
-                    <th className="text-center px-4">Invoice</th>
                   </tr>
                 </thead>
                 <tbody className="text-lightWhite">
-                  {transactionTable &&
-                    transactionTable
-                      .filter((row) => row.subscription !== "No Subscrption")
+                  {filteredTransactions &&
+                    filteredTransactions
+                    .filter((row) => row.subscription.trim() !== "No Subscrption")
                       .map((row, index) => (
                         <tr
                           key={index}
@@ -384,13 +363,6 @@ const Wallet = () => {
                           <td className="text-start font-[500] text-[16px] leading-[18px] px-4">
                             {row.amount}
                           </td>
-                          <td className="text-center py-2">
-                            <img
-                              src={invoiceImg}
-                              alt="Invoice"
-                              className="w-[21px] h-[21px] mx-auto"
-                            />
-                          </td>
                         </tr>
                       ))}
                 </tbody>
@@ -412,11 +384,6 @@ const Wallet = () => {
                       <p className="w-[173px] h-[26px] font-[600] text-[16px] leading-[25px] text-lightWhite">
                         {row.transcationId}
                       </p>
-                      <img
-                        src={row.invoice}
-                        alt=""
-                        className="w-[24px] h-[24px] text-white"
-                      />
                     </div>
                     <span className="flex items-center justify-between sm:w-[305px] h-[13px] font-[500] text-[14px] leading-[12px] text-lightWhite">
                       <span className="text-dimWhite">DATE:</span>{" "}
@@ -449,7 +416,6 @@ const Wallet = () => {
                     <th className="text-start pl-[4rem]">Bank</th>
                     <th className="text-start pl-[0rem]">Account Number</th>
                     <th className="text-start pl-[4rem]">Amount</th>
-                    <th className="text-start pl-[4rem]">Invoice</th>
                   </tr>
                 </thead>
                 <tbody className="text-lightWhite w-[1084px] h-[81px]">
@@ -478,13 +444,6 @@ const Wallet = () => {
                           </td>
                           <td className="pl-[4rem] w-[105px] h-[18px] font-[500] text-[16px] leading-[18px]">
                             {row.amount}
-                          </td>
-                          <td className="pl-[5rem]">
-                            <img
-                              src={invoiceImg}
-                              alt=""
-                              className="w-[21px] h-[21px] text-white"
-                            />
                           </td>
                         </tr>
                       )
@@ -523,13 +482,13 @@ const Wallet = () => {
                             <div>{row.requestAction}</div>
                           ) : (
                             <button
-                              className="text-[16px]"
-                              onClick={openEditUpiDialog}
+                              className="text-[14px]"
+                              onClick={() => openEditUpiDialog(row)}
                             >
-                              {row.requestAction}
+                              {getStatusText(row.requestAction)}
                             </button>
                           )}
-                          {isEditUpiOpen && (
+                          {isEditUpiOpen && row.requestAction === "R" && (
                             <RejectUpiOpen
                               isOpen={isEditUpiOpen}
                               onClose={closeDialog}
@@ -578,7 +537,7 @@ const Wallet = () => {
                         row.requestAction !== "A" && (
                           <tr
                             key={index}
-                            className={index % 2 === 0 ? "" : "bg-[#18181B]"}
+                            className={index % 2 === 0 ? "bg-[#18181B]" : ""}
                           >
                             <td className="pl-[4rem] font-[500] text-[16px] leading-[18px]">
                               {/* {row.transcationId} */}
@@ -600,22 +559,27 @@ const Wallet = () => {
                             <td
                               className={`pl-[4rem] ${
                                 row.status === "Pending"
-                                  ? "text-[#FB923C]"
-                                  : "text-[#E24966]"
+                                  ? "bg-red-500"
+                                  : "bg-transparent text-[#E24966]"
                               }`}
                             >
                               {row.status === "Pending" ? (
-                                <div>{row.requestAction}</div>
+                                <div>{getStatusText(row.requestAction)}</div>
                               ) : (
-                                <button onClick={() => openEditUpiDialog(row)}>
-                                  {row.requestAction}
+                                <button
+                                  onClick={() =>
+                                    row.requestAction === "R" &&
+                                    openEditUpiDialog(row)
+                                  }
+                                >
+                                  {getStatusText(row.requestAction)}
                                 </button>
                               )}
                             </td>
                           </tr>
                         )
                     )}
-                  {isEditUpiOpen && selectedRow && (
+                  {isEditUpiOpen && selectedRow && selectedRow.requestAction === "R" && (
                     <RejectUpiOpen
                       isOpen={isEditUpiOpen}
                       onClose={closeDialog}

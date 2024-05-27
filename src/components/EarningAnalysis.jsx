@@ -5,10 +5,16 @@ import axios from "axios";
 
 const EarningAnalysis = () => {
   const [earingAnalysis, setEaringAnalysis] = useState(null);
+  const [userEarning, setUserEarning] = useState({
+    copartnerEarning: 0,
+    personalEarning: 0,
+  });
 
   const stackholderId = sessionStorage.getItem("stackholderId");
 
   const EARNING_URL = `https://copartners.in:5135/api/Wallet/GetWalletWithdrawalBalance/${stackholderId}?userType=RA`;
+
+  const USER_EARNING = `https://copartners.in:5132/api/RADashboard/GetDashboardRAListingData/${stackholderId}?page=1&pageSize=10`;
 
   useEffect(() => {
     const fetchWalletBalance = async () => {
@@ -22,6 +28,41 @@ const EarningAnalysis = () => {
     };
 
     fetchWalletBalance();
+  }, []);
+
+  useEffect(() => {
+    const fetchEarningBalance = async () => {
+      try {
+        const response = await axios.get(USER_EARNING);
+        const data = response.data.data;
+
+        // Calculate Copartner and Personal Earnings
+        let copartnerEarning = 0;
+        let personalEarning = 0;
+
+        data.forEach((item) => {
+          if (item.amount !== null && item.subscription !== "No Subscrption") {
+            if (item.amount !== item.subscriptionAmount) {
+              copartnerEarning += item.amount;
+            } else {
+              personalEarning += item.subscriptionAmount;
+            }
+          }
+        });
+
+        setUserEarning({
+          copartnerEarning,
+          personalEarning,
+        });
+
+        console.log('User Earning data is-', data);
+      } catch (error) {
+        console.error("Error fetching the earning balance:", error);
+        setUserEarning('Error');
+      }
+    };
+
+    fetchEarningBalance();
   }, []);
 
   return (
@@ -44,7 +85,7 @@ const EarningAnalysis = () => {
                 Total Earning:
               </span>
               <span className="text-gradient  text-white font-[600] md:text-[65px] text-[29px] md:leading-[55px] leading-[24px]">
-              ₹{(Number(earingAnalysis?.walletBalance) || 0) + 10}
+                ₹{(Number(earingAnalysis?.walletBalance) || 0)}
               </span>
             </div>
             <div className="flex flex-col">
@@ -52,7 +93,7 @@ const EarningAnalysis = () => {
                 Copartner Earning:
               </span>
               <span className="text-gradient  text-white font-[600] md:text-[65px] text-[29px] md:leading-[55px] leading-[24px]">
-              ₹{earingAnalysis?.walletBalance}
+                ₹{userEarning.copartnerEarning}
               </span>
             </div>
             <div className="flex flex-col">
@@ -60,7 +101,7 @@ const EarningAnalysis = () => {
                 Personal Earning:
               </span>
               <span className="text-gradient  text-white font-[600] md:text-[65px] text-[29px] md:leading-[55px] leading-[24px]">
-                ₹10
+                ₹{userEarning.personalEarning}
               </span>
             </div>
           </div>

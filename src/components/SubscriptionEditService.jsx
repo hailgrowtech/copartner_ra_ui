@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { dropdown, closeIcon } from "../assets";
 
 const SubscriptionEditService = ({ closeDialog, subscription }) => {
-  const [subscriptionType, setSubscriptionType] = useState("Future & Option");
+  const [subscriptionType, setSubscriptionType] = useState("Futures & Options");
   const [planType, setPlanType] = useState("Basic");
   const [durationType, setDurationType] = useState("1 Month");
   const [keyPointsType, setKeyPointsType] = useState("Plan Key Points");

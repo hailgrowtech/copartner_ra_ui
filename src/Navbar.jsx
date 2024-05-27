@@ -138,7 +138,7 @@ const Navbar = ({ activeTab, toggleSidebar }) => {
 
           {isSmallScreen ? (
             <div className="flex md:mr-8 mr-10 gap-[1rem]">
-              <div className="relative">
+              {/* <div className="relative">
                 <img
                   src={searchIcon}
                   alt=""
@@ -149,7 +149,7 @@ const Navbar = ({ activeTab, toggleSidebar }) => {
                   placeholder="Search for something"
                   className="pl-8 bg-[#2E323C] w-[292px] h-[40px] text-white rounded-[10px]"
                 />
-              </div>
+              </div> */}
 
               {/* <div className="relative">
                 <button
@@ -183,8 +183,8 @@ const Navbar = ({ activeTab, toggleSidebar }) => {
               </div> */}
             </div>
           ) : (
-            <div className="flex w-[540px] ml-[8rem] gap-[2rem]">
-              <div className="relative">
+            <div className="flex w-[540px] ml-[26rem] gap-[2rem]">
+              {/* <div className="relative">
                 <img
                   src={searchIcon}
                   alt=""
@@ -195,7 +195,7 @@ const Navbar = ({ activeTab, toggleSidebar }) => {
                   placeholder="Search for something"
                   className="pl-10 pr-4 bg-[#2E323C] w-[252px] h-[55px] text-white rounded-[10px]"
                 />
-              </div>
+              </div> */}
 
               {/* <div className="relative">
                 <button

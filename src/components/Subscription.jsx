@@ -78,7 +78,7 @@ const Subscription = () => {
   const getSubscriptionTypeLabel = (type) => {
     switch (type) {
       case '1':
-        return "Future & Option";
+        return "Futures & Options";
       case '2':
         return "Commodity";
       case '3':
