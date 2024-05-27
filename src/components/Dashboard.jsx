@@ -107,7 +107,7 @@ const Dashboard = () => {
             <h2 className="md:w-[176px] md:h-[27px] w-[125px] h-[28px] font-inter md:text-[22px] text-[20px] font-[600] leading-[27px] text-white">
               User Analysis
             </h2>
-            <div className="flex items-center md:gap-[2rem] gap-2 xl:ml-[57rem] md:ml-[25rem] ml-[-20px]">
+            <div className="flex items-center md:gap-[2rem] gap-2 xl:ml-[50rem] xl:ml-[] md:ml-[25rem] ml-[-20px]">
               <button
                 className={`button ${
                   activeButtonSecondSection === "today" ?
@@ -412,7 +412,7 @@ const Dashboard = () => {
                     </div>
                   </div>
 
-                  <div className="md:h-[344px] sm:h-[240px] md:max-h-[250px] max-h-[180px] md:right-0 right-[4rem] relative profile-image_1 mb-4">
+                  <div className="md:h-[344px] sm:h-[240px] md:max-h-[250px] max-h-[180px] xl:left-48 md:right-0 right-[4rem] relative profile-image_1 mb-4">
                     <img
                       src={userBck}
                       alt="background"

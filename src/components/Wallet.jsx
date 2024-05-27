@@ -173,7 +173,7 @@ const Wallet = () => {
                 Transaction History
               </span>
 
-              <div className="relative md:mr-[-90px] ml-0 md:mb-[-4rem] mb-0">
+              {/* <div className="relative md:mr-[-90px] ml-0 md:mb-[-4rem] mb-0">
                 <button
                   onClick={handleOpenFilter}
                   className="flex items-center justify-center w-[40px] h-[40px] rounded-[10px] border-solid border-[1px] border-white font-[600] font-inter text-[12px] md:mr-0 mr-[8px]"
@@ -192,7 +192,7 @@ const Wallet = () => {
                           className="text-white text-sm rounded hover:bg-gray-600"
                           onClick={handleOpenFilter}
                         >
-                          {/* Add button content here */}
+                          
                         </button>
                         <h2 className="text-white text-2xl">Filter</h2>
                       </div>
@@ -228,8 +228,8 @@ const Wallet = () => {
                               type="radio"
                               name="priceFilter"
                               value="lowToHigh"
-                              // checked={selectedPriceFilter === "lowToHigh"}
-                              // onChange={handleRadioChange}
+                              checked={selectedPriceFilter === "lowToHigh"}
+                              onChange={handleRadioChange}
                               className="mr-2"
                             />
                             Low-To-High
@@ -239,8 +239,8 @@ const Wallet = () => {
                               type="radio"
                               name="priceFilter"
                               value="highToLow"
-                              // checked={selectedPriceFilter === "highToLow"}
-                              // onChange={handleRadioChange}
+                              checked={selectedPriceFilter === "highToLow"}
+                              onChange={handleRadioChange}
                               className="mr-2"
                             />
                             High-To-Low
@@ -258,7 +258,7 @@ const Wallet = () => {
                     </div>
                   </div>
                 )}
-              </div>
+              </div> */}
             </div>
             <div className="flex flex-row md:gap-4 gap-2">
               <button
@@ -345,8 +345,8 @@ const Wallet = () => {
                 </button>
               </div>
             ) : (
-              <table className="xl:w-[1520px] md:w-[1130px] md:h-auto h-[497px] px-[1rem] bg-[#29303F] rounded-[30px]">
-                <thead className="text-dimWhite">
+              <table className="xl:w-[1520px] md:w-[1130px] md:h-[500px] h-[497px] px-[1rem] bg-[#29303F] rounded-[30px]">
+                <thead className="text-dimWhite md:h-[60px] h-0">
                   <tr>
                     <th className="text-center px-4">Transaction ID</th>
                     <th className="text-center px-4">Date</th>
@@ -578,7 +578,7 @@ const Wallet = () => {
                         row.requestAction !== "A" && (
                           <tr
                             key={index}
-                            className={index % 2 === 0 ? "bg-[#1E1E22]" : ""}
+                            className={index % 2 === 0 ? "" : "bg-[#18181B]"}
                           >
                             <td className="pl-[4rem] font-[500] text-[16px] leading-[18px]">
                               {/* {row.transcationId} */}

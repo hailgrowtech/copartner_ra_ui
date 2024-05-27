@@ -122,7 +122,7 @@ const Subscription = () => {
                   {getSubscriptionTypeLabel(row.serviceType)}
                 </p>
                 <div className="flex gap-3">
-                  <button onClick={() => openEditDialog(row)}>
+                  {/* <button onClick={() => openEditDialog(row)}>
                     <img
                       src={edit}
                       alt=""
@@ -134,7 +134,7 @@ const Subscription = () => {
                       isEditDialogOpen={isEditDialogOpen}
                       closeDialog={closeDialog}
                     />
-                  )}
+                  )} */}
                   <button onClick={() => handleDeleteTable(row.id)}>
                     <img
                       src={deleteIcon}
@@ -212,7 +212,7 @@ const Subscription = () => {
                       {row.activeUser}
                     </td>
                     <td className="flex flex-row items-center justify-center gap-2 py-[2rem]">
-                      <button onClick={() => openEditDialog(row)}>
+                      {/* <button onClick={() => openEditDialog(row)}>
                         <img
                           src={edit}
                           alt=""
@@ -225,7 +225,7 @@ const Subscription = () => {
                           closeDialog={closeDialog}
                           subTable={subTable}
                         />
-                      )}
+                      )} */}
                       <button onClick={() => handleDeleteTable(row.id)}>
                         <img
                           src={deleteIcon}

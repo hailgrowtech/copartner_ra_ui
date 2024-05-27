@@ -26,7 +26,7 @@ const EarningAnalysis = () => {
 
   return (
     <div className="flex flex-col py-8">
-      <div className="flex md:gap-[22rem] xl:gap-[33rem] mb-2">
+      <div className="flex md:gap-[28rem] xl:gap-[38rem] mb-2">
         <span className="text-xl font-semibold text-white">
           Earning analysis
         </span>
@@ -35,7 +35,7 @@ const EarningAnalysis = () => {
         </span>
       </div>
 
-      <div className="md:w-[1000px] xl:w-[1500px] w-[345px] xl:justify-around sm:w-[380px] md:flex-row flex-col md:gap-10 gap-8 flex md-ml-0 ml-[-6px]">
+      <div className="md:w-[1120px] xl:w-[1500px] w-[345px] xl:justify-around sm:w-[380px] md:flex-row flex-col md:gap-10 gap-8 flex xl:ml-[-2.6rem] md:ml-0 ml-[-6px]">
         <div className="flex flex-row bg_cards rounded-[10px] md:w-[100%] w-[358px] px-12">
           {/* <PieCharts />  */}
           <div className="grid grid-col-3 md:flex flex-col md:item-center item-start md:justify-center md:gap-10 gap-7 md:w-[360px] md:h-auto w-[219px] h-[190px] md:py-0 py-4">

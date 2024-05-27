@@ -170,7 +170,7 @@ const BarGraph = ({
     <ResponsiveContainer
       className="bg_cards rounded-[10px] ml-[-3.8rem] md:flex hidden"
       width="110%"
-      height={300}
+      height={370}
     >
       <BarChart
         data={selectData()}
