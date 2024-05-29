@@ -51,7 +51,7 @@ const BarGraph = ({
             }));
 
           apiData.forEach((item) => {
-            const date = item.date ? parseISO(item.date) : null;
+            const date = item.userJoiningDate ? parseISO(item.userJoiningDate) : null;
             const dayOfWeek = date ? getDay(date) : null;
             const month = date ? getMonth(date) : null;
             const dayLabel = date ? format(date, "yyyy-MM-dd") : "Unknown Date";

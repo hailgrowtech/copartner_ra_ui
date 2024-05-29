@@ -93,7 +93,7 @@ const EarningAnalysis = () => {
                 Copartner Earning:
               </span>
               <span className="text-gradient  text-white font-[600] md:text-[65px] text-[29px] md:leading-[55px] leading-[24px]">
-                ₹{userEarning.copartnerEarning}
+                ₹{userEarning.copartnerEarning.toFixed(2)}
               </span>
             </div>
             <div className="flex flex-col">

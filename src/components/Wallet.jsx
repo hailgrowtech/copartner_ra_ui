@@ -17,13 +17,11 @@ const Wallet = () => {
   const [showTransactions, setShowTransactions] = useState("transaction");
   const [isEditUpiOpen, setIsEditUpiOpen] = useState(false);
   const [smallScreen, setSmallScreen] = useState(false);
-  const [openFilter, setOpenFilter] = useState(false);
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
   const [walletBalance, setWalletBalance] = useState(null);
   const [transactionTable, setTransactionTable] = useState([]);
   const [withdrawalReq, setWithdrawalReq] = useState([]);
-  const [getBankID, setGetBankID] = useState("");
   const [selectedRow, setSelectedRow] = useState(null);
   const [searchInput, setSearchInput] = useState("");
   const [filteredTransactions, setFilteredTransactions] = useState([]);
@@ -36,7 +34,38 @@ const Wallet = () => {
 
   const WITHDRAWAL_REQ_API = `https://copartners.in:5135/api/Withdrawal/GetWithdrawalByUserId/${stackholderId}?userType=RA&page=1&pageSize=10`;
 
-  const BANK_API = `https://copartners.in:5135/api/Withdrawal/GetBankUPIById/${getBankID}`;
+  const fetchBankDetails = async (withdrawalModeId) => {
+    const BANK_API = `https://copartners.in:5135/api/Withdrawal/GetBankUPIById/${withdrawalModeId}`;
+    try {
+      const response = await axios.get(BANK_API);
+      return response.data.data;
+    } catch (error) {
+      console.error("Error fetching bank details:", error);
+      return null;
+    }
+  };
+
+  const fetchWithdrawalRequests = async () => {
+    try {
+      const response = await axios.get(WITHDRAWAL_REQ_API);
+      const withdrawalRequests = response.data.data;
+
+      const requestsWithBankDetails = await Promise.all(
+        withdrawalRequests.map(async (request) => {
+          const bankDetails = await fetchBankDetails(request.withdrawalModeId);
+          return {
+            ...request,
+            bankDetails,
+          };
+        })
+      );
+
+      setWithdrawalReq(requestsWithBankDetails);
+    } catch (error) {
+      console.error("Error fetching the withdrawal requests:", error);
+      setWithdrawalReq("Error");
+    }
+  };
 
   useEffect(() => {
     const fetchWalletBalance = async () => {
@@ -50,21 +79,8 @@ const Wallet = () => {
     };
 
     fetchWalletBalance();
+    fetchWithdrawalRequests();
   }, []);
-
-  useEffect(() => {
-    const fetchWalletReqBalance = async () => {
-      try {
-        const response = await axios.get(WITHDRAWAL_REQ_API);
-        setWithdrawalReq(response.data.data);
-      } catch (error) {
-        console.error("Error fetching the wallet balance:", error);
-        setWithdrawalReq("Error");
-      }
-    };
-
-    fetchWalletReqBalance();
-  }, [WITHDRAWAL_REQ_API]);
 
   useEffect(() => {
     const fetchTransactionTable = async () => {
@@ -83,14 +99,6 @@ const Wallet = () => {
 
     fetchTransactionTable();
   }, []);
-
-  useEffect(() => {
-    if (getBankID) {
-      axios.get(BANK_API).then((res) => {
-        setWithdrawalReq(res.data.data);
-      });
-    }
-  }, [getBankID, BANK_API]);
 
   useEffect(() => {
     const checkScreenSize = () => {
@@ -157,22 +165,58 @@ const Wallet = () => {
     filterTransactions(searchInput, start, end);
   };
 
+  // const filterTransactions = (searchValue, startDate, endDate) => {
+  //   let filtered = transactionTable;
+
+  //   if (searchValue) {
+  //     filtered = filtered.filter((row) =>
+  //       row.userMobileNo.includes(searchValue)
+  //     );
+  //   }
+
+  //   if (startDate && endDate) {
+  //     filtered = filtered.filter((row) => {
+  //       const date = new Date(row.subscribeDate);
+  //       console.log('transcationData', date)
+  //       return date >= startDate && date <= endDate;
+  //     });
+  //   }
+
+  //   setFilteredTransactions(filtered);
+  // };
+
   const filterTransactions = (searchValue, startDate, endDate) => {
     let filtered = transactionTable;
-
+  
     if (searchValue) {
       filtered = filtered.filter((row) =>
         row.userMobileNo.includes(searchValue)
       );
     }
-
+  
     if (startDate && endDate) {
       filtered = filtered.filter((row) => {
-        const date = new Date(row.date);
-        return date >= startDate && date <= endDate;
+        const subscribeDate = new Date(row.subscribeDate);
+        const subscribeDateOnly = new Date(
+          subscribeDate.getFullYear(),
+          subscribeDate.getMonth(),
+          subscribeDate.getDate()
+        );
+        const startDateOnly = new Date(
+          startDate.getFullYear(),
+          startDate.getMonth(),
+          startDate.getDate()
+        );
+        const endDateOnly = new Date(
+          endDate.getFullYear(),
+          endDate.getMonth(),
+          endDate.getDate()
+        );
+  
+        return subscribeDateOnly >= startDateOnly && subscribeDateOnly <= endDateOnly;
       });
     }
-
+  
     setFilteredTransactions(filtered);
   };
 
@@ -287,7 +331,9 @@ const Wallet = () => {
                 {filteredTransactions &&
                   filteredTransactions
                     .slice(0, 5)
-                    .filter((row) => row.subscription.trim() !== "No Subscrption")
+                    .filter(
+                      (row) => row.subscription.trim() !== "No Subscription"
+                    )
                     .map((row, index) => (
                       <div
                         key={index}
@@ -300,7 +346,7 @@ const Wallet = () => {
                         </div>
                         <span className="flex items-center justify-between sm:w-[305px] h-[13px] font-[500] text-[14px] leading-[12px] text-lightWhite">
                           <span className="text-dimWhite">DATE:</span>{" "}
-                          {formatDate(row.date)}
+                          {formatDate(row.subscribeDate)}
                         </span>
                         <span className="flex items-center justify-between sm:w-[305px] h-[34px] font-[500] text-[14px] leading-[12px] text-lightWhite">
                           <span className="text-dimWhite">SUBSCRIPTION:</span>{" "}
@@ -325,42 +371,44 @@ const Wallet = () => {
                 </button>
               </div>
             ) : (
-              <table className="xl:w-[1520px] md:w-[1130px] md:h-full p-8 h-[497px] px-[1rem] bg-[#29303F] rounded-[30px]">
-                <thead className="text-dimWhite md:h-[60px] h-0">
+              <table className="xl:w-[1520px] md:w-[1130px] p-8 h-[497px] bg-[#29303F] rounded-[30px]">
+                <thead className="text-dimWhite bg-[#1E1E22]">
                   <tr>
-                    <th className="text-center px-4">Transaction ID</th>
-                    <th className="text-center px-4">Date</th>
-                    <th className="text-center px-4">Subscription</th>
-                    <th className="text-center px-4">Plan Name</th>
-                    <th className="text-center px-4">User Number</th>
-                    <th className="text-start px-4">Amount</th>
+                    <th className="text-start px-4 py-2">Transaction ID</th>
+                    <th className="text-start px-4 py-2">Date</th>
+                    <th className="text-start px-4 py-2">Subscription</th>
+                    <th className="text-start px-4 py-2">Plan Name</th>
+                    <th className="text-start px-4 py-2">User Number</th>
+                    <th className="text-start px-4 py-2">Amount</th>
                   </tr>
                 </thead>
                 <tbody className="text-lightWhite">
                   {filteredTransactions &&
                     filteredTransactions
-                    .filter((row) => row.subscription.trim() !== "No Subscrption")
+                      .filter(
+                        (row) => row.subscription.trim() !== "No Subscription"
+                      )
                       .map((row, index) => (
                         <tr
                           key={index}
                           className={index % 2 === 0 ? "bg-[#1E1E22]" : ""}
                         >
-                          <td className="text-center font-[500] text-[16px] leading-[18px] px-4">
+                          <td className="text-start font-[500] text-[16px] leading-[18px] px-4 py-2">
                             {row.transactionId}
                           </td>
-                          <td className="text-center font-[500] text-[16px] leading-[18px] px-4">
-                            {formatDate(row.date)}
+                          <td className="text-start font-[500] text-[16px] leading-[18px] px-4 py-2">
+                            {formatDate(row.subscribeDate)}
                           </td>
-                          <td className="text-center font-[500] text-[16px] leading-[18px] px-4">
+                          <td className="text-start font-[500] text-[16px] leading-[18px] px-4 py-2">
                             {row.subscription}
                           </td>
-                          <td className="text-center font-[500] text-[16px] leading-[18px] px-4">
+                          <td className="text-start font-[500] text-[16px] leading-[18px] px-4 py-2">
                             {row.planType}
                           </td>
-                          <td className="text-center font-[500] text-[16px] leading-[18px] px-4">
+                          <td className="text-start font-[500] text-[16px] leading-[18px] px-4 py-2">
                             {row.userMobileNo}
                           </td>
-                          <td className="text-start font-[500] text-[16px] leading-[18px] px-4">
+                          <td className="text-start font-[500] text-[16px] leading-[18px] px-4 py-2">
                             {row.amount}
                           </td>
                         </tr>
@@ -382,7 +430,7 @@ const Wallet = () => {
                   >
                     <div className="flex flex-row justify-between">
                       <p className="w-[173px] h-[26px] font-[600] text-[16px] leading-[25px] text-lightWhite">
-                        {row.transcationId}
+                        {row.transactionId}
                       </p>
                     </div>
                     <span className="flex items-center justify-between sm:w-[305px] h-[13px] font-[500] text-[14px] leading-[12px] text-lightWhite">
@@ -391,11 +439,11 @@ const Wallet = () => {
                     </span>
                     <span className="flex items-center justify-between sm:w-[305px] h-[34px] font-[500] text-[14px] leading-[12px] text-lightWhite">
                       <span className="text-dimWhite">BANK:</span>{" "}
-                      {row.withdrawal}
+                      {row.bankDetails.bankName || row.bankDetails.upI_ID}
                     </span>
                     <span className="flex items-center justify-between sm:w-[305px] h-[13px] font-[500] text-[14px] leading-[12px] text-lightWhite">
                       <span className="text-dimWhite">ACCOUNT NUMBER:</span>{" "}
-                      {row.accNum}
+                      {row.bankDetails.accountNumber || row.bankDetails.upI_ID}
                     </span>
                     <span className="flex items-center justify-between sm:w-[305px] h-[13px] font-[500] text-[14px] leading-[12px] text-lightWhite">
                       <span className="text-dimWhite">AMOUNT:</span>{" "}
@@ -409,16 +457,16 @@ const Wallet = () => {
               </div>
             ) : (
               <table className="xl:w-[1520px] md:w-[1130px] md:h-auto h-[497px] px-[1rem] bg-[#29303F] rounded-[30px]">
-                <thead className="text-dimWhite w-[1084px] h-[51px]">
+                <thead className="text-dimWhite">
                   <tr>
-                    <th className="text-start pl-[4rem]">Transaction ID</th>
-                    <th className="text-start pl-[4rem]">Date</th>
-                    <th className="text-start pl-[4rem]">Bank</th>
-                    <th className="text-start pl-[0rem]">Account Number</th>
-                    <th className="text-start pl-[4rem]">Amount</th>
+                    <th className="text-center px-4 py-2">Transaction ID</th>
+                    <th className="text-start px-4 py-2">Date</th>
+                    <th className="text-start px-4 py-2">Bank</th>
+                    <th className="text-start px-4 py-2">Account Number</th>
+                    <th className="text-start px-4 py-2">Amount</th>
                   </tr>
                 </thead>
-                <tbody className="text-lightWhite w-[1084px] h-[81px]">
+                <tbody className="text-lightWhite">
                   {withdrawalReq.map((row, index) => {
                     return (
                       row.requestAction === "A" && (
@@ -426,23 +474,20 @@ const Wallet = () => {
                           key={index}
                           className={index % 2 === 0 ? "bg-[#1E1E22]" : ""}
                         >
-                          <td className="pl-[4rem] font-[500] text-[16px] leading-[18px]">
-                            {/* {row.transcationId} */}
+                          <td className="text-center font-[500] text-[16px] leading-[18px] px-4 py-2">
+                            {row.transactionId}
                           </td>
-                          <td className="pl-[4rem] font-[500] text-[16px] leading-[18px]">
-                            {/* {row.date} */}
+                          <td className="text-start font-[500] text-[16px] leading-[18px] px-4 py-2">
                             {formatDate(row.withdrawalRequestDate)}
                           </td>
-                          <td className="pl-[4rem] w-[143px] h-[36px] font-[500] text-[16px] leading-[18px]">
-                            {row.paymentMode}
+                          <td className="text-start font-[500] text-[16px] leading-[18px] px-4 py-2">
+                            {row.bankDetails.bankName || row.bankDetails.upI_ID}
                           </td>
-                          <td className="pl-[4rem] w-[143px] h-[36px] font-[500] text-[16px] leading-[18px]">
-                            {/* {row.accountNumber} */}
-                            {row.paymentMode === "Bank"
-                              ? row.accountNumber
-                              : row.upI_ID}
+                          <td className="text-start font-[500] text-[16px] leading-[18px] px-4 py-2">
+                            {row.bankDetails.accountNumber ||
+                              row.bankDetails.upI_ID}
                           </td>
-                          <td className="pl-[4rem] w-[105px] h-[18px] font-[500] text-[16px] leading-[18px]">
+                          <td className="text-start font-[500] text-[16px] leading-[18px] px-4 py-2">
                             {row.amount}
                           </td>
                         </tr>
@@ -469,7 +514,7 @@ const Wallet = () => {
                     >
                       <div className="flex flex-row justify-between">
                         <p className="w-[173px] h-[26px] font-[600] text-[16px] leading-[25px] text-lightWhite">
-                          {row.transcationId}
+                          {Math.floor(row.id.length * 1110000)}
                         </p>
                         <div
                           className="font-[600] text-[16px] leading-[25px] text-lightWhite pl-[4rem]"
@@ -502,11 +547,12 @@ const Wallet = () => {
                       </span>
                       <span className="flex items-center justify-between sm:w-[305px] h-[13px] font-[500] text-[14px] leading-[12px] text-lightWhite">
                         <span className="text-dimWhite">BANK:</span>{" "}
-                        {row.paymentMode}
+                        {row.bankDetails.bankName || row.bankDetails.upI_ID}
                       </span>
                       <span className="flex items-center justify-between sm:w-[305px] h-[13px] font-[500] text-[14px] leading-[12px] text-lightWhite">
                         <span className="text-dimWhite">ACCOUNT NUMBER:</span>{" "}
-                        {row.accNum}
+                        {row.bankDetails.accountNumber ||
+                          row.bankDetails.upI_ID}
                       </span>
                       <span className="flex items-center justify-between sm:w-[305px] h-[13px] font-[500] text-[14px] leading-[12px] text-lightWhite">
                         <span className="text-dimWhite">AMOUNT:</span>{" "}
@@ -540,18 +586,18 @@ const Wallet = () => {
                             className={index % 2 === 0 ? "bg-[#18181B]" : ""}
                           >
                             <td className="pl-[4rem] font-[500] text-[16px] leading-[18px]">
-                              {/* {row.transcationId} */}
+                              {Math.floor(row.id.length * 1110000)}
                             </td>
                             <td className="pl-[4rem] font-[500] text-[16px] leading-[18px]">
                               {formatDate(row.withdrawalRequestDate)}
                             </td>
                             <td className="w-[143px] h-[36px] font-[500] text-[16px] leading-[18px]">
-                              {row.paymentMode}
+                              {row.bankDetails.bankName ||
+                                row.bankDetails.upI_ID}
                             </td>
                             <td className="px-[4rem] w-[143px] h-[36px] font-[500] text-[16px] leading-[18px]">
-                              {row.paymentMode === "Bank"
-                                ? row.accountNumber
-                                : row.upI_ID}
+                              {row.bankDetails.accountNumber ||
+                                row.bankDetails.upI_ID}
                             </td>
                             <td className="pl-[4rem] w-[105px] h-[18px] font-[500] text-[16px] leading-[18px]">
                               {row.amount}
@@ -579,13 +625,15 @@ const Wallet = () => {
                           </tr>
                         )
                     )}
-                  {isEditUpiOpen && selectedRow && selectedRow.requestAction === "R" && (
-                    <RejectUpiOpen
-                      isOpen={isEditUpiOpen}
-                      onClose={closeDialog}
-                      withdrawalReq={selectedRow}
-                    />
-                  )}
+                  {isEditUpiOpen &&
+                    selectedRow &&
+                    selectedRow.requestAction === "R" && (
+                      <RejectUpiOpen
+                        isOpen={isEditUpiOpen}
+                        onClose={closeDialog}
+                        withdrawalReq={selectedRow}
+                      />
+                    )}
                 </tbody>
               </table>
             )}

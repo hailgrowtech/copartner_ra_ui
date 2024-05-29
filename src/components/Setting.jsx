@@ -190,7 +190,7 @@ const Setting = () => {
                     Experience
                   </span>
                   <span className="text-white md:w-[83px] w-[54px] md:h-[20] h-[12px] font-[600] md:text-[16px] text-[10px] text-center leading-[20px]">
-                    {myCard && myCard.experience}
+                    {myCard && myCard.experience}+
                   </span>
                 </div>
                 <div className="bg-white w-[1px] md:h-[35px] h-[22px]"></div>

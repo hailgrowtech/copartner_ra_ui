@@ -357,7 +357,7 @@ const Dashboard = () => {
                           Experience
                         </span>
                         <span className="text-white md:w-[83px] w-[54px] md:h-[20] h-[12px] font-[600] md:text-[16px] text-[10px] text-center leading-[20px]">
-                          {myCard && myCard.experience}
+                          {myCard && myCard.experience}+
                         </span>
                       </div>
                       <div className="bg-white w-[1px] md:h-[35px] h-[22px]"></div>
@@ -437,7 +437,7 @@ const Dashboard = () => {
                     </div>
                   </div>
                 </div>
-                <div className="md:flex md:flex-row grid grid-cols-2 md:gap-[4rem] gap-2 md:px-[1rem] md:mt-[2rem] mt-14 md:py-0 py-8 items-center justify-center">
+                <div className="md:flex md:flex-row grid grid-cols-2 md:gap-[12rem] gap-2 md:px-[1rem] md:mt-[2rem] mt-14 md:py-0 py-8 items-center justify-center">
                   {subTable &&
                     subTable.map((subUnit) => (
                       <div className="flex gap-[4rem] md:w-[165px] w-[150px] h-[38px] flex md:flex-col justify-center items-center">

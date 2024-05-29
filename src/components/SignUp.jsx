@@ -70,7 +70,7 @@ const SignUp = ({ setIsSignedUp }) => {
         toast.info("Session expired. Please log in again.", {
           position: "top-right",
         });
-      }, 10000);
+      }, 86400000);
 
       const stackholderResponse = await axios.get(
         `${STACKHOLDER_API}/${stackholderId}`
@@ -89,7 +89,7 @@ const SignUp = ({ setIsSignedUp }) => {
         }
         const timeout = setTimeout(() => {
           handleLogout();
-        }, 10000);
+        }, 86400000);
       } else {
         setError("Email ID or Password does not match.");
         toast.error("Email ID or Password does not match.", {
@@ -172,14 +172,14 @@ const SignUp = ({ setIsSignedUp }) => {
                 />
               </button>
             </div>
-            <button
+            {/* <button
               className="w-full text-[14px] text-[#0081F1] text-right"
               onClick={() =>
                 navigate("/reset", { state: { emailId, password } })
               }
             >
               Forget Password?
-            </button>
+            </button> */}
             <button
               type="submit"
               onClick={handleContinue}
