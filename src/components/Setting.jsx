@@ -238,7 +238,7 @@ const Setting = () => {
                 </span>
               </div>
 
-              <div className="z-[9999] flex md:flex-row flex-col items-center gap-2 md:py-3 py-2">
+              <div className="flex md:flex-row flex-col items-center gap-2 md:py-3 py-2">
                 <div className="flex md:flex-row flex-col gap-4">
                   <div className="text-white flex items-center gap-2">
                     <img src={card} alt="" className="w-[18px] h-[18px]" />
@@ -337,16 +337,16 @@ const Setting = () => {
               </div>
             </div>
 
-            <div className="md:h-[344px] sm:h-[240px] md:max-h-[250px] max-h-[180px] md:right-0 right-[4rem] relative profile-image_1 mb-4">
+            <div className="md:h-[344px] sm:h-[240px] md:max-h-[250px] max-h-[180px] md:right-0 right-[2rem] relative profile-image_1 mb-4">
               <img
                 src={userBck}
                 alt="background"
-                className="absolute top-0 left-0 w-full h-full object-contain rounded-t-[11px]"
+                className="absolute top-0 md:left-0 w-full h-full object-contain rounded-t-[11px]"
               />
               <img
                 src={myCard && myCard.expertImagePath}
                 alt="User"
-                className="absolute top-0 w-32 right-0 md:w-full h-full object-contain rounded-t-[11px]"
+                className="absolute top-0 w-32 md:right-0 left-[2rem] md:w-full h-full object-contain rounded-t-[11px]"
               />
             </div>
 

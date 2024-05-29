@@ -90,37 +90,31 @@ const Navbar = ({ activeTab, toggleSidebar }) => {
                 <img
                   src={myCard && myCard.expertImagePath}
                   alt="LoginUser"
-                  className="w-[40px] h-[40px] rounded-full"
+                  className="w-[50px] h-[50px] bg-black rounded-full"
                 />
               </Link>
-              <div className="w-[159px] h-[30px] rounded-[24px] overflow-hidden flex">
+              <div className="w-[150px] h-[40px] rounded-[24px] overflow-hidden flex">
+              {isCoPartner ? (
                 <button
-                  className={`w-1/2  py-2 font-inter font-[600] text-[11px] leading-[10px] text-center ${
-                    showTab === "copartner"
-                      ? "bg-gray-200 text-[#282F3E]"
-                      : "bg-btn text-gray-500"
-                  }`}
+                  className={`w-full py-2 font-inter font-[600] text-[16px] leading-[19px] text-center bg-white`}
                   onClick={() => handleTabClick("copartner")}
-                  disabled={!isCoPartner}
                 >
                   Copartner
                 </button>
+              ) : (
                 <button
-                  className={`w-1/2 py-2 font-inter font-[600] text-[11px] leading-[10px] text-center ${
-                    showTab === "personal"
-                      ? "bg-gray-200 text-[#282F3E]"
-                      : "bg-btn text-gray-500"
-                  }`}
+                  className={`w-full py-2 font-inter font-[600] text-[16px] leading-[19px] text-center bg-white`}
                   onClick={() => handleTabClick("personal")}
                 >
                   Personal
                 </button>
-              </div>
+              )}
+            </div>
               <button onClick={toggleSidebar} className="md:ml-0 ml-[20px]">
                 <img
                   src={menu}
                   alt="Menu"
-                  className="w-[40px] h-[40px] rounded-full"
+                  className="w-[50px] h-[50px] rounded-full"
                 />
               </button>
             </div>

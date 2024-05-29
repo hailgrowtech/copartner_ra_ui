@@ -42,7 +42,7 @@ const Dashboard = () => {
       .get(SUB_TABLE)
       .then((res) => {
         setSubTable(res.data.data);
-        console.log('My Table is', res.data.data)
+        console.log("My Table is", res.data.data);
       })
       .catch((error) => {
         console.log("Something went wrong", error);
@@ -105,8 +105,9 @@ const Dashboard = () => {
             <div className="flex items-center md:gap-[2rem] gap-2 xl:ml-[50rem] xl:ml-[] md:ml-[25rem] ml-[-20px]">
               <button
                 className={`button ${
-                  activeButtonSecondSection === "today" ?
-                  "bg-[#fff] text-[#000]" : "bg-transparent text-[#fff]"
+                  activeButtonSecondSection === "today"
+                    ? "bg-[#fff] text-[#000]"
+                    : "bg-transparent text-[#fff]"
                 } md:text-[18px] border-solid border-[1px] border-white transition duration-300 md:py-2 py-1 px-2 md:px-6 rounded mb-2 md:mb-0`}
                 onClick={() => setActiveButtonSecondSection("today")}
               >
@@ -114,8 +115,9 @@ const Dashboard = () => {
               </button>
               <button
                 className={`button ${
-                  activeButtonSecondSection === "weekly" ?
-                  "bg-[#fff] text-[#000]" : "bg-transparent text-[#fff]" 
+                  activeButtonSecondSection === "weekly"
+                    ? "bg-[#fff] text-[#000]"
+                    : "bg-transparent text-[#fff]"
                 } md:text-[18px] border-solid border-[1px] border-white  transition duration-300 md:py-2 py-1 px-2 md:px-6 rounded mb-2 md:mb-0`}
                 onClick={() => setActiveButtonSecondSection("weekly")}
               >
@@ -123,8 +125,9 @@ const Dashboard = () => {
               </button>
               <button
                 className={`button ${
-                  activeButtonSecondSection === "monthly" ?
-                  "bg-[#fff] text-[#000]" : "bg-transparent text-[#fff]"
+                  activeButtonSecondSection === "monthly"
+                    ? "bg-[#fff] text-[#000]"
+                    : "bg-transparent text-[#fff]"
                 } md:text-[18px] border-solid border-[1px] border-white  transition duration-300 md:py-2 py-1 px-2 md:px-6 rounded mb-2 md:mb-0`}
                 onClick={() => setActiveButtonSecondSection("monthly")}
               >
@@ -133,8 +136,9 @@ const Dashboard = () => {
               <div className="relative inline-block">
                 <button
                   className={`button ${
-                    activeButtonSecondSection === "custom" ?
-                    "bg-[#fff] text-[#000]" : "bg-transparent text-[#fff]"
+                    activeButtonSecondSection === "custom"
+                      ? "bg-[#fff] text-[#000]"
+                      : "bg-transparent text-[#fff]"
                   } md:text-[18px] border-solid border-[1px] border-white  transition duration-300 md:py-2 py-1 px-2 md:px-6 rounded mb-2 md:mb-0`}
                   onClick={handleCustomButtonClick}
                 >
@@ -326,10 +330,10 @@ const Dashboard = () => {
               </div>
             </div>
           </div>
-          
+
           <ReferralLinkComponent />
           <EarningAnalysis />
-          
+
           <div className="py-8 flex flex-col gap-4 md:mt-0 mt-[-2rem]">
             <span className="font-inter font-[600] text-[22px] leading-[27px] w-[246px] h-[27px] text-white">
               Subscription : Services
@@ -411,12 +415,12 @@ const Dashboard = () => {
                     <img
                       src={userBck}
                       alt="background"
-                      className="absolute top-0 left-0 w-full h-full object-contain rounded-t-[11px]"
+                      className="absolute top-0 md:left-0 left-6 w-full h-full object-contain rounded-t-[11px]"
                     />
                     <img
                       src={myCard && myCard.expertImagePath}
                       alt="User"
-                      className="absolute top-0 right-0 md:w-full h-full object-contain rounded-t-[11px]"
+                      className="absolute top-0 md:left-[2rem] left-12 md:w-full h-full object-contain rounded-t-[11px]"
                     />
                   </div>
 
@@ -433,18 +437,21 @@ const Dashboard = () => {
                     </div>
                   </div>
                 </div>
-                <div className="md:flex md:flex-row grid grid-cols-2 md:gap-[4rem] gap-0 md:px-[1rem] md:mt-[2rem] mt-16 items-center justify-center">
-                  {
-                    subTable && subTable.map((subUnit) => (
-                      <div className="flex gap-[4rem] md:w-[165px] w-[150px] h-[38px] flex md:flex-col">
-                        <div className="md:w-auto md:h-[97px] md:gap-0 gap-1 flex md:flex-col flex-row md:items-start items-center">
-                          <span className="text-gradient-2 md:w-auto md:h-[32px] font-inter font-[700] md:text-[23px] text-[12px]">{subUnit.planType}</span>
-                          <span className="text-white md:w-[120px] font-poppins font-[700] md:text-[36px]">{subUnit.amount}</span>
+                <div className="md:flex md:flex-row grid grid-cols-2 md:gap-[4rem] gap-2 md:px-[1rem] md:mt-[2rem] mt-14 md:py-0 py-8 items-center justify-center">
+                  {subTable &&
+                    subTable.map((subUnit) => (
+                      <div className="flex gap-[4rem] md:w-[165px] w-[150px] h-[38px] flex md:flex-col justify-center items-center">
+                        <div className="md:w-auto md:h-[97px] md:gap-0 gap-0 flex md:flex-col flex-col justify-center items-center">
+                          <span className="text-gradient-2 md:w-auto md:h-[32px] font-inter font-[700] md:text-[23px] text-[12 px] text-center">
+                            {subUnit.planType}
+                          </span>
+                          <span className="text-white md:w-[120px] font-poppins font-[700] md:text-[36px] text-[11px] text-center">
+                            {subUnit.amount}
+                          </span>
                         </div>
                       </div>
-                    ))
-                  }
-              </div>
+                    ))}
+                </div>
               </div>
             </div>
           </div>
