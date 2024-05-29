@@ -50,6 +50,8 @@ import clipboard from './Clipboard.png';
 import pancard from './PanCard.png';
 import card from './Card.png';
 import editDocument from "./editpopup.png";
+import eye from './Eye.png'
+import eyeClose from './eyeClosed.png'
 
 export {
     availableIcon,
@@ -96,5 +98,6 @@ export {
     location,
     location1,
     pancard, card,
-    editDocument
+    editDocument, eye,
+    eyeClose,
 }

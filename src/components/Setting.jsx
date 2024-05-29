@@ -8,8 +8,11 @@ import {
   telegramIcon,
   arrow,
   userBck,
-  stars,  card,
-  location, location1, pancard
+  stars,
+  card,
+  location,
+  location1,
+  pancard,
 } from "../assets";
 import ProfileEdit from "./ProfileEdit";
 import BankEditDialog from "./BankEditDialog";
@@ -168,7 +171,7 @@ const Setting = () => {
 
   return (
     <div className="pb-[5rem] xl:pl-[12rem] md:pl-[10rem] pl-6 md:py-[6rem] pt-[8rem] bg-gradient min-h-screen">
-      <div className="xl:w-[1530px] md:w-[1122px] xl-h-[480px] w-[361px] h-[570px] md:ml-0 ml-[-8px] bg_cards p-4 rounded-[24px]">
+      <div className="xl:w-[1530px] md:w-[1122px] xl -h-[480px] md:h-[530px] w-[361px] h-[610px] md:ml-0 ml-[-8px] bg_cards p-4 rounded-[24px]">
         <div className="flex flex-col">
           <div className="flex flex-row">
             <div className="flex flex-col">
@@ -191,7 +194,7 @@ const Setting = () => {
                   </span>
                 </div>
                 <div className="bg-white w-[1px] md:h-[35px] h-[22px]"></div>
-                <div className="w-[84px] h-[53px] flex flex-col">
+                <div className="flex flex-col items-center">
                   <span className="text-[#E4E4E7] opacity-[40%] font-[400] md:text-[14px] text-[10px] md:leading-[17px] leading-[12px] font-inter md:w-[83px] w-[56px] md:h-[17px]">
                     Followers
                   </span>
@@ -224,7 +227,7 @@ const Setting = () => {
                 </div>
               </div>
 
-              <div className="flex py-2">
+              <div className="flex py-2 items-center gap-2">
                 <img
                   src={sebi}
                   alt="SEDI_User"
@@ -235,15 +238,15 @@ const Setting = () => {
                 </span>
               </div>
 
-              <div className="flex flex-row items-center gap-2 md:py-3 py-2">
-                <div className="flex flex-row gap-4">
+              <div className="z-[9999] flex md:flex-row flex-col items-center gap-2 md:py-3 py-2">
+                <div className="flex md:flex-row flex-col gap-4">
                   <div className="text-white flex items-center gap-2">
-                  <img src={card} alt="" className="w-[18px] h-[18px]" />
-                  <span>CIS80IS</span>
+                    <img src={card} alt="" className="w-[18px] h-[18px]" />
+                    <span>{myCard && myCard.pan}</span>
                   </div>
                   <div className="text-white flex items-center gap-2">
-                  <img src={location} alt=" " className="w-[18px] h-[18px]" />
-                  <span>JMD Megapolish</span>
+                    <img src={location} alt=" " className="w-[18px] h-[18px]" />
+                    <span>{myCard && myCard.address}</span>
                   </div>
                 </div>
               </div>
@@ -251,12 +254,12 @@ const Setting = () => {
               <div className="flex flex-row items-center gap-2 md:py-3 py-2">
                 <div className="flex flex-row gap-4">
                   <div className="text-white flex items-center gap-2 justify-center">
-                  <img src={location1} alt="" className="w-[18px] h-[18px]" />
-                  <span>Gurgaon</span>
+                    <img src={location1} alt="" className="w-[18px] h-[18px]" />
+                    <span>{myCard && myCard.state}</span>
                   </div>
                   <div className="text-white flex items-center gap-2">
-                  <img src={pancard} alt="" className="w-[18px] h-[18px]" />
-                  <span>GST01038S</span>
+                    <img src={pancard} alt="" className="w-[18px] h-[18px]" />
+                    <span>{myCard && myCard.gst}</span>
                   </div>
                 </div>
               </div>
@@ -347,7 +350,7 @@ const Setting = () => {
               />
             </div>
 
-            <div className="flex md:ml-auto ml-[-8rem] flex-col items-start md:gap-[16rem] gap-[10rem]">
+            <div className="flex md:ml-auto ml-[-6rem] flex-col items-start md:gap-[16rem] gap-[10rem]">
               <div className="flex flex-row gap-2 w-[70px] h-[32px]">
                 <img
                   src={stars}
@@ -436,54 +439,57 @@ const Setting = () => {
       </div>
 
       <div className="xl:w-[1520px] md:w-[1120px] md:h-auto w-[360px] px-4 p-8 border-2 border-[#202F49] rounded-[30px] flex gap-4 flex-col md:mt-[4rem] mt-[2rem] md:ml-0 ml-[-0.5rem]">
-      <div className="flex flex-row justify-between">
-        <span className="text-white font-inter font-[600] text-[22px] leading-[26px]">
-          Documents
-        </span>
-        <div className="md:w-[93px] w-[64px] md:h-[32px] h-[22px] rounded-[36px] border border-[#fffff] flex justify-center items-center">
-          <button className="flex flex-row items-center gap-2 justify-center items-center" onClick={openEditPopup}>
-            <img
-              src={edit}
-              alt="Edit"
-              className="md:w-[16px] w-[12px] h-[12px] md:h-[16px]"
-            />
-            <span className="text-white md:text-[16px] text-[10px] md:leading-[26px] leading-[20px]">
-              Edit
-            </span>
-          </button>
-        </div>
-      </div>
-
-      <label
-        htmlFor="fileInput"
-        className="relative w-[236px] h-[180px] border-2 border-dotted border-[#ffffff]"
-      >
-        {!filePreview ? (
-          <>
-            <img
-              src={myCard?.signatureImage}  // Replace with your addDoc icon path
-              alt=""
-              className="w-[95px] h-[95px] ml-16 mt-[2rem]"
-            />
-          </>
-        ) : (
-          <div className="relative w-full h-full flex justify-center items-center">
-            <img
-              src={filePreview}
-              alt="Preview"
-              className="max-w-full max-h-full"
-            />
+        <div className="flex flex-row justify-between">
+          <span className="text-white font-inter font-[600] text-[22px] leading-[26px]">
+            Documents
+          </span>
+          <div className="md:w-[93px] w-[64px] md:h-[32px] h-[22px] rounded-[36px] border border-[#fffff] flex justify-center items-center">
+            <button
+              className="flex flex-row items-center gap-2 justify-center items-center"
+              onClick={openEditPopup}
+            >
+              <img
+                src={edit}
+                alt="Edit"
+                className="md:w-[16px] w-[12px] h-[12px] md:h-[16px]"
+              />
+              <span className="text-white md:text-[16px] text-[10px] md:leading-[26px] leading-[20px]">
+                Edit
+              </span>
+            </button>
           </div>
-        )}
-      </label>
+        </div>
 
-      {documentEdit && (
-        <DocumentEditPopup
-          onClose={closeEditPopup}
-          stackholderId={stackholderId}
-        />
-      )}
-    </div>
+        <label
+          htmlFor="fileInput"
+          className="relative w-[236px] h-[180px] border-2 border-dotted border-[#ffffff]"
+        >
+          {!filePreview ? (
+            <>
+              <img
+                src={myCard?.signatureImage} // Replace with your addDoc icon path
+                alt=""
+                className="w-[95px] h-[95px] ml-16 mt-[2rem]"
+              />
+            </>
+          ) : (
+            <div className="relative w-full h-full flex justify-center items-center">
+              <img
+                src={filePreview}
+                alt="Preview"
+                className="max-w-full max-h-full"
+              />
+            </div>
+          )}
+        </label>
+
+        {documentEdit && (
+          <DocumentEditPopup
+            onClose={closeEditPopup}
+            stackholderId={stackholderId}
+          />
+        )}
+      </div>
 
       <div className="xl:w-[1520px] md:w-[1120px] md:h-[397px] w-[360px] px-4 p-8 border-2 border-[#202F49] rounded-[30px] rounded-[30px] flex gap-4 flex-col md:mt-[4rem] mt-[2rem] md:ml-0 ml-[-0.5rem]">
         <div className="flex flex-row justify-between">
@@ -502,7 +508,7 @@ const Setting = () => {
 
             {isAddBankOpen && (
               <AddBankDialog
-              fetchData={fetchData}
+                fetchData={fetchData}
                 isOpen={isAddBankOpen}
                 onClose={closeDialog}
                 saveBankDetails={saveBankDetails}
@@ -512,9 +518,7 @@ const Setting = () => {
         </div>
 
         <div className="flex flex-row items-center mt-4 justify-between">
-          <button
-            className="md:w-full w-[260px] md:h-[76px] rounded-[16px] border-[#40495C] flex md:flex-row flex-col gap-4"
-          >
+          <button className="md:w-full w-[260px] md:h-[76px] rounded-[16px] border-[#40495C] flex md:flex-row flex-col gap-4">
             {withdrawalAmount.map((withdrawal, index) => {
               if (withdrawal.paymentMode === "Bank") {
                 return (
@@ -525,8 +529,12 @@ const Setting = () => {
                   >
                     <div className="flex md:ml-8 ml-6 items-start md:flex-col flex">
                       <div className="flex flex-col md:items-start items-center">
-                      <span className="text-[16px] font-[600]">{withdrawal.bankName}</span>
-                      <span className="text-[14px]">{withdrawal.accountNumber}</span>
+                        <span className="text-[16px] font-[600]">
+                          {withdrawal.bankName}
+                        </span>
+                        <span className="text-[14px]">
+                          {withdrawal.accountNumber}
+                        </span>
                       </div>
                     </div>
                   </button>
@@ -573,9 +581,7 @@ const Setting = () => {
         </div>
 
         <div className="md:px-0 px-0 md:w-full w-[310px] md:h-[76px] rounded-[16px] border-[#40495C] flex md:flex-row flex-col gap-4">
-          <button
-            className="rounded-[16px] flex gap-4"
-          >
+          <button className="rounded-[16px] flex gap-4">
             {withdrawalAmount.map((withdrawal, index) => {
               if (withdrawal.paymentMode === "UPI") {
                 return (
@@ -585,8 +591,10 @@ const Setting = () => {
                     className="md:w-[310px] w-[200px]  h-[50px] text-white rounded-[16px] border border-[#40495C] bg-[#282F3E]"
                   >
                     <div className="flex justify-center items-start md:ml-4 md:flex-col flex">
-                      <span className="text-[16px] font-[600]">{withdrawal.upI_ID}</span>
-                      </div>
+                      <span className="text-[16px] font-[600]">
+                        {withdrawal.upI_ID}
+                      </span>
+                    </div>
                   </button>
                 );
               } else {
@@ -595,7 +603,12 @@ const Setting = () => {
             })}
           </button>
           {isEditUpiOpen && (
-            <UpiEditDialog isOpen={isEditUpiOpen} onClose={closeDialog} selectedWithdrawal={selectedWithdrawal} fetchData={fetchData} />
+            <UpiEditDialog
+              isOpen={isEditUpiOpen}
+              onClose={closeDialog}
+              selectedWithdrawal={selectedWithdrawal}
+              fetchData={fetchData}
+            />
           )}
         </div>
       </div>

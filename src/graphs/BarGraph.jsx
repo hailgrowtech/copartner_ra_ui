@@ -32,12 +32,11 @@ const BarGraph = ({
           const apiData = response.data.data;
           console.log("apiData", apiData);
 
-          // Initialize data containers
           const dailyData = {};
           const weeklyData = Array(7)
             .fill()
             .map((_, index) => ({
-              name: format(new Date(2024, 0, 1 + index), "EEEE"), // Generate day names starting from Monday
+              name: format(new Date(2024, 0, 1 + index), "EEEE"),
               totalVisit: 0,
               paidUsers: 0,
               usersLeft: 0,
@@ -45,29 +44,22 @@ const BarGraph = ({
           const monthlyData = Array(12)
             .fill()
             .map((_, index) => ({
-              name: format(new Date(2024, index, 1), "MMMM"), // Generate month names
+              name: format(new Date(2024, index, 1), "MMMM"),
               totalVisit: 0,
               paidUsers: 0,
               usersLeft: 0,
             }));
 
-          // Process API data
           apiData.forEach((item) => {
             const date = item.date ? parseISO(item.date) : null;
             const dayOfWeek = date ? getDay(date) : null;
             const month = date ? getMonth(date) : null;
             const dayLabel = date ? format(date, "yyyy-MM-dd") : "Unknown Date";
-            const totalVisit = 1;
-            const paidUser =
-              item.subscription && item.subscription !== "No Subscription"
-                ? 1
-                : 0;
-            const notInterested =
-              item.subscription && item.subscription === "No Subscription"
-                ? 1
-                : 0;
 
-            // Daily data
+            const totalVisit = 1;
+            const paidUser = item.subscription && item.subscription !== "No Subscription" && item.subscription !== "No Subscrption" ? 1 : 0;
+            const notInterested = item.subscription && (item.subscription === "No Subscription" || item.subscription === "No Subscrption") ? 1 : 0;
+
             if (!dailyData[dayLabel]) {
               dailyData[dayLabel] = {
                 name: dayLabel,
@@ -80,14 +72,12 @@ const BarGraph = ({
             dailyData[dayLabel].paidUsers += paidUser;
             dailyData[dayLabel].usersLeft += notInterested;
 
-            // Weekly data
             if (dayOfWeek !== null) {
               weeklyData[dayOfWeek].totalVisit += totalVisit;
               weeklyData[dayOfWeek].paidUsers += paidUser;
               weeklyData[dayOfWeek].usersLeft += notInterested;
             }
 
-            // Monthly data
             if (month !== null) {
               monthlyData[month].totalVisit += totalVisit;
               monthlyData[month].paidUsers += paidUser;
@@ -188,13 +178,13 @@ const BarGraph = ({
         <Legend wrapperStyle={{ color: "#fff" }} />
         <Bar
           dataKey="totalVisit"
-          fill="#8884d8"
+          fill="#8884D8"
           name="Total Visit"
           barSize={20}
         />
         <Bar
           dataKey="paidUsers"
-          fill="#82ca9d"
+          fill="#82CA9D"
           name="Paid Users"
           barSize={20}
         />
@@ -210,4 +200,3 @@ const BarGraph = ({
 };
 
 export default BarGraph;
-
