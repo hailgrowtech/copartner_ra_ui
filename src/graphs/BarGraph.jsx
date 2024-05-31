@@ -118,9 +118,13 @@ const BarGraph = ({
   }, [data, activeButton, customStartDate, customEndDate, onDataUpdate]);
 
   const selectData = () => {
+    const today = format(new Date(), "yyyy-MM-dd");
     switch (activeButton) {
       case "today":
-        return data.daily.slice(-1);
+        const todayData = data.daily.filter((d) => d.name === today);
+        return todayData.length > 0
+          ? todayData
+          : [{ name: today, totalVisit: 0, paidUsers: 0, usersLeft: 0 }];
       case "weekly":
         return data.weekly;
       case "monthly":
