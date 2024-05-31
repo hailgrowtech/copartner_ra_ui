@@ -63,7 +63,7 @@ const Wallet = () => {
       setWithdrawalReq(requestsWithBankDetails);
     } catch (error) {
       console.error("Error fetching the withdrawal requests:", error);
-      setWithdrawalReq("Error");
+      setWithdrawalReq([]);
     }
   };
 
@@ -86,6 +86,7 @@ const Wallet = () => {
     const fetchTransactionTable = async () => {
       try {
         const response = await axios.get(TRANSACTION_API);
+        console.log('Transcation', response.data)
         const sortedData = response.data.data.sort(
           (a, b) => new Date(b.date) - new Date(a.date)
         );
@@ -165,35 +166,15 @@ const Wallet = () => {
     filterTransactions(searchInput, start, end);
   };
 
-  // const filterTransactions = (searchValue, startDate, endDate) => {
-  //   let filtered = transactionTable;
-
-  //   if (searchValue) {
-  //     filtered = filtered.filter((row) =>
-  //       row.userMobileNo.includes(searchValue)
-  //     );
-  //   }
-
-  //   if (startDate && endDate) {
-  //     filtered = filtered.filter((row) => {
-  //       const date = new Date(row.subscribeDate);
-  //       console.log('transcationData', date)
-  //       return date >= startDate && date <= endDate;
-  //     });
-  //   }
-
-  //   setFilteredTransactions(filtered);
-  // };
-
   const filterTransactions = (searchValue, startDate, endDate) => {
     let filtered = transactionTable;
-  
+
     if (searchValue) {
       filtered = filtered.filter((row) =>
         row.userMobileNo.includes(searchValue)
       );
     }
-  
+
     if (startDate && endDate) {
       filtered = filtered.filter((row) => {
         const subscribeDate = new Date(row.subscribeDate);
@@ -212,12 +193,27 @@ const Wallet = () => {
           endDate.getMonth(),
           endDate.getDate()
         );
-  
-        return subscribeDateOnly >= startDateOnly && subscribeDateOnly <= endDateOnly;
+
+        return (
+          subscribeDateOnly >= startDateOnly && subscribeDateOnly <= endDateOnly
+        );
       });
     }
-  
+
     setFilteredTransactions(filtered);
+  };
+
+  const getExpertType = (typeId) => {
+    switch (typeId) {
+      case "1":
+        return "Commodity";
+      case "2":
+        return "Equity";
+      case "3":
+        return "Options";
+      default:
+        return "";
+    }
   };
 
   return (
@@ -253,9 +249,9 @@ const Wallet = () => {
 
       <div className="flex flex-col md:gap-6 gap-3">
         <div className="flex flex-row items-center justify-between md:ml-0 ml-[-8px]">
-          <div className="xl:w-[1420px] md:w-[1030px] flex flex-col gap-4 mt-4">
+          <div className="xl:w-[1420px] md:w-[1030px] flex flex-col gap-8 mt-4">
             <div className="flex md:justify-between items-center">
-              <span className="text-white md:w-[210px] w-[140px] h-[27px] font-inter font-[600] text-[22px] md:leading-[27px] leading-[22px] md:mt-0 mt-[-1rem]">
+              <span className="text-white md:w-[210px] w-[140px] h-[27px] font-inter font-[600] text-[22px] md:leading-[27px] leading-[24px] md:mt-0 mt-[-1rem]">
                 Transaction History
               </span>
               {showTransactions === "transaction" && (
@@ -371,7 +367,7 @@ const Wallet = () => {
                 </button>
               </div>
             ) : (
-              <table className="xl:w-[1520px] md:w-[1130px] p-8 h-[497px] bg-[#29303F] rounded-[30px]">
+              <table className="xl:w-[1520px] md:w-[1130px] md:h-auto h-[497px] p-8 h-[497px] bg-[#29303F] rounded-[30px]">
                 <thead className="text-dimWhite bg-[#1E1E22]">
                   <tr>
                     <th className="text-start px-4 py-2">Transaction ID</th>
@@ -391,7 +387,7 @@ const Wallet = () => {
                       .map((row, index) => (
                         <tr
                           key={index}
-                          className={index % 2 === 0 ? "bg-[#1E1E22]" : ""}
+                          className={index % 2 === 0 ? "bg-transparent" : "bg-[#1E1E22]"}
                         >
                           <td className="text-start font-[500] text-[16px] leading-[18px] px-4 py-2">
                             {row.transactionId}
@@ -400,7 +396,7 @@ const Wallet = () => {
                             {formatDate(row.subscribeDate)}
                           </td>
                           <td className="text-start font-[500] text-[16px] leading-[18px] px-4 py-2">
-                            {row.subscription}
+                          {getExpertType(row.subscription)}
                           </td>
                           <td className="text-start font-[500] text-[16px] leading-[18px] px-4 py-2">
                             {row.planType}
@@ -467,7 +463,7 @@ const Wallet = () => {
                   </tr>
                 </thead>
                 <tbody className="text-lightWhite">
-                  {withdrawalReq.map((row, index) => {
+                  {Array.isArray(withdrawalReq) && withdrawalReq.map((row, index) => {
                     return (
                       row.requestAction === "A" && (
                         <tr
@@ -577,54 +573,53 @@ const Wallet = () => {
                   </tr>
                 </thead>
                 <tbody className="text-lightWhite w-[1084px] h-[81px]">
-                  {withdrawalReq &&
-                    withdrawalReq.map(
-                      (row, index) =>
-                        row.requestAction !== "A" && (
-                          <tr
-                            key={index}
-                            className={index % 2 === 0 ? "bg-[#18181B]" : ""}
+                  {Array.isArray(withdrawalReq) && withdrawalReq.map(
+                    (row, index) =>
+                      row.requestAction !== "A" && (
+                        <tr
+                          key={index}
+                          className={index % 2 === 0 ? "bg-[#18181B]" : ""}
+                        >
+                          <td className="pl-[4rem] font-[500] text-[16px] leading-[18px]">
+                            {Math.floor(row.id.length * 1110000)}
+                          </td>
+                          <td className="pl-[4rem] font-[500] text-[16px] leading-[18px]">
+                            {formatDate(row.withdrawalRequestDate)}
+                          </td>
+                          <td className="w-[143px] h-[36px] font-[500] text-[16px] leading-[18px]">
+                            {row.bankDetails.bankName ||
+                              row.bankDetails.upI_ID}
+                          </td>
+                          <td className="px-[4rem] w-[143px] h-[36px] font-[500] text-[16px] leading-[18px]">
+                            {row.bankDetails.accountNumber ||
+                              row.bankDetails.upI_ID}
+                          </td>
+                          <td className="pl-[4rem] w-[105px] h-[18px] font-[500] text-[16px] leading-[18px]">
+                            {row.amount}
+                          </td>
+                          <td
+                            className={`pl-[4rem] ${
+                              row.status === "Pending"
+                                ? "bg-red-500"
+                                : "bg-transparent text-[#E24966]"
+                            }`}
                           >
-                            <td className="pl-[4rem] font-[500] text-[16px] leading-[18px]">
-                              {Math.floor(row.id.length * 1110000)}
-                            </td>
-                            <td className="pl-[4rem] font-[500] text-[16px] leading-[18px]">
-                              {formatDate(row.withdrawalRequestDate)}
-                            </td>
-                            <td className="w-[143px] h-[36px] font-[500] text-[16px] leading-[18px]">
-                              {row.bankDetails.bankName ||
-                                row.bankDetails.upI_ID}
-                            </td>
-                            <td className="px-[4rem] w-[143px] h-[36px] font-[500] text-[16px] leading-[18px]">
-                              {row.bankDetails.accountNumber ||
-                                row.bankDetails.upI_ID}
-                            </td>
-                            <td className="pl-[4rem] w-[105px] h-[18px] font-[500] text-[16px] leading-[18px]">
-                              {row.amount}
-                            </td>
-                            <td
-                              className={`pl-[4rem] ${
-                                row.status === "Pending"
-                                  ? "bg-red-500"
-                                  : "bg-transparent text-[#E24966]"
-                              }`}
-                            >
-                              {row.status === "Pending" ? (
-                                <div>{getStatusText(row.requestAction)}</div>
-                              ) : (
-                                <button
-                                  onClick={() =>
-                                    row.requestAction === "R" &&
-                                    openEditUpiDialog(row)
-                                  }
-                                >
-                                  {getStatusText(row.requestAction)}
-                                </button>
-                              )}
-                            </td>
-                          </tr>
-                        )
-                    )}
+                            {row.status === "Pending" ? (
+                              <div>{getStatusText(row.requestAction)}</div>
+                            ) : (
+                              <button
+                                onClick={() =>
+                                  row.requestAction === "R" &&
+                                  openEditUpiDialog(row)
+                                }
+                              >
+                                {getStatusText(row.requestAction)}
+                              </button>
+                            )}
+                          </td>
+                        </tr>
+                      )
+                  )}
                   {isEditUpiOpen &&
                     selectedRow &&
                     selectedRow.requestAction === "R" && (

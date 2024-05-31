@@ -3,7 +3,8 @@ import { closeIcon, dropdown } from "../assets";
 import axios from "axios";
 import { toast } from "react-toastify";
 
-const SubscriptionDialog = ({ closeDialog, axiosServiceData }) => {
+const SubscriptionDialog = ({ closeDialog, axiosServiceData, subTable }) => {
+  console.log(subTable, 'FECTHING SUBTABLE DATA')
   const [subscriptionType, setSubscriptionType] = useState(
     null
   );
@@ -17,7 +18,8 @@ const SubscriptionDialog = ({ closeDialog, axiosServiceData }) => {
   const [isDuration, setIsDuration] = useState('');
   const [amount, setAmount] = useState(null);
   const [isKeyPointsOpen, setIsKeyPointsOpen] = useState(false);
-  const [premiumTelegram, setPremiumTelegram] = useState('')
+  const [premiumTelegram, setPremiumTelegram] = useState('');
+  const [changes, setChanges] = useState([]);
 
   const [selectedItems, setSelectedItems] = useState([]);
 
@@ -27,13 +29,21 @@ const SubscriptionDialog = ({ closeDialog, axiosServiceData }) => {
   const inputClassName = subscriptionType === null ? "text-[#9BA3AF]" : "text-white";
 
   const stackholderId = sessionStorage.getItem('stackholderId')
-  // console.log('My Stackholder ID--', stackholderId);
 
   const handleSuccess = () => {
     toast.success("Subscription saved!", {
       position: "top-right",
     });
   }
+
+  useEffect(() => {
+    axios.get(`https://copartners.in:5132/api/Experts/${stackholderId}`)
+      .then((res) => {
+        console.log('Data that I am expecting', res.data.data);
+        setChanges(res.data.data);
+      })
+      .catch((err) => console.error(err));
+  }, [stackholderId]);
 
   const handleConfirm = async (e) => {
     // e.preventDefault();
@@ -57,7 +67,7 @@ const SubscriptionDialog = ({ closeDialog, axiosServiceData }) => {
       description: des,
     }
 
-    // console.log('Post Data value', postData)
+    console.log('Post Data value', postData)
 
     try {
       const response = await axios.post('https://copartners.in:5009/api/Subscription', postData);
@@ -122,11 +132,11 @@ const SubscriptionDialog = ({ closeDialog, axiosServiceData }) => {
   const getSubscriptionTypeLabel = (type) => {
     switch (type) {
       case 1:
-        return "Futures & Options";
-      case 2:
         return "Commodity";
-      case 3:
+      case 2:
         return "Equity";
+      case 3:
+        return "Futures & Options";
       default:
         return "Select Subscription Type";
     }
@@ -169,24 +179,6 @@ const SubscriptionDialog = ({ closeDialog, axiosServiceData }) => {
               />
             </button>
           </div>
-          {/* <div className="flex flex-col mt-8 gap-2 md:flex hidden">
-            <span className="w-[184px] h-[23px] text-white text-[20px] font-inter font-[500] leading-[16px]">
-              Upload Title Image
-            </span>
-            <label
-              htmlFor="fileInput"
-              className="relative w-[482px] h-[142px] border-2 border-dotted border-[#ffffff] opacity-[50%] rounded-[10px] cursor-pointer"
-            >
-              <input
-                id="fileInput"
-                type="file"
-                className="absolute inset-0 opacity-0 w-full h-full"
-              />
-              <span className="flex items-center justify-center py-14 font-inter font-[400] text-[13px] leading-[16px] text-white opacity-[50%]">
-                Select
-              </span>
-            </label>
-          </div> */}
 
           <div className="flex flex-col md:mt-0 mt-[1rem] gap-4 md:w-[1006px] md:h-[470px]">
             <div className="flex md:flex-row flex-col md:gap-12 gap-4 md:mt-6 md:ml-0 ml-[-16px]">
@@ -202,12 +194,7 @@ const SubscriptionDialog = ({ closeDialog, axiosServiceData }) => {
                   <div className="relative">
                     <input
                       id="subscriptionType"
-                      // value={
-                      //   subscriptionType === 1 ? "Futures & Options" :
-                      //   subscriptionType === 2 ? "Commodity" :
-                      //   subscriptionType === 3 ? "Equity" : "Select Subscription Type"
-                      // }
-                      value={getSubscriptionTypeLabel(subscriptionType)}
+                      value={getSubscriptionTypeLabel(changes.expertTypeId)}
                       readOnly
                       onClick={toggleSubscriptionDropdown}
                       className={`md:w-[482px] w-[345px] md:px-4 px-2 py-2 cursor-pointer rounded-md border border-[#40495C] bg-[#282F3E] ${inputClassName}`}
@@ -218,30 +205,6 @@ const SubscriptionDialog = ({ closeDialog, axiosServiceData }) => {
                       className="absolute inset-y-0 md:right-3 right-[-6px] w-[14px] h-[14px] top-[50%] transform -translate-y-1/2"
                     />
                   </div>
-                  {isSubscriptionOpen && (
-                    <div className="absolute z-10 mt-2 md:w-[482px] w-[345px] rounded-md bg-white shadow-lg">
-                      <ul className="py-1">
-                        <li
-                          onClick={() => handleSubClick(1)}
-                          className="cursor-pointer px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                        >
-                          Futures & Options
-                        </li>
-                        <li
-                          onClick={() => handleSubClick(2)}
-                          className="cursor-pointer px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                        >
-                          Commodity
-                        </li>
-                        <li
-                          onClick={() => handleSubClick(3)}
-                          className="cursor-pointer px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                        >
-                          Equity
-                        </li>
-                      </ul>
-                    </div>
-                  )}
                 </div>
               </div>
               <div className="relative">
@@ -383,84 +346,6 @@ const SubscriptionDialog = ({ closeDialog, axiosServiceData }) => {
               </div>
             </div>
 
-            {/* <div className="relative md:ml-0 ml-[-16px]">
-              <label
-                htmlFor="keyPointsType"
-                className="flex items-center justify-center bg-[#282F3E] text-white opacity-[50%]
-                    md:w-[140px] w-[116px] md:h-[26px] h-[25px] rounded-[8px] font-[400] md:text-[14px] text-[13px] md:leading-[16px] leading-[15px] text-center"
-              >
-                Plan Key Points
-              </label>
-              <div className="relative">
-                <div className="relative">
-                  <input
-                    id="default-input"
-                    placeholder="Select your Key Points"
-                    value={selectedItems.join(", ")}
-                    readOnly
-                    onClick={toggleKeyPointsDropdown}
-                    className="md:w-[1012px] w-[345px] md:px-4 px-2 py-2 cursor-pointer rounded-md text-white border border-[#40495C] bg-[#282F3E]"
-                  />
-                  {isKeyPointsOpen && (
-                    <div className="absolute z-10 mt-2 md:w-[1012px] w-[345px] rounded-md bg-white shadow-lg">
-                      <ul className="py-1">
-                        <li className="px-4 py-2 flex gap-4 text-sm text-gray-700 hover:bg-gray-100">
-                          <input
-                            type="checkbox"
-                            id="expertInsights"
-                            checked={selectedItems.includes("Expert Insights")}
-                            onChange={() =>
-                              handleKeyPlanClick("Expert Insights")
-                            }
-                          />
-                          <label htmlFor="expertInsights">
-                            Expert Insights
-                          </label>
-                        </li>
-                        <li className="px-4 py-2 flex gap-4 text-sm text-gray-700 hover:bg-gray-100">
-                          <input
-                            type="checkbox"
-                            id="performanceTracking"
-                            checked={selectedItems.includes(
-                              "Performance Tracking"
-                            )}
-                            onChange={() =>
-                              handleKeyPlanClick("Performance Tracking")
-                            }
-                          />
-                          <label htmlFor="performanceTracking">
-                            Performance Tracking
-                          </label>
-                        </li>
-                        <li className="px-4 py-2 flex gap-4 text-sm text-gray-700 hover:bg-gray-100">
-                          <input
-                            type="checkbox"
-                            id="riskManagement"
-                            checked={selectedItems.includes("Risk Management")}
-                            onChange={() =>
-                              handleKeyPlanClick("Risk Management")
-                            }
-                          />
-                          <label htmlFor="riskManagement">
-                            Risk Management
-                          </label>
-                        </li>
-                        <li className="px-4 py-2 flex gap-4 text-sm text-gray-700 hover:bg-gray-100">
-                          <input
-                            type="checkbox"
-                            id="marketsAlert"
-                            checked={selectedItems.includes("Markets Alert")}
-                            onChange={() => handleKeyPlanClick("Markets Alert")}
-                          />
-                          <label htmlFor="marketsAlert">Markets Alert</label>
-                        </li>
-                      </ul>
-                    </div>
-                  )}
-                </div>
-              </div>
-            </div> */}
-
             <div className="relative md:ml-0 ml-[-16px]">
               <div className="mb-0">
                 <label
@@ -470,11 +355,9 @@ const SubscriptionDialog = ({ closeDialog, axiosServiceData }) => {
                   Premium Telegram Channel Link
                 </label>
                 <input
-                onChange={(e) => setPremiumTelegram(e.target.value)}
-                value={premiumTelegram}
+                value={changes.premiumTelegramChannel}
                   type="link"
                   id="default-input"
-                  placeholder="Paste Link"
                   className="md:w-[1012px] w-[345px] py-2 px-4 rounded-md text-white border border-[#40495C] bg-[#282F3E]"
                 />
               </div>

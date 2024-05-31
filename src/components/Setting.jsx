@@ -171,7 +171,7 @@ const Setting = () => {
 
   return (
     <div className="pb-[5rem] xl:pl-[12rem] md:pl-[10rem] pl-6 md:py-[6rem] pt-[8rem] bg-gradient min-h-screen">
-      <div className="xl:w-[1530px] md:w-[1122px] xl -h-[480px] md:h-[530px] w-[361px] h-[610px] md:ml-0 ml-[-8px] bg_cards p-4 rounded-[24px]">
+      <div className="xl:w-[1530px] md:w-[1122px] xl -h-[480px] md:h-[560px] w-[361px] h-[650px] md:ml-0 ml-[-8px] bg_cards p-4 rounded-[24px]">
         <div className="flex flex-col">
           <div className="flex flex-row">
             <div className="flex flex-col">
@@ -238,7 +238,7 @@ const Setting = () => {
                 </span>
               </div>
 
-              <div className="flex md:flex-row flex-col items-center gap-2 md:py-3 py-2">
+              <div className="flex md:flex-row flex-col md:items-center gap-2 md:py-3 py-2">
                 <div className="flex md:flex-row flex-col gap-4">
                   <div className="text-white flex items-center gap-2">
                     <img src={card} alt="" className="w-[18px] h-[18px]" />

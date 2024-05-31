@@ -161,4 +161,3 @@ const Navbar = ({ activeTab, toggleSidebar }) => {
 };
 
 export default Navbar;
-

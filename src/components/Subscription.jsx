@@ -8,7 +8,7 @@ const Subscription = () => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const [smallScreen, setSmallScreen] = useState(false);
-  const [subTable, setSubTable] = useState([]);
+  const [subTable, setSubTable] = useState(null);
   const [currentSubscription, setCurrentSubscription] = useState(null);
 
   const stackholderId = sessionStorage.getItem('stackholderId');
@@ -105,6 +105,7 @@ const Subscription = () => {
           axiosServiceData={axiosServiceData}
             isDialogOpen={isDialogOpen}
             closeDialog={closeDialog}
+            subTable={subTable}
           />
         )}
       </div>
@@ -112,7 +113,7 @@ const Subscription = () => {
       <div className="flex md:mt-[3rem] mt-1">
         {smallScreen ? (
           <div className="flex flex-wrap justify-center items-center ml-[-22px]">
-          {subTable.map((row, index) => (
+          {subTable && subTable.map((row, index) => (
             <div
               key={index}
               className="flex flex-col justify-around w-[361px] h-[248px] bg-[#18181B] bg-opacity-[50%] rounded-[30px] md:m-4 m-[10px] p-4 w-[90%] max-w-sm"
@@ -187,7 +188,7 @@ const Subscription = () => {
               </tr>
             </thead>
             <tbody className="text-lightWhite h-[81px]">
-              {subTable.map((row, index) => {
+              {subTable && subTable.map((row, index) => {
                 return (
                   <tr
                     key={index}

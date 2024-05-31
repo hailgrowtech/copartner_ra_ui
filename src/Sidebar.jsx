@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { sideBar } from "./constants";
-import { closeIcon, logo } from "./assets";
+import { closeIcon, login, logo } from "./assets";
 
 const Sidebar = ({ activeTab, setActiveTab, setShowSidebar }) => {
   const location = useLocation();
@@ -105,12 +105,15 @@ const Sidebar = ({ activeTab, setActiveTab, setShowSidebar }) => {
           </Link>
         ))}
       </div>
+      <div className="relative">
       <button
         onClick={handleLogout}
-        className="w-[110px] h-[30px] text-[14px] bg-white text-black rounded-[5px] mt-[4rem]"
+        className="w-[110px] h-[30px] text-[14px] bg-white text-black rounded-[5px] mt-[4rem] flex items-center justify-center gap-2"
       >
         Logout
+        <img src={login} className="w-[16px] h-[16px]" alt="Login icon" />
       </button>
+    </div>
     </div>
   );
 };

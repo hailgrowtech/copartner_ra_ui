@@ -299,14 +299,14 @@ const Dashboard = () => {
                 onDataUpdate={handleDataUpdate}
               />
             </div>
-            <div className="leaderDiv w-full md:w-1/3 flex md:flex-col justify-center items-center bg_cards rounded-[30px] p-2 md:mt-0 mt-3">
+            <div className="leaderDiv w-full md:w-1/3 flex md:flex-col justify-center items-center bg_cards rounded-[30px] p-2 md:mt-0 mt-3 md:ml-0 ml-[-6px]">
               <img
                 src={telegramIcon}
                 alt=""
                 className="md:w-[70px] w-[60px] border-[2px] rounded-full p-4"
               />
               <div className="px-4">
-                <h3 className="text-left md:text-[2rem] text-[1.7rem] xl:text-[4rem] font-bold text-gradient">
+                <h3 className="text-left md:text-[2rem] text-[1.4rem] xl:text-[4rem] font-bold text-gradient">
                   User Analysis Board
                 </h3>
                 <div className="flex flex-row justify-between md:text-xl xl:text-2xl">

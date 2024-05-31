@@ -4,31 +4,46 @@ import Charts from "../graphs/Charts";
 import axios from "axios";
 
 const EarningAnalysis = () => {
-  const [earingAnalysis, setEaringAnalysis] = useState(null);
+  const [earningAnalysis, setEarningAnalysis] = useState(null);
   const [userEarning, setUserEarning] = useState({
     copartnerEarning: 0,
     personalEarning: 0,
   });
-
+  const [isCoPartner, setIsCoPartner] = useState(false);
+  
   const stackholderId = sessionStorage.getItem("stackholderId");
 
   const EARNING_URL = `https://copartners.in:5135/api/Wallet/GetWalletWithdrawalBalance/${stackholderId}?userType=RA`;
-
   const USER_EARNING = `https://copartners.in:5132/api/RADashboard/GetDashboardRAListingData/${stackholderId}?page=1&pageSize=10`;
+  const EXPERT_DATA_URL = `https://copartners.in:5132/api/Experts/${stackholderId}`;
+
+  useEffect(() => {
+    const fetchExpertData = async () => {
+      try {
+        const response = await axios.get(EXPERT_DATA_URL);
+        setIsCoPartner(response.data.data.isCoPartner);
+      } catch (error) {
+        console.error("Error fetching the expert data:", error);
+      }
+    };
+
+    fetchExpertData();
+  }, [stackholderId]);
 
   useEffect(() => {
     const fetchWalletBalance = async () => {
       try {
         const response = await axios.get(EARNING_URL);
-        setEaringAnalysis(response.data.data);
+        setEarningAnalysis(response.data.data);
+        console.log('My API VALUES IS', response.data.data);
       } catch (error) {
         console.error("Error fetching the wallet balance:", error);
-        setEaringAnalysis('Error');
+        setEarningAnalysis('Error');
       }
     };
 
     fetchWalletBalance();
-  }, []);
+  }, [stackholderId]);
 
   useEffect(() => {
     const fetchEarningBalance = async () => {
@@ -41,7 +56,7 @@ const EarningAnalysis = () => {
         let personalEarning = 0;
 
         data.forEach((item) => {
-          if (item.amount !== null && item.subscription !== "No Subscrption") {
+          if (item.amount !== null && item.subscription !== "No Subscription") {
             if (item.amount !== item.subscriptionAmount) {
               copartnerEarning += item.amount;
             } else {
@@ -63,7 +78,7 @@ const EarningAnalysis = () => {
     };
 
     fetchEarningBalance();
-  }, []);
+  }, [stackholderId]);
 
   return (
     <div className="flex flex-col py-8">
@@ -79,31 +94,35 @@ const EarningAnalysis = () => {
       <div className="md:w-[1120px] xl:w-[1500px] w-[345px] xl:justify-around sm:w-[380px] md:flex-row flex-col md:gap-10 gap-8 flex xl:ml-[-2.6rem] md:ml-0 ml-[-6px]">
         <div className="flex flex-row bg_cards rounded-[10px] md:w-[100%] w-[358px] px-12">
           {/* <PieCharts />  */}
-          <div className="grid grid-col-3 md:flex flex-col md:item-center item-start md:justify-center md:gap-10 gap-7 md:w-[360px] md:h-auto w-[219px] h-[190px] md:py-0 py-4">
+          <div className="grid grid-col-3 md:flex flex-col md:item-center item-start md:justify-center md:gap-10 gap-7 md:w-[360px] md:h-auto w-[219px] h-auto md:py-0 py-4">
             <div className="flex flex-col">
               <span className="text-white font-[500] md:text-[16px] text-[10px] md:leading-[24px] leading-[12px]">
                 Total Earning:
               </span>
               <span className="text-gradient  text-white font-[600] md:text-[65px] text-[29px] md:leading-[55px] leading-[24px]">
-                ₹{(Number(earingAnalysis?.walletBalance) || 0)}
+                ₹{(Number(earningAnalysis?.walletBalance) || 0)}
               </span>
             </div>
-            <div className="flex flex-col">
-              <span className="text-white font-[500] md:text-[16px] text-[10px] md:leading-[24px] leading-[12px]">
-                Copartner Earning:
-              </span>
-              <span className="text-gradient  text-white font-[600] md:text-[65px] text-[29px] md:leading-[55px] leading-[24px]">
-                ₹{userEarning.copartnerEarning.toFixed(2)}
-              </span>
-            </div>
-            <div className="flex flex-col">
-              <span className="text-white font-[500] md:text-[16px] text-[10px] md:leading-[24px] leading-[12px]">
-                Personal Earning:
-              </span>
-              <span className="text-gradient  text-white font-[600] md:text-[65px] text-[29px] md:leading-[55px] leading-[24px]">
-                ₹{userEarning.personalEarning}
-              </span>
-            </div>
+            {isCoPartner && (
+              <>
+                <div className="flex flex-col">
+                  <span className="text-white font-[500] md:text-[16px] text-[10px] md:leading-[24px] leading-[12px]">
+                    Copartner Earning:
+                  </span>
+                  <span className="text-gradient  text-white font-[600] md:text-[65px] text-[29px] md:leading-[55px] leading-[24px]">
+                    ₹{userEarning.copartnerEarning.toFixed(2)}
+                  </span>
+                </div>
+                <div className="flex flex-col">
+                  <span className="text-white font-[500] md:text-[16px] text-[10px] md:leading-[24px] leading-[12px]">
+                    Personal Earning:
+                  </span>
+                  <span className="text-gradient  text-white font-[600] md:text-[65px] text-[29px] md:leading-[55px] leading-[24px]">
+                    ₹{userEarning.personalEarning}
+                  </span>
+                </div>
+              </>
+            )}
           </div>
         </div>
 
