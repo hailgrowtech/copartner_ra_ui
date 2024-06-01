@@ -35,7 +35,6 @@ const Setting = () => {
   const [withdrawalAmount, setWithDrawalAmount] = useState([]);
   const [selectedWithdrawal, setSelectedWithdrawal] = useState(null);
   const [documentEdit, setDocumentEdit] = useState(false);
-  console.log(myCard);
 
   const [selectedFile, setSelectedFile] = useState(null);
   const [filePreview, setFilePreview] = useState(null);
@@ -163,7 +162,7 @@ const Setting = () => {
       case 2:
         return "Equity";
       case 3:
-        return "Options";
+        return "Futures & Options";
       default:
         return "Unknown";
     }

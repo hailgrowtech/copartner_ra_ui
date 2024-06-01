@@ -4,14 +4,12 @@ import axios from "axios";
 import { toast } from "react-toastify";
 
 const SubscriptionDialog = ({ closeDialog, axiosServiceData, subTable }) => {
-  console.log(subTable, 'FECTHING SUBTABLE DATA')
-  const [subscriptionType, setSubscriptionType] = useState(
-    null
-  );
+  console.log(subTable, 'FETCHING SUBTABLE DATA');
+  const [subscriptionType, setSubscriptionType] = useState(null);
   const [planType, setPlanType] = useState("Select Plan Type");
   const [durationType, setDurationType] = useState("Select Duration Type");
   const [keyPointsType, setKeyPointsType] = useState("Plan Key Points");
-  const [des, setDes] = useState('')
+  const [des, setDes] = useState('');
 
   const [isSubscriptionOpen, setIsSubscriptionOpen] = useState(false);
   const [isPlanOpen, setIsPlanOpen] = useState(false);
@@ -19,7 +17,7 @@ const SubscriptionDialog = ({ closeDialog, axiosServiceData, subTable }) => {
   const [amount, setAmount] = useState(null);
   const [isKeyPointsOpen, setIsKeyPointsOpen] = useState(false);
   const [premiumTelegram, setPremiumTelegram] = useState('');
-  const [changes, setChanges] = useState([]);
+  const [changes, setChanges] = useState({});
 
   const [selectedItems, setSelectedItems] = useState([]);
 
@@ -28,25 +26,26 @@ const SubscriptionDialog = ({ closeDialog, axiosServiceData, subTable }) => {
 
   const inputClassName = subscriptionType === null ? "text-[#9BA3AF]" : "text-white";
 
-  const stackholderId = sessionStorage.getItem('stackholderId')
+  const stackholderId = sessionStorage.getItem('stackholderId');
 
   const handleSuccess = () => {
     toast.success("Subscription saved!", {
       position: "top-right",
     });
-  }
+  };
 
   useEffect(() => {
     axios.get(`https://copartners.in:5132/api/Experts/${stackholderId}`)
       .then((res) => {
         console.log('Data that I am expecting', res.data.data);
         setChanges(res.data.data);
+        setSubscriptionType(res.data.data.expertTypeId); // Set subscription type from fetched data
+        setPremiumTelegram(res.data.data.premiumTelegramChannel); // Set premium telegram link from fetched data
       })
       .catch((err) => console.error(err));
   }, [stackholderId]);
 
   const handleConfirm = async (e) => {
-    // e.preventDefault();
     setError("");
     setLoading(true);
 
@@ -65,9 +64,17 @@ const SubscriptionDialog = ({ closeDialog, axiosServiceData, subTable }) => {
       amount: amount,
       premiumTelegramLink: premiumTelegram,
       description: des,
-    }
+    };
 
-    console.log('Post Data value', postData)
+    // Log postData to verify all fields
+    console.log('Post Data:', postData);
+
+    // Check for any null or invalid values
+    if (!amount || !subscriptionType || !planType || !durationMonth || !premiumTelegram || !des) {
+      setError('Please fill out all required fields.');
+      setLoading(false);
+      return;
+    }
 
     try {
       const response = await axios.post('https://copartners.in:5009/api/Subscription', postData);
@@ -82,6 +89,7 @@ const SubscriptionDialog = ({ closeDialog, axiosServiceData, subTable }) => {
       axiosServiceData();
     } catch (error) {
       console.error('Error posting data:', error);
+      console.log('Response data:', error.response.data);
       toast.error('Failed to submit data. Please try again.', {
         position: "top-right",
       });
@@ -89,7 +97,7 @@ const SubscriptionDialog = ({ closeDialog, axiosServiceData, subTable }) => {
     } finally {
       setLoading(false);
     }
-  }
+  };
 
   const toggleKeyPointsDropdown = () => {
     setIsKeyPointsOpen(!isKeyPointsOpen);
@@ -119,13 +127,13 @@ const SubscriptionDialog = ({ closeDialog, axiosServiceData, subTable }) => {
 
   const handleDurationClick = (month) => {
     if (month === "1 Month") {
-      setDurationType(1)
+      setDurationType(1);
     } else if (month === "3 Months") {
-      setDurationType(3)
+      setDurationType(3);
     } else if (month === "6 Months") {
-      setDurationType(6)
+      setDurationType(6);
     } else setDurationType(12);
-    setDurationType(month)
+    setDurationType(month);
     setIsDuration(false);
   };
 
@@ -194,7 +202,7 @@ const SubscriptionDialog = ({ closeDialog, axiosServiceData, subTable }) => {
                   <div className="relative">
                     <input
                       id="subscriptionType"
-                      value={getSubscriptionTypeLabel(changes.expertTypeId)}
+                      value={getSubscriptionTypeLabel(subscriptionType)}
                       readOnly
                       onClick={toggleSubscriptionDropdown}
                       className={`md:w-[482px] w-[345px] md:px-4 px-2 py-2 cursor-pointer rounded-md border border-[#40495C] bg-[#282F3E] ${inputClassName}`}
@@ -237,7 +245,7 @@ const SubscriptionDialog = ({ closeDialog, axiosServiceData, subTable }) => {
                           onClick={() => handlePlanClick("Monthly")}
                           className="cursor-pointer px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                         >
-                          Montly
+                          Monthly
                         </li>
                         <li
                           onClick={() => handlePlanClick("Quarterly")}
@@ -278,7 +286,6 @@ const SubscriptionDialog = ({ closeDialog, axiosServiceData, subTable }) => {
                     <input
                       disabled
                       id="durationType"
-                      // value={planType === "Monthly" ? 1 : 3}
                       value={
                         planType === "Monthly" ? 1 :
                         planType === "Quarterly" ? 3 :
@@ -355,7 +362,9 @@ const SubscriptionDialog = ({ closeDialog, axiosServiceData, subTable }) => {
                   Premium Telegram Channel Link
                 </label>
                 <input
-                value={changes.premiumTelegramChannel}
+                  // value={premiumTelegram}
+                  value={changes.premiumTelegramChannel}
+                  onChange={(e) => setPremiumTelegram(e.target.value)}
                   type="link"
                   id="default-input"
                   className="md:w-[1012px] w-[345px] py-2 px-4 rounded-md text-white border border-[#40495C] bg-[#282F3E]"
@@ -371,8 +380,8 @@ const SubscriptionDialog = ({ closeDialog, axiosServiceData, subTable }) => {
                 Description
               </label>
               <textarea
-              typeof="text"
-              onChange={(e) => setDes(e.target.value)}
+                typeof="text"
+                onChange={(e) => setDes(e.target.value)}
                 id="des-input"
                 value={des}
                 rows="4"
@@ -384,9 +393,7 @@ const SubscriptionDialog = ({ closeDialog, axiosServiceData, subTable }) => {
 
           <div className="flex md:flex-row flex-col gap-2 justify-end md:mt-0 mt-4">
             <button
-              onClick={() => {
-                handleConfirm();
-              }}
+              onClick={handleConfirm}
               className="px-4 w-[100%] py-2 bg-blue-500 text-white md:text-[14px] text-[14px] rounded-lg hover:bg-blue-600"
             >
               Confirm

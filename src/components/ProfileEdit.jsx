@@ -22,7 +22,8 @@ const ProfileEdit = ({ closeDialog, stackholderId, myCard, fetchDetails }) => {
 
   const [originalData, setOriginalData] = useState({});
 
-  const expertTypeOptions = ["Option", "Commodity", "Equity"];
+  const expertTypeOptions = ["Commodity", "Equity", "Futures & Options"];
+  console.log('MY CARDS DATA', expertTypeOptions[myCard.expertTypeId] || "")
   const experienceOptions = [
     "1+ Year",
     "2+ Years",
@@ -123,6 +124,8 @@ const ProfileEdit = ({ closeDialog, stackholderId, myCard, fetchDetails }) => {
       expertTypeId: expertTypeOptions.indexOf(expertTypeId) + 1,
       experience: experienceOptions.indexOf(experienceType) + 1,
     };
+
+    console.log('Updated data is', updatedData.expertTypeId)
 
     const patchOperations = generatePatchOperations(originalData, updatedData);
 
@@ -298,7 +301,7 @@ const ProfileEdit = ({ closeDialog, stackholderId, myCard, fetchDetails }) => {
                   <input
                     id="expertTypeId"
                     value={expertTypeId}
-                    readOnly
+                    disabled
                     onClick={toggleSubscriptionDropdown}
                     className="md:w-[482px] w-[345px] px-4 py-2 rounded-md text-white border border-[#40495C] bg-[#282F3E]"
                   />
