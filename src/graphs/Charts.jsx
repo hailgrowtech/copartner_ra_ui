@@ -15,15 +15,12 @@ const Charts = () => {
     const fetchData = async () => {
       try {
         if (stackholderId) {
-          console.log('Fetching data for stackholderId:', stackholderId);
           const response = await axios.get(
             `https://copartners.in:5009/api/Subscription/GetByExpertsId/${stackholderId}`
           );
-          console.log('Response received:', response);
 
           if (response.data.isSuccess) {
             const apiData = response.data.data;
-            console.log('API Data:', apiData);
 
             const monthlyData = Array(12).fill().map((_, index) => ({
               name: format(new Date(2024, index, 1), 'MMMM'), // Generate month names

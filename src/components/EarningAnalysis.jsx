@@ -35,7 +35,6 @@ const EarningAnalysis = () => {
       try {
         const response = await axios.get(EARNING_URL);
         setEarningAnalysis(response.data.data);
-        console.log('My API VALUES IS', response.data.data);
       } catch (error) {
         console.error("Error fetching the wallet balance:", error);
         setEarningAnalysis('Error');
@@ -69,8 +68,6 @@ const EarningAnalysis = () => {
           copartnerEarning,
           personalEarning,
         });
-
-        console.log('User Earning data is-', data);
       } catch (error) {
         console.error("Error fetching the earning balance:", error);
         setUserEarning('Error');

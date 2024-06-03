@@ -1,15 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { userAnalysis, expertise_data } from "../constants";
 import {
   arrow,
-  card,
-  edit,
-  location,
-  location1,
-  mail,
-  pancard,
-  phone,
-  sebi,
   stars,
   telegramIcon,
   userBck,
@@ -42,7 +33,6 @@ const Dashboard = () => {
       .get(SUB_TABLE)
       .then((res) => {
         setSubTable(res.data.data);
-        console.log("My Table is", res.data.data);
       })
       .catch((error) => {
         console.log("Something went wrong", error);
@@ -102,7 +92,7 @@ const Dashboard = () => {
             <h2 className="md:w-[176px] md:h-[27px] w-[125px] h-[28px] font-inter md:text-[22px] text-[20px] font-[600] leading-[27px] text-white">
               User Analysis
             </h2>
-            <div className="flex items-center md:gap-[2rem] gap-2 xl:ml-[50rem] xl:ml-[] md:ml-[25rem] ml-[-20px]">
+            <div className="flex items-center md:gap-[2rem] gap-2 xl:ml-[50rem] md:ml-[25rem] ml-[-20px]">
               <button
                 className={`button ${
                   activeButtonSecondSection === "today"
@@ -343,7 +333,7 @@ const Dashboard = () => {
                 <div className="flex flex-row">
                   <div className="flex flex-col">
                     <div className="flex flex-col gap-2">
-                      <span className="font-inter font-[700] md:text-[55px] text-[26px] md:leading-[66px] leading-[30px] text-gradient">
+                      <span className="font-inter font-[700] md:text-[47px] text-[26px] md:leading-[60px] leading-[30px] text-gradient">
                         {myCard && myCard.channelName}
                       </span>
                       <span className="text-white font-inter font-[500] md:text-[17px] text-[12px] md:leading-[22px]">
@@ -440,7 +430,7 @@ const Dashboard = () => {
                 <div className="md:flex md:flex-row grid grid-cols-2 md:gap-[12rem] gap-2 md:px-[1rem] md:mt-[2rem] mt-14 md:py-0 py-8 items-center justify-center">
                   {subTable &&
                     subTable.map((subUnit) => (
-                      <div className="flex gap-[4rem] md:w-[165px] w-[150px] h-[38px] flex md:flex-col justify-center items-center">
+                      <div className="flex gap-[4rem] md:w-[165px] w-[150px] h-[38px] md:flex-col justify-center items-center">
                         <div className="md:w-auto md:h-[97px] md:gap-0 gap-0 flex md:flex-col flex-col justify-center items-center">
                           <span className="text-gradient-2 md:w-auto md:h-[32px] font-inter font-[700] md:text-[23px] text-[12 px] text-center">
                             {subUnit.planType}

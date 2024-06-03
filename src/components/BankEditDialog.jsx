@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { closeIcon } from "../assets";
 import axios from "axios";
+import { toast } from "react-toastify";
 
 const BankEditDialog = ({
   closeDialog,
@@ -19,6 +20,12 @@ const BankEditDialog = ({
 
   const deleteBankDetails_api = `https://copartners.in:5135/api/Withdrawal/${deleteBankInfo}`;
 
+  const handleDelete = () => {
+    toast.success("Successfully Deleted!", {
+      position: "top-right",
+    });
+  };
+
   const deleteBankDetails = async () => {
     try {
       const response = await axios.delete(deleteBankDetails_api);
@@ -26,6 +33,7 @@ const BankEditDialog = ({
         console.log("Bank details deleted successfully");
         fetchData();
         closeDialog();
+        handleDelete();
       } else {
         console.error("Failed to delete bank details");
       }

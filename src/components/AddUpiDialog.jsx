@@ -3,7 +3,7 @@ import { closeIcon } from "../assets";
 import axios from "axios";
 import { toast } from "react-toastify";
 
-const AddUpiDialog = ({ isOpen, onClose, saveUpiDetails }) => {
+const AddUpiDialog = ({ isOpen, onClose, saveUpiDetails, fetchData }) => {
   const [myUpiId, setMyUpiId] = useState("");
   const [getUPIID, setGetUPIID] = useState("");
   const [error, setError] = useState("");
@@ -48,6 +48,7 @@ const AddUpiDialog = ({ isOpen, onClose, saveUpiDetails }) => {
           position: "top-right",
         });
       } else {
+        fetchData();
         setGetUPIID(response.data.data.id);
         onClose();
       }

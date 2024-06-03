@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { closeIcon, dropdown } from "../assets";
 import axios from "axios";
+import { toast } from "react-toastify";
 
 const ProfileEdit = ({ closeDialog, stackholderId, myCard, fetchDetails }) => {
   const [expertTypeId, setExpertTypeId] = useState("");
@@ -23,7 +24,6 @@ const ProfileEdit = ({ closeDialog, stackholderId, myCard, fetchDetails }) => {
   const [originalData, setOriginalData] = useState({});
 
   const expertTypeOptions = ["Commodity", "Equity", "Futures & Options"];
-  console.log('MY CARDS DATA', expertTypeOptions[myCard.expertTypeId] || "")
   const experienceOptions = [
     "1+ Year",
     "2+ Years",
@@ -31,6 +31,12 @@ const ProfileEdit = ({ closeDialog, stackholderId, myCard, fetchDetails }) => {
     "4+ Years",
     "5+ Years",
   ];
+
+  const handleSuccess = () => {
+    toast.success("Successfully Created!", {
+      position: "top-right",
+    });
+  };
 
   useEffect(() => {
     if (myCard) {
@@ -125,8 +131,6 @@ const ProfileEdit = ({ closeDialog, stackholderId, myCard, fetchDetails }) => {
       experience: experienceOptions.indexOf(experienceType) + 1,
     };
 
-    console.log('Updated data is', updatedData.expertTypeId)
-
     const patchOperations = generatePatchOperations(originalData, updatedData);
 
     try {
@@ -140,6 +144,7 @@ const ProfileEdit = ({ closeDialog, stackholderId, myCard, fetchDetails }) => {
       setError(null);
       setOriginalData(updatedData);
       closeDialog();
+      handleSuccess();
     } catch (error) {
       setError("An error occurred while updating the profile.");
       setSuccess(null);
@@ -446,6 +451,7 @@ const ProfileEdit = ({ closeDialog, stackholderId, myCard, fetchDetails }) => {
                   value={premiumTelegramLink}
                   onChange={(e) => setPremiumTelegramLink(e.target.value)}
                   type="link"
+                  disabled
                   id="default-input"
                   placeholder="Paste Link"
                   className="md:w-[482px] w-[345px] py-2 px-4 rounded-md text-white border border-[#40495C] bg-[#282F3E]"

@@ -6,8 +6,8 @@ import { Routes, Route, useLocation, Navigate } from "react-router-dom";
 import { Dashboard, Subscription, Wallet, Setting } from "./components";
 import SignUp from "./components/SignUp";
 import ForgetPassword from "./components/ForgetPassword";
-import ErrorPage from "./components/ErrorPage";
 import { ToastContainer } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
 
 function App() {
   const [isSmallScreen, setIsSmallScreen] = useState(window.innerWidth < 768);
@@ -81,6 +81,7 @@ function App() {
           </>
         </div>
       </div>
+      <ToastContainer />
     </div>
   );
 }

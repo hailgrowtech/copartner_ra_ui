@@ -51,48 +51,69 @@ const SignUp = ({ setIsSignedUp }) => {
     };
 
     try {
-      const response = await axios.post(
-        "https://copartners.in:5130/Authentication/authenticate",
-        postData,
-        { headers: { "Content-Type": "application/json" } }
+      const usersResponse = await axios.get(
+        "https://copartners.in:5130/api/Users?userType=RA&page=1&pageSize=10"
       );
+      const users = usersResponse.data.data;
 
-      const data = response.data;
-      const stackholderId = data.data.stackholderId;
-      console.log(stackholderId, 'Session store')
-      sessionStorage.setItem("stackholderId", stackholderId);
+      const user = users.find(user => user.email.toLowerCase() === emailId.toLowerCase());
 
-      // Schedule removal of sessionStorage item after 10 seconds
-      timeoutId = setTimeout(() => {
-        sessionStorage.removeItem("stackholderId");
-        sessionStorage.setItem("visitedSignUp", "false");
-        setSessionDeleted(true);
-        toast.info("Session expired. Please log in again.", {
+      if (!user) {
+        setError("Email is wrong.");
+        toast.error("Email is wrong.", {
           position: "top-right",
         });
-      }, 86400000);
+        setLoading(false);
+        return;
+      }
 
-      const stackholderResponse = await axios.get(
-        `${STACKHOLDER_API}/${stackholderId}`
-      );
+      try {
+        const response = await axios.post(
+          "https://copartners.in:5130/Authentication/authenticate",
+          postData,
+          { headers: { "Content-Type": "application/json" } }
+        );
 
-      if (data.data.email.toLowerCase() === emailId.toLowerCase()) {
-        if (password === "Copartner@1234#") {
-          navigate("/reset", { state: { emailId, password } });
-        } else {
-          setIsSignedUp(true);
-          sessionStorage.setItem("visitedSignUp", "true");
-          toast.success("Login successful!", {
+        const data = response.data;
+        const stackholderId = data.data.stackholderId;
+        sessionStorage.setItem("stackholderId", stackholderId);
+
+        timeoutId = setTimeout(() => {
+          sessionStorage.removeItem("stackholderId");
+          sessionStorage.setItem("visitedSignUp", "false");
+          setSessionDeleted(true);
+          toast.info("Session expired. Please log in again.", {
             position: "top-right",
           });
-          navigate("/");
-        }
-        const timeout = setTimeout(() => {
-          handleLogout();
         }, 86400000);
-      } else {
-        setError("Email ID or Password does not match.");
-        toast.error("Email ID or Password does not match.", {
+
+        const stackholderResponse = await axios.get(
+          `${STACKHOLDER_API}/${stackholderId}`
+        );
+
+        if (data.data.email.toLowerCase() === emailId.toLowerCase()) {
+          if (password === "Copartner@1234#") {
+            navigate("/reset", { state: { emailId, password } });
+          } else {
+            setIsSignedUp(true);
+            sessionStorage.setItem("visitedSignUp", "true");
+            toast.success("Login successful!", {
+              position: "top-right",
+            });
+            navigate("/");
+          }
+          const timeout = setTimeout(() => {
+            handleLogout();
+          }, 86400000);
+        } else {
+          setError("Password is wrong.");
+          toast.error("Password is wrong.", {
+            position: "top-right",
+          });
+        }
+      } catch (error) {
+        setError("Password is wrong.");
+        toast.error("Password is wrong.", {
           position: "top-right",
         });
       }

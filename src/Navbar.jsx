@@ -27,7 +27,6 @@ const Navbar = ({ activeTab, toggleSidebar }) => {
         .then((res) => {
           setMyCard(res.data.data);
           setIsCoPartner(res.data.data.isCoPartner);
-          console.log("Navbar Data are-", res.data.data);
         });
     }
   }, [stackholderId]);

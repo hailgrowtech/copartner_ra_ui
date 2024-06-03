@@ -4,7 +4,6 @@ import {
   mail,
   phone,
   sebi,
-  addDoc,
   telegramIcon,
   arrow,
   userBck,
@@ -175,7 +174,7 @@ const Setting = () => {
           <div className="flex flex-row">
             <div className="flex flex-col">
               <div className="flex flex-col gap-2">
-                <span className="font-inter font-[700] md:text-[54px] text-[26px] md:leading-[66px] leading-[30px] text-gradient">
+                <span className="font-inter font-[700] md:text-[47px] text-[26px] md:leading-[60px] leading-[30px] text-gradient">
                   {myCard && myCard.channelName}
                 </span>
                 <span className="text-white font-inter font-[500] md:text-[17px] text-[12px] md:leading-[22px]">
@@ -363,7 +362,7 @@ const Setting = () => {
               <div className="rounded-[36px] border border-[#fffff] flex justify-center items-center md:w-[80px] w-[50px]">
                 <button
                   onClick={openDialog}
-                  className="flex flex-row items-center gap-2 justify-center items-center"
+                  className="flex flex-row gap-2 justify-center items-center"
                 >
                   <img
                     src={edit}
@@ -389,7 +388,7 @@ const Setting = () => {
         </div>
       </div>
 
-      <div className="xl:w-[1520px] md:w-[1120px] md:h-auto w-[363px] h-auto px-4 p-8 border-2 border-[#202F49] rounded-[30px] rounded-[30px] flex gap-4 flex-col md:mt-[4rem] mt-[2rem] md:ml-0 ml-[-0.5rem]">
+      <div className="xl:w-[1520px] md:w-[1120px] md:h-auto w-[363px] h-auto px-4 p-8 border-2 border-[#202F49] rounded-[30px] flex gap-4 flex-col md:mt-[4rem] mt-[2rem] md:ml-0 ml-[-0.5rem]">
         <div className="flex flex-row items-center justify-between">
           <span className="text-white font-inter font-[600] text-[22px] leading-[26px]">
             About
@@ -397,7 +396,7 @@ const Setting = () => {
           <div className="w-[93px] h-[32px] rounded-[36px] bg-gradient flex justify-center items-center md:mr-0 mr-[-8px]">
             {isEditing ? (
               <button
-                className="flex flex-row items-center gap-2 justify-center items-center w-[64px] md:h-[32px] h-[22px] rounded-[36px] bg-blue-600"
+                className="flex flex-row gap-2 justify-center items-center w-[64px] md:h-[32px] h-[22px] rounded-[36px] bg-blue-600"
                 onClick={handleSaveClick}
               >
                 <button className="text-white md:text-[16px] text-[10px] md:leading-[26px] leading-[20px]">
@@ -406,7 +405,7 @@ const Setting = () => {
               </button>
             ) : (
               <button
-                className="flex flex-row items-center md:w-[93px] w-[64px] md:h-[32px] h-[22px] rounded-[36px] border-solid border-[1px] border-white gap-2 justify-center items-center"
+                className="flex flex-row md:w-[93px] w-[64px] md:h-[32px] h-[22px] rounded-[36px] border-solid border-[1px] border-white gap-2 justify-center items-center"
                 onClick={handleEditClick}
               >
                 <img
@@ -444,7 +443,7 @@ const Setting = () => {
           </span>
           <div className="md:w-[93px] w-[64px] md:h-[32px] h-[22px] rounded-[36px] border border-[#fffff] flex justify-center items-center">
             <button
-              className="flex flex-row items-center gap-2 justify-center items-center"
+              className="flex flex-row items-center gap-2 justify-center"
               onClick={openEditPopup}
             >
               <img
@@ -498,7 +497,7 @@ const Setting = () => {
           <div className="md:w-[128px] w-[68px] h-[30px] md:h-[32p] rounded-[10px] border-2 border-dotted border-[#ffffff] flex justify-center items-center">
             <button
               onClick={openAddBankDialog}
-              className="flex flex-row items-center gap-2 justify-center items-center"
+              className="flex flex-row items-center gap-2 justify-center"
             >
               <span className="text-white font-[400] md:text-[15px] text-[10.5px] leading-[5.7px] md:leading-[28px]">
                 +Add Bank
@@ -526,7 +525,7 @@ const Setting = () => {
                     onClick={() => openEditBankDialog(withdrawal)}
                     className="md:w-[310px] w-[200px] md:h-[70px] h-[70px] text-white rounded-[16px] border border-[#40495C] bg-[#282F3E]"
                   >
-                    <div className="flex md:ml-8 ml-6 items-start md:flex-col flex">
+                    <div className="flex md:ml-8 ml-6 items-start md:flex-col">
                       <div className="flex flex-col md:items-start items-center">
                         <span className="text-[16px] font-[600]">
                           {withdrawal.bankName}
@@ -564,7 +563,7 @@ const Setting = () => {
           </span>
           <button
             onClick={openUpiDialog}
-            className="md:w-[128px] w-[68px] md:h-[32px] h-[30px] border-2 border-dotted border-[#ffffff] rounded-[10px] border text-white font-[600] font-inter text-[12px]"
+            className="md:w-[128px] w-[68px] md:h-[32px] h-[30px] border-dotted border-[#ffffff] rounded-[10px] border text-white font-[600] font-inter text-[12px]"
           >
             <span className="text-white font-[400] md:text-[15px] text-[10.5px] leading-[5.7px] md:leading-[28px]">
               +Add UPI
@@ -575,12 +574,13 @@ const Setting = () => {
               isOpen={isAddUpiOpen}
               onClose={closeDialog}
               saveUpiDetails={saveUpiDetails}
+              fetchData={fetchData}
             />
           )}
         </div>
 
-        <div className="md:px-0 px-0 md:w-full w-[310px] md:h-[76px] rounded-[16px] border-[#40495C] flex md:flex-row flex-col gap-4">
-          <button className="rounded-[16px] flex gap-4">
+        <div className="flex flex-row items-center mt-4 justify-between">
+          <button className="md:w-full w-[260px] md:h-[76px] rounded-[16px] border-[#40495C] flex md:flex-row flex-col gap-4">
             {withdrawalAmount.map((withdrawal, index) => {
               if (withdrawal.paymentMode === "UPI") {
                 return (
@@ -589,7 +589,7 @@ const Setting = () => {
                     onClick={() => openEditUpiDialog(withdrawal)}
                     className="md:w-[310px] w-[200px]  h-[50px] text-white rounded-[16px] border border-[#40495C] bg-[#282F3E]"
                   >
-                    <div className="flex justify-center items-start md:ml-4 md:flex-col flex">
+                    <div className="flex justify-center items-start md:ml-4 md:flex-col">
                       <span className="text-[16px] font-[600]">
                         {withdrawal.upI_ID}
                       </span>

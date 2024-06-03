@@ -30,7 +30,6 @@ const BarGraph = ({
         );
         if (response.data.isSuccess) {
           const apiData = response.data.data;
-          console.log("apiData", apiData);
 
           const dailyData = {};
           const weeklyData = Array(7)

@@ -15,7 +15,13 @@ const AddBankDialog = ({ onClose, saveBankDetails, isOpen, fetchData }) => {
   const [getBankID, setGetBankID] = useState("");
   const [accountError, setAccountError] = useState(false);
 
-  const stackholderId = sessionStorage.getItem("stackholderId");
+  const stackholderId = sessionStorage.getItem("stackholderId"); 
+
+  const handleAddBank = () => {
+    toast.success("Successfully Added!", {
+      position: "top-right",
+    });
+  };
 
   const handleSubmit = async (e) => {
     setError("");
@@ -45,8 +51,6 @@ const AddBankDialog = ({ onClose, saveBankDetails, isOpen, fetchData }) => {
       upI_ID: "",
     };
 
-    console.log('Post Data value', postData)
-
     try {
       const response = await axios.post(
         "https://copartners.in:5135/api/Withdrawal/PostBankUPIDetails",
@@ -59,7 +63,8 @@ const AddBankDialog = ({ onClose, saveBankDetails, isOpen, fetchData }) => {
         });
       }
       setGetBankID(response.data.data.id);
-      fetchData()
+      fetchData();
+      handleAddBank();
       onClose();
     } catch (error) {
       console.error("Error posting data:", error);

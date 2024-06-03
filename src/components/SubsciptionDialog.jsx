@@ -4,7 +4,6 @@ import axios from "axios";
 import { toast } from "react-toastify";
 
 const SubscriptionDialog = ({ closeDialog, axiosServiceData, subTable }) => {
-  console.log(subTable, 'FETCHING SUBTABLE DATA');
   const [subscriptionType, setSubscriptionType] = useState(null);
   const [planType, setPlanType] = useState("Select Plan Type");
   const [durationType, setDurationType] = useState("Select Duration Type");
@@ -34,10 +33,15 @@ const SubscriptionDialog = ({ closeDialog, axiosServiceData, subTable }) => {
     });
   };
 
+  const handleError = (message) => {
+    toast.error(message, {
+      position: "top-right",
+    });
+  };
+
   useEffect(() => {
     axios.get(`https://copartners.in:5132/api/Experts/${stackholderId}`)
       .then((res) => {
-        console.log('Data that I am expecting', res.data.data);
         setChanges(res.data.data);
         setSubscriptionType(res.data.data.expertTypeId); // Set subscription type from fetched data
         setPremiumTelegram(res.data.data.premiumTelegramChannel); // Set premium telegram link from fetched data
@@ -66,9 +70,6 @@ const SubscriptionDialog = ({ closeDialog, axiosServiceData, subTable }) => {
       description: des,
     };
 
-    // Log postData to verify all fields
-    console.log('Post Data:', postData);
-
     // Check for any null or invalid values
     if (!amount || !subscriptionType || !planType || !durationMonth || !premiumTelegram || !des) {
       setError('Please fill out all required fields.');
@@ -78,21 +79,14 @@ const SubscriptionDialog = ({ closeDialog, axiosServiceData, subTable }) => {
 
     try {
       const response = await axios.post('https://copartners.in:5009/api/Subscription', postData);
-      console.log('Response:', response.data);
       if (response.status !== 200) {
-        toast.error("Something Wrong happened!", {
-          position: "top-right",
-        });
+        handleError("Something Wrong happened!");
       }
       handleSuccess();
       closeDialog();
       axiosServiceData();
     } catch (error) {
-      console.error('Error posting data:', error);
-      console.log('Response data:', error.response.data);
-      toast.error('Failed to submit data. Please try again.', {
-        position: "top-right",
-      });
+      handleError('Failed to submit data. Please try again.');
       setError('Failed to submit data. Please try again.');
     } finally {
       setLoading(false);

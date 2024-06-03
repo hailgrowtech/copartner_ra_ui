@@ -1,10 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { filter, notificationSlider, searchIcon } from "../assets";
-import {
-  subscriptionData,
-  transcationData,
-  withdrawalData,
-} from "../constants";
+import { searchIcon } from "../assets";
 import WalletWithdrawal from "./WalletWithdrawal";
 import EarningAnalysis from "./EarningAnalysis";
 import RejectUpiOpen from "./RejectUpiOpen";

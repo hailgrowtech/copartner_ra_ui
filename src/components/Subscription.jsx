@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
 import SubscriptionDialog from "./SubsciptionDialog";
-import { deleteIcon, edit } from "../assets";
+import { deleteIcon } from "../assets";
 import SubscriptionEditService from "./SubscriptionEditService";
 import axios from "axios";
+import { toast } from "react-toastify";
 
 const Subscription = () => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -17,11 +18,16 @@ const Subscription = () => {
   const SUB_TABLE = `https://copartners.in:5009/api/Subscription/GetByExpertsId/${stackholderId}`;
   const ACTIVE_USER = `https://copartners.in:5132/api/RADashboard/GetDashboardRAListingData/${stackholderId}?page=1&pageSize=100`;
 
+  const handleSuccess = () => {
+    toast.success("Successfully Deleted!", {
+      position: "top-right",
+    });
+  };
+
   useEffect(() => {
     const fetchActiveUser = async () => {
       try {
         const res = await axios.get(ACTIVE_USER);
-        console.log('Active User value:', res.data.data);
         setActiveUser(res.data.data);  // Set active user data
         countPlanTypes(res.data.data);  // Count plan types
       } catch (error) {
@@ -72,9 +78,9 @@ const Subscription = () => {
 
   const handleDeleteTable = async (id) => {
     const DELETE_TABLE = `https://copartners.in:5009/api/Subscription/${id}`;
-    console.log("Deleting subscription with URL:", DELETE_TABLE);
 
     try {
+      handleSuccess();
       const response = await axios.delete(DELETE_TABLE);
       if (response.status === 200) {
         console.log("Subscription deleted successfully");
@@ -97,11 +103,11 @@ const Subscription = () => {
 
   const getSubscriptionTypeLabel = (type) => {
     switch (type) {
-      case '1':
-        return "Futures & Options";
-      case '2':
-        return "Commodity";
       case '3':
+        return "Futures & Options";
+      case '1':
+        return "Commodity";
+      case '2':
         return "Equity";
       default:
         return "Select Subscription Type";
@@ -254,7 +260,7 @@ const Subscription = () => {
                       <img
                         src={deleteIcon}
                         alt=""
-                        className="w-[21px] h-[21px] mx-auto"
+                        className="w-[21px] h-[21px] mx-auto flex items-center justify-center"
                       />
                     </button>
                   </td>
