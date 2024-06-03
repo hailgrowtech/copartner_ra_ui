@@ -81,14 +81,14 @@ const Wallet = () => {
     const fetchTransactionTable = async () => {
       try {
         const response = await axios.get(TRANSACTION_API);
-        console.log('Transcation', response.data)
+        console.log('Transcation', response.data.data)
         const sortedData = response.data.data.sort(
-          (a, b) => new Date(b.date) - new Date(a.date)
+          (a, b) => new Date(b.subscribeDate) - new Date(a.subscribeDate)
         );
         setTransactionTable(sortedData);
         setFilteredTransactions(sortedData);
       } catch (error) {
-        console.error("Error fetching the wallet balance:", error);
+        console.error("Error fetching the transaction table:", error);
         setTransactionTable("Error");
       }
     };

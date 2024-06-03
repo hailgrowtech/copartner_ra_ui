@@ -4,7 +4,6 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-
 const SignUp = ({ setIsSignedUp }) => {
   const [emailId, setEmailId] = useState("");
   const [password, setPassword] = useState("");
@@ -15,14 +14,11 @@ const SignUp = ({ setIsSignedUp }) => {
   const [logoutTimeout, setLogoutTimeout] = useState(null);
   const navigate = useNavigate();
   let timeoutId;
-
   const STACKHOLDER_API = `https://copartners.in:5132/api/Experts`;
-
   const handleLogout = () => {
     localStorage.removeItem("stackholderId");
     navigate("/signup");
   };
-
   useEffect(() => {
     return () => {
       if (logoutTimeout) {
@@ -30,18 +26,15 @@ const SignUp = ({ setIsSignedUp }) => {
       }
     };
   }, [logoutTimeout]);
-
   const handleContinue = async (e) => {
     e.preventDefault();
     setError("");
     setLoading(true);
-
     if (!emailId || !password) {
       setError("Email and Password are required");
       setLoading(false);
       return;
     }
-
     const postData = {
       mobile: "",
       email: emailId,
@@ -49,84 +42,57 @@ const SignUp = ({ setIsSignedUp }) => {
       isLoginUsingOtpRequest: true,
       userIpAddress: "string",
     };
-
     try {
-      const usersResponse = await axios.get(
-        "https://copartners.in:5130/api/Users?userType=RA&page=1&pageSize=10"
+      const response = await axios.post(
+        "https://copartners.in:5130/Authentication/authenticate",
+        postData,
+        { headers: { "Content-Type": "application/json" } }
       );
-      const users = usersResponse.data.data;
-
-      const user = users.find(user => user.email.toLowerCase() === emailId.toLowerCase());
-
-      if (!user) {
-        setError("Email is wrong.");
-        toast.error("Email is wrong.", {
+      const data = response.data;
+      const stackholderId = data.data.stackholderId;
+      console.log(stackholderId, 'Session store')
+      sessionStorage.setItem("stackholderId", stackholderId);
+      // Schedule removal of sessionStorage item after 10 seconds
+      timeoutId = setTimeout(() => {
+        sessionStorage.removeItem("stackholderId");
+        sessionStorage.setItem("visitedSignUp", "false");
+        setSessionDeleted(true);
+        toast.info("Session expired. Please log in again.", {
           position: "top-right",
         });
-        setLoading(false);
-        return;
-      }
-
-      try {
-        const response = await axios.post(
-          "https://copartners.in:5130/Authentication/authenticate",
-          postData,
-          { headers: { "Content-Type": "application/json" } }
-        );
-
-        const data = response.data;
-        const stackholderId = data.data.stackholderId;
-        sessionStorage.setItem("stackholderId", stackholderId);
-
-        timeoutId = setTimeout(() => {
-          sessionStorage.removeItem("stackholderId");
-          sessionStorage.setItem("visitedSignUp", "false");
-          setSessionDeleted(true);
-          toast.info("Session expired. Please log in again.", {
-            position: "top-right",
-          });
-        }, 86400000);
-
-        const stackholderResponse = await axios.get(
-          `${STACKHOLDER_API}/${stackholderId}`
-        );
-
-        if (data.data.email.toLowerCase() === emailId.toLowerCase()) {
-          if (password === "Copartner@1234#") {
-            navigate("/reset", { state: { emailId, password } });
-          } else {
-            setIsSignedUp(true);
-            sessionStorage.setItem("visitedSignUp", "true");
-            toast.success("Login successful!", {
-              position: "top-right",
-            });
-            navigate("/");
-          }
-          const timeout = setTimeout(() => {
-            handleLogout();
-          }, 86400000);
+      }, 86400000);
+      const stackholderResponse = await axios.get(
+        `${STACKHOLDER_API}/${stackholderId}`
+      );
+      if (data.data.email.toLowerCase() === emailId.toLowerCase()) {
+        if (password === "Copartner@1234#") {
+          navigate("/reset", { state: { emailId, password } });
         } else {
-          setError("Password is wrong.");
-          toast.error("Password is wrong.", {
+          setIsSignedUp(true);
+          sessionStorage.setItem("visitedSignUp", "true");
+          toast.success("Login successful!", {
             position: "top-right",
           });
+          navigate("/");
         }
-      } catch (error) {
-        setError("Password is wrong.");
-        toast.error("Password is wrong.", {
+        const timeout = setTimeout(() => {
+          handleLogout();
+        }, 86400000);
+      } else {
+        setError("Email ID or Password does not match.");
+        toast.error("Email ID or Password does not match.", {
           position: "top-right",
         });
       }
     } catch (error) {
-      setError("Something went wrong. Please try again.");
-      toast.error("Something went wrong. Please try again.", {
+      setError("EmailID or Password is incorrect");
+      toast.error("EmailID or Password is incorrect", {
         position: "top-right",
       });
     } finally {
       setLoading(false);
     }
   };
-
   return (
     <>
       <div
@@ -216,5 +182,4 @@ const SignUp = ({ setIsSignedUp }) => {
     </>
   );
 };
-
 export default SignUp;
