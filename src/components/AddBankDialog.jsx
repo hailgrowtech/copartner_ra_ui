@@ -15,6 +15,7 @@ const AddBankDialog = ({ onClose, saveBankDetails, isOpen, fetchData }) => {
   const [getBankID, setGetBankID] = useState("");
   const [accountError, setAccountError] = useState(false);
 
+
   const stackholderId = sessionStorage.getItem("stackholderId"); 
 
   const handleAddBank = () => {
@@ -229,7 +230,7 @@ const AddBankDialog = ({ onClose, saveBankDetails, isOpen, fetchData }) => {
                     ? "bg-gray-300 cursor-not-allowed" // Change background color and cursor
                     : "bg-white" // Default background color
                 }`}
-                disabled={
+                disabled={loading ||
                   !isChecked ||
                   !accountNumber ||
                   !confirmAccountNumber ||

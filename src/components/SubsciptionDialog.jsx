@@ -388,6 +388,7 @@ const SubscriptionDialog = ({ closeDialog, axiosServiceData, subTable }) => {
           <div className="flex md:flex-row flex-col gap-2 justify-end md:mt-0 mt-4">
             <button
               onClick={handleConfirm}
+              disabled = {loading}
               className="px-4 w-[100%] py-2 bg-blue-500 text-white md:text-[14px] text-[14px] rounded-lg hover:bg-blue-600"
             >
               Confirm

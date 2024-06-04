@@ -12,6 +12,7 @@ const WalletWithdrawal = ({ closeDialog, walletBalance }) => {
   const [withdrawalAmount, setWithdrawalAmount] = useState([]);
   const [inputValue, setInputValue] = useState("");
   const [inputError, setInputError] = useState("");
+  const [loading, setLoading] = useState(false);
   const [isKycVerified, setIsKycVerified] = useState(true); // Assuming KYC is verified for now
   const stackholderId = sessionStorage.getItem("stackholderId");
 
@@ -231,12 +232,13 @@ const WalletWithdrawal = ({ closeDialog, walletBalance }) => {
             className={`rounded-[10px] w-[147px] h-[40px] md:text-[18px] text-[14px] ${
               isButtonDisabled ? "bg-[#D2D2D2] text-black" : "bg-white"
             }`}
-            disabled={isButtonDisabled}
+            disabled={isButtonDisabled || loading}
           >
             Withdraw
           </button>
         </div>
       </div>
+      {loading && <p>Loading...</p>}
     </div>
   );
 };

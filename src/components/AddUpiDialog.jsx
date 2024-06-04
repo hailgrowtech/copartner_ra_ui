@@ -145,6 +145,7 @@ const AddUpiDialog = ({ isOpen, onClose, saveUpiDetails, fetchData }) => {
                     : "bg-white" // Default background color
                 }`}
                 disabled={
+                  loading ||
                   !isCheckboxChecked ||
                   !myUpiId 
                 }
@@ -155,6 +156,7 @@ const AddUpiDialog = ({ isOpen, onClose, saveUpiDetails, fetchData }) => {
           </form>
         </div>
       </div>
+      {loading && <p>Loading...</p>}
     </div>
   );
 };
