@@ -249,7 +249,7 @@ const Setting = () => {
                 </div>
               </div>
 
-              <div className="flex flex-row items-center gap-2 md:py-3 py-2">
+              <div className="flex flex-row items-center gap-2 md:py-3 py-2 md:ml-0 ml-[0.6rem]">
                 <div className="flex flex-row gap-4">
                   <div className="text-white flex items-center gap-2 justify-center">
                     <img src={location1} alt="" className="w-[18px] h-[18px]" />
@@ -348,7 +348,7 @@ const Setting = () => {
               />
             </div>
 
-            <div className="flex md:ml-auto ml-[-6rem] flex-col items-start md:gap-[16rem] gap-[10rem]">
+            <div className="flex md:ml-auto ml-[-7rem] flex-col items-start md:gap-[16rem] gap-[10rem]">
               <div className="flex flex-row gap-2 w-[70px] h-[32px]">
                 <img
                   src={stars}

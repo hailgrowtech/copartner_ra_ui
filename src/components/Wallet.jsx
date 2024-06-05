@@ -25,9 +25,9 @@ const Wallet = () => {
 
   const WALLET_BALANCE_URL = `https://copartners.in:5135/api/Wallet/GetWalletWithdrawalBalance/${stackholderId}?userType=RA`;
 
-  const TRANSACTION_API = `https://copartners.in:5132/api/RADashboard/GetDashboardRAListingData/${stackholderId}?page=1&pageSize=10`;
+  const TRANSACTION_API = `https://copartners.in:5132/api/RADashboard/GetDashboardRAListingData/${stackholderId}?page=1&pageSize=100`;
 
-  const WITHDRAWAL_REQ_API = `https://copartners.in:5135/api/Withdrawal/GetWithdrawalByUserId/${stackholderId}?userType=RA&page=1&pageSize=10`;
+  const WITHDRAWAL_REQ_API = `https://copartners.in:5135/api/Withdrawal/GetWithdrawalByUserId/${stackholderId}?userType=RA&page=1&pageSize=100`;
 
   const fetchBankDetails = async (withdrawalModeId) => {
     const BANK_API = `https://copartners.in:5135/api/Withdrawal/GetBankUPIById/${withdrawalModeId}`;
@@ -81,7 +81,6 @@ const Wallet = () => {
     const fetchTransactionTable = async () => {
       try {
         const response = await axios.get(TRANSACTION_API);
-        console.log('Transcation', response.data.data)
         const sortedData = response.data.data.sort(
           (a, b) => new Date(b.subscribeDate) - new Date(a.subscribeDate)
         );
@@ -321,9 +320,8 @@ const Wallet = () => {
               <div className="flex flex-col pl-[5rem] flex-wrap justify-center items-center">
                 {filteredTransactions &&
                   filteredTransactions
-                    .slice(0, 5)
                     .filter(
-                      (row) => row.subscription.trim() !== "No Subscription"
+                      (row) => row.subscription.trim() !== "No Subscrption"
                     )
                     .map((row, index) => (
                       <div
@@ -362,7 +360,7 @@ const Wallet = () => {
                 </button>
               </div>
             ) : (
-              <table className="xl:w-[1520px] md:w-[1130px] md:h-auto h-[497px] p-8 h-[497px] bg-[#29303F] rounded-[30px]">
+              <table className="xl:w-[1520px] md:w-[1130px] md:h-auto p-8 h-[497px] bg-[#29303F] rounded-[30px]">
                 <thead className="text-dimWhite bg-[#1E1E22]">
                   <tr>
                     <th className="text-start px-4 py-2">Transaction ID</th>
@@ -377,7 +375,7 @@ const Wallet = () => {
                   {filteredTransactions &&
                     filteredTransactions
                       .filter(
-                        (row) => row.subscription.trim() !== "No Subscription"
+                        (row) => row.subscription.trim() !== "No Subscrption"
                       )
                       .map((row, index) => (
                         <tr

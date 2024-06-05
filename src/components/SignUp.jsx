@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+
 const SignUp = ({ setIsSignedUp }) => {
   const [emailId, setEmailId] = useState("");
   const [password, setPassword] = useState("");
@@ -14,11 +15,13 @@ const SignUp = ({ setIsSignedUp }) => {
   const [logoutTimeout, setLogoutTimeout] = useState(null);
   const navigate = useNavigate();
   let timeoutId;
+
   const STACKHOLDER_API = `https://copartners.in:5132/api/Experts`;
   const handleLogout = () => {
     localStorage.removeItem("stackholderId");
     navigate("/signup");
   };
+
   useEffect(() => {
     return () => {
       if (logoutTimeout) {
@@ -26,6 +29,7 @@ const SignUp = ({ setIsSignedUp }) => {
       }
     };
   }, [logoutTimeout]);
+
   const handleContinue = async (e) => {
     e.preventDefault();
     setError("");
@@ -93,6 +97,7 @@ const SignUp = ({ setIsSignedUp }) => {
       setLoading(false);
     }
   };
+  
   return (
     <>
       <div
@@ -159,14 +164,14 @@ const SignUp = ({ setIsSignedUp }) => {
                 />
               </button>
             </div>
-            {/* <button
+            <button
               className="w-full text-[14px] text-[#0081F1] text-right"
               onClick={() =>
-                navigate("/reset", { state: { emailId, password } })
+                navigate("/forget", { state: { emailId, password } })
               }
             >
               Forget Password?
-            </button> */}
+            </button>
             <button
               type="submit"
               onClick={handleContinue}

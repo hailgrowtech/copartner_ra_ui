@@ -16,10 +16,11 @@ const Charts = () => {
       try {
         if (stackholderId) {
           const response = await axios.get(
-            `https://copartners.in:5009/api/Subscription/GetByExpertsId/${stackholderId}`
+            `https://copartners.in:5132/api/RADashboard/GetDashboardRAListingData/${stackholderId}`
           );
 
           if (response.data.isSuccess) {
+            console.log('Earning Analysis', response.data.data)
             const apiData = response.data.data;
 
             const monthlyData = Array(12).fill().map((_, index) => ({
@@ -28,12 +29,12 @@ const Charts = () => {
             }));
 
             apiData.forEach((item) => {
-              const date = parseISO(item.createdOn);
-              const month = getMonth(date);
-
-              const earnings = item.amount || 0;
-
-              monthlyData[month].earnings += earnings;
+              if (item.subscribeDate && item.subscriptionAmount !== null) {
+                const date = parseISO(item.subscribeDate);
+                const month = getMonth(date);
+                const earnings = item.subscriptionAmount || 0;
+                monthlyData[month].earnings += earnings;
+              }
             });
 
             setData({ monthly: monthlyData });
@@ -80,7 +81,6 @@ const Charts = () => {
     <div
       style={{
         width: '100%',
-        // height: '400px',
         backgroundColor: '#2b2d42',
         borderRadius: '30px',
         padding: '15px',
@@ -90,7 +90,7 @@ const Charts = () => {
       <ResponsiveContainer>
         <LineChart
           data={data.monthly} // Displaying monthly data
-          margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
+          margin={{ top: 60, right: 30, left: 0, bottom: 5 }}
         >
           <CartesianGrid strokeDasharray="3 3" stroke="#3a3e5c" />
           <XAxis dataKey="name" stroke="#fff" />
@@ -117,4 +117,3 @@ Charts.propTypes = {
 };
 
 export default Charts;
-

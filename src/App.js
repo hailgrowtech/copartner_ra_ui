@@ -8,6 +8,8 @@ import SignUp from "./components/SignUp";
 import ForgetPassword from "./components/ForgetPassword";
 import { ToastContainer } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
+import NewPassword from "./components/NewPassword";
+import ConfirmPassword from "./components/ConfirmPassword";
 
 function App() {
   const [isSmallScreen, setIsSmallScreen] = useState(window.innerWidth < 768);
@@ -15,9 +17,10 @@ function App() {
   const [showSidebar, setShowSidebar] = useState(!isSmallScreen);
   const location = useLocation();
   const signUp = sessionStorage.getItem('visitedSignUp');
-
   const isSignUpPage = location.pathname === "/signup";
   const isResetPage = location.pathname === "/reset";
+  const isNewPasswordPage = location.pathname === "/forget";
+  const isConfirmPasswordPage = location.pathname === "/set-new-password";
 
   const toggleSidebar = () => {
     setShowSidebar(!showSidebar);
@@ -32,25 +35,21 @@ function App() {
         setShowSidebar(true);
       }
     };
-
     window.addEventListener("resize", handleResize);
-
     return () => {
       window.removeEventListener("resize", handleResize);
     };
   }, []);
 
   return (
-    <div
-      className={`bg-gradient overflow-hidden ${styles.boxWidth} ${styles.paddingX} overflow-hidden`}
-    >
+    <div className={`bg-gradient overflow-hidden ${styles.boxWidth} ${styles.paddingX} overflow-hidden`}>
       <div className="flex">
         <div className="flex-grow">
           <>
-            {!isSignUpPage && !isResetPage && (
+            {!isSignUpPage && !isResetPage && !isNewPasswordPage && !isConfirmPasswordPage && (
               <Navbar activeTab={activeTab} toggleSidebar={toggleSidebar} />
             )}
-            {!isSignUpPage && !isResetPage && showSidebar && (
+            {!isSignUpPage && !isResetPage && !isNewPasswordPage && !isConfirmPasswordPage && showSidebar && (
               <Sidebar
                 activeTab={activeTab}
                 setActiveTab={setActiveTab}
@@ -73,10 +72,9 @@ function App() {
                 path="/signup"
                 element={<SignUp setIsSignedUp={() => sessionStorage.setItem('visitedSignUp', 'true')} />}
               />
-              <Route
-                path="/reset"
-                element={<ForgetPassword />}
-              />
+              <Route path="/reset" element={<ForgetPassword />} />
+              <Route path="/forget" element={<NewPassword />} />
+              <Route path="/set-new-password" element={<ConfirmPassword />} />
             </Routes>
           </>
         </div>
