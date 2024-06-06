@@ -38,7 +38,6 @@ const ReferralLinkComponent = () => {
       );
       const result = await response.json();
       if (result.isSuccess) {
-        console.log('Payment Link', result.data)
         setPaymentLink(result.data);
       } else {
         console.error("Failed to generate referral link");

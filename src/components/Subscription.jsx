@@ -41,6 +41,7 @@ const Subscription = () => {
   const axiosServiceData = async () => {
     try {
       const res = await axios.get(SUB_TABLE);
+      console.log('ajxjejje', res.data.data)
       setSubTable(res.data.data);
     } catch (error) {
       console.log('Something went wrong', error);
@@ -122,6 +123,9 @@ const Subscription = () => {
     setPlanTypeCounts(counts);
   };
 
+  // Sort subTable by amount in ascending order
+  const sortedSubTable = [...subTable].sort((a, b) => a.amount - b.amount);
+
   return (
     <div className="pb-[5rem] xl:pl-[12rem] md:pl-[10rem] pl-6 md:py-[6rem] pt-[8rem] bg-gradient min-h-screen">
       <div className="xl:w-[1520px] md:w-[1130px] w-[350px] flex items-center justify-between">
@@ -147,7 +151,7 @@ const Subscription = () => {
       <div className="flex md:mt-[3rem] mt-1">
         {smallScreen ? (
           <div className="flex flex-wrap justify-center items-center ml-[-22px]">
-            {subTable.map((row, index) => (
+            {sortedSubTable.map((row, index) => (
               <div
                 key={index}
                 className="flex flex-col justify-around w-[361px] h-[248px] bg-[#18181B] bg-opacity-[50%] rounded-[30px] md:m-4 m-[10px] p-4 w-[90%] max-w-sm"
@@ -201,7 +205,7 @@ const Subscription = () => {
                 </span>
               </div>
             ))}
-            {subTable.length > 0 && (
+            {sortedSubTable.length > 0 && (
               <button className="mt-6 md:w-[147px] w-[95px] h-[20px] md:h-[40px] md:flex items-center justify-center flex w-[110px] h-[30px] rounded-[6px] bg-lightWhite md:text-[14px] text-[10px] font-[500] md:leading-[16px] leading-[12px]">
                 Show More
               </button>
@@ -221,7 +225,7 @@ const Subscription = () => {
               </tr>
             </thead>
             <tbody className="text-lightWhite h-[81px]">
-              {subTable.map((row, index) => (
+              {sortedSubTable.map((row, index) => (
                 <tr key={index} className={index % 2 === 0 ? "bg-[#1E1E22]" : ""}>
                   <td className="font-[500] text-center text-[16px] leading-[18px]">
                     {formatDate(row.createdOn)}

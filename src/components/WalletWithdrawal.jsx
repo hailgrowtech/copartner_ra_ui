@@ -22,7 +22,6 @@ const WalletWithdrawal = ({ closeDialog, walletBalance }) => {
     try {
       const res = await axios.get(withdrawal_api);
       setWithdrawalAmount(res.data.data);
-      console.log('my req for amount', res.data.data);
     } catch (error) {
       console.error("Error fetching data:", error);
     }

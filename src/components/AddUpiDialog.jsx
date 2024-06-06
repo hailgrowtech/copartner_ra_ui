@@ -68,7 +68,6 @@ const AddUpiDialog = ({ isOpen, onClose, saveUpiDetails, fetchData }) => {
   useEffect(() => {
     if (getUPIID) {
       axios.get(UPI_API).then((res) => {
-        console.log("MY value is showing", res.data);
         setMyUpiId(res.data.data);
       });
     }

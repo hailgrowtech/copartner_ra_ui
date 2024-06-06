@@ -60,7 +60,6 @@ const DocumentEditPopup = ({ onClose, stackholderId }) => {
           },
         }
       );
-      console.log(response);
       toast.success("Document uploaded and profile updated successfully!");
       onClose();
       window.location.reload();

@@ -9,7 +9,6 @@ const BankEditDialog = ({
   stackholderId,
   fetchData,
 }) => {
-  console.log("My Bank Edit Info", selectedWithdrawal);
   const [accNum, setAccNum] = useState(selectedWithdrawal.accountNumber);
   const [ifscCode, setIfscCode] = useState(selectedWithdrawal.ifscCode);
   const [bankName, setBankName] = useState(selectedWithdrawal.bankName);

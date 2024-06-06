@@ -83,7 +83,6 @@ const AddBankDialog = ({ onClose, saveBankDetails, isOpen, fetchData }) => {
   useEffect(() => {
     getBankID &&
       axios.get(BANK_API).then((res) => {
-        console.log("MY value is showing", res.data);
         setBankName(res.data.data);
       });
   }, [getBankID]);

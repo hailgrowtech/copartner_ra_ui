@@ -20,7 +20,6 @@ const Charts = () => {
           );
 
           if (response.data.isSuccess) {
-            console.log('Earning Analysis', response.data.data)
             const apiData = response.data.data;
 
             const monthlyData = Array(12).fill().map((_, index) => ({
@@ -29,10 +28,10 @@ const Charts = () => {
             }));
 
             apiData.forEach((item) => {
-              if (item.subscribeDate && item.subscriptionAmount !== null) {
+              if (item.subscribeDate && item.amount !== null) {
                 const date = parseISO(item.subscribeDate);
                 const month = getMonth(date);
-                const earnings = item.subscriptionAmount || 0;
+                const earnings = item.amount || 0;
                 monthlyData[month].earnings += earnings;
               }
             });
