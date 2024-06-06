@@ -52,7 +52,7 @@ const Setting = () => {
 
   const stackholderId = sessionStorage.getItem("stackholderId");
 
-  const withdrawal_api = `https://copartners.in:5135/api/Withdrawal/BankUPIByUserId/${stackholderId}?userType=RA&page=1&pageSize=10`;
+  const withdrawal_api = `https://copartners.in:5135/api/Withdrawal/BankUPIByUserId/${stackholderId}?userType=RA&page=1&pageSize=100000`;
 
   const fetchData = async () => {
     try {

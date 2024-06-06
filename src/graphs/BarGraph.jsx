@@ -26,7 +26,7 @@ const BarGraph = ({
     const fetchData = async () => {
       try {
         const response = await axios.get(
-          `https://copartners.in:5132/api/RADashboard/GetDashboardRAListingData/${stackholderId}?page=1&pageSize=10`
+          `https://copartners.in:5132/api/RADashboard/GetDashboardRAListingData/${stackholderId}?page=1&pageSize=100000`
         );
         if (response.data.isSuccess) {
           const apiData = response.data.data;

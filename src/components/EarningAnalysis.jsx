@@ -14,7 +14,7 @@ const EarningAnalysis = () => {
   const stackholderId = sessionStorage.getItem("stackholderId");
 
   const EARNING_URL = `https://copartners.in:5135/api/Wallet/GetWalletWithdrawalBalance/${stackholderId}?userType=RA`;
-  const USER_EARNING = `https://copartners.in:5132/api/RADashboard/GetDashboardRAListingData/${stackholderId}?page=1&pageSize=10`;
+  const USER_EARNING = `https://copartners.in:5132/api/RADashboard/GetDashboardRAListingData/${stackholderId}?page=1&pageSize=100000`;
   const EXPERT_DATA_URL = `https://copartners.in:5132/api/Experts/${stackholderId}`;
 
   useEffect(() => {

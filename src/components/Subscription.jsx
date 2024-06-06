@@ -16,7 +16,7 @@ const Subscription = () => {
 
   const stackholderId = sessionStorage.getItem('stackholderId');
   const SUB_TABLE = `https://copartners.in:5009/api/Subscription/GetByExpertsId/${stackholderId}`;
-  const ACTIVE_USER = `https://copartners.in:5132/api/RADashboard/GetDashboardRAListingData/${stackholderId}?page=1&pageSize=100`;
+  const ACTIVE_USER = `https://copartners.in:5132/api/RADashboard/GetDashboardRAListingData/${stackholderId}?page=1&pageSize=100000`;
 
   const handleSuccess = () => {
     toast.success("Successfully Deleted!", {
