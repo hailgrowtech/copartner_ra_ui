@@ -1,10 +1,5 @@
 import React, { useState, useEffect } from "react";
-import {
-  arrow,
-  stars,
-  telegramIcon,
-  userBck,
-} from "../assets";
+import { arrow, stars, telegramIcon, userBck } from "../assets";
 import BarGraph from "../graphs/BarGraph";
 import EarningAnalysis from "./EarningAnalysis";
 import ReferralLinkComponent from "./ReferralLinkComponent";
@@ -83,6 +78,8 @@ const Dashboard = () => {
         return "";
     }
   };
+
+  const sortedSubTable = [...subTable].sort((a, b) => a.amount - b.amount);
 
   return (
     <div className="xl:pl-[12rem] md:pl-[10rem] pl-6 md:py-[6rem] xl:py-[6rem] md:pt-[8rem] pt-[6rem]">
@@ -428,9 +425,12 @@ const Dashboard = () => {
                   </div>
                 </div>
                 <div className="md:flex md:flex-row grid grid-cols-2 md:gap-[12rem] gap-2 md:px-[1rem] md:mt-[2rem] mt-14 md:py-0 py-8 items-center justify-center">
-                  {subTable &&
-                    subTable.map((subUnit) => (
-                      <div className="flex gap-[4rem] md:w-[165px] w-[150px] h-[38px] md:flex-col justify-center items-center">
+                  {sortedSubTable &&
+                    sortedSubTable.map((subUnit) => (
+                      <div
+                        key={subUnit.id}
+                        className="flex gap-[4rem] md:w-[165px] w-[150px] h-[38px] md:flex-col justify-center items-center"
+                      >
                         <div className="md:w-auto md:h-[97px] md:gap-0 gap-0 flex md:flex-col flex-col justify-center items-center">
                           <span className="text-gradient-2 md:w-auto md:h-[32px] font-inter font-[700] md:text-[23px] text-[12 px] text-center">
                             {subUnit.planType}

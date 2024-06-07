@@ -12,7 +12,7 @@ const SubscriptionDialog = ({ closeDialog, axiosServiceData, subTable }) => {
 
   const [isSubscriptionOpen, setIsSubscriptionOpen] = useState(false);
   const [isPlanOpen, setIsPlanOpen] = useState(false);
-  const [isDuration, setIsDuration] = useState('');
+  const [isDuration, setIsDuration] = useState(false);
   const [amount, setAmount] = useState(null);
   const [isKeyPointsOpen, setIsKeyPointsOpen] = useState(false);
   const [premiumTelegram, setPremiumTelegram] = useState('');
@@ -67,11 +67,10 @@ const SubscriptionDialog = ({ closeDialog, axiosServiceData, subTable }) => {
       durationMonth: durationMonth,
       amount: amount,
       premiumTelegramLink: premiumTelegram,
-      description: des,
+      description: des || '',
     };
 
-    // Check for any null or invalid values
-    if (!amount || !subscriptionType || !planType || !durationMonth || !premiumTelegram || !des) {
+    if (!amount || !subscriptionType || !planType || !durationMonth || !premiumTelegram) {
       setError('Please fill out all required fields.');
       setLoading(false);
       return;
