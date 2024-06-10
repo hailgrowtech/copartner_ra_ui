@@ -6,6 +6,7 @@ import RejectUpiOpen from "./RejectUpiOpen";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import axios from "axios";
+import Pagination from "./Pagination";
 
 const Wallet = () => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -20,6 +21,8 @@ const Wallet = () => {
   const [selectedRow, setSelectedRow] = useState(null);
   const [searchInput, setSearchInput] = useState("");
   const [filteredTransactions, setFilteredTransactions] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const pageSize = 15;
 
   const stackholderId = sessionStorage.getItem("stackholderId");
 
@@ -129,7 +132,7 @@ const Wallet = () => {
   const formatDate = (dateString) => {
     const date = new Date(dateString);
     const day = String(date.getDate()).padStart(2, "0");
-    const month = String(date.getMonth() + 1).padStart(2, "0"); // Months are 0-based
+    const month = String(date.getMonth() + 1).padStart(2, "0");
     const year = date.getFullYear();
     return `${day}-${month}-${year}`;
   };
@@ -160,7 +163,7 @@ const Wallet = () => {
     filterTransactions(searchInput, start, end);
   };
 
-  const filterTransactions = (searchValue, startDate, endDate) => {
+  const filterTransactions = (searchValue, start, end) => {
     let filtered = transactionTable;
 
     if (searchValue) {
@@ -169,33 +172,22 @@ const Wallet = () => {
       );
     }
 
-    if (startDate && endDate) {
+    if (start && end) {
       filtered = filtered.filter((row) => {
         const subscribeDate = new Date(row.subscribeDate);
-        const subscribeDateOnly = new Date(
-          subscribeDate.getFullYear(),
-          subscribeDate.getMonth(),
-          subscribeDate.getDate()
-        );
-        const startDateOnly = new Date(
-          startDate.getFullYear(),
-          startDate.getMonth(),
-          startDate.getDate()
-        );
-        const endDateOnly = new Date(
-          endDate.getFullYear(),
-          endDate.getMonth(),
-          endDate.getDate()
-        );
-
-        return (
-          subscribeDateOnly >= startDateOnly && subscribeDateOnly <= endDateOnly
-        );
+        return subscribeDate >= start && subscribeDate <= end;
       });
     }
 
     setFilteredTransactions(filtered);
+    setCurrentPage(1); // Reset to first page when filtering
   };
+
+  const totalPages = Math.ceil(filteredTransactions.length / pageSize);
+  const currentPageData = filteredTransactions.slice(
+    (currentPage - 1) * pageSize,
+    currentPage * pageSize
+  );
 
   const getExpertType = (typeId) => {
     switch (typeId) {
@@ -318,10 +310,10 @@ const Wallet = () => {
           <>
             {smallScreen ? (
               <div className="flex flex-col pl-[5rem] flex-wrap justify-center items-center">
-                {filteredTransactions &&
-                  filteredTransactions
+                {currentPageData &&
+                  currentPageData
                     .filter(
-                      (row) => row.subscription.trim() !== "No Subscrption"
+                      (row) => row.subscription.trim() !== "No Subscription"
                     )
                     .map((row, index) => (
                       <div
@@ -355,55 +347,66 @@ const Wallet = () => {
                         </span>
                       </div>
                     ))}
-                <button className="items-center mr-[6rem] mt-2 justify-center flex w-[110px] h-[30px] rounded-[6px] bg-lightWhite text-[10px] font-[500] leading-[12px]">
-                  Show More
-                </button>
+                <Pagination
+                  currentPage={currentPage}
+                  totalPages={totalPages}
+                  onPageChange={setCurrentPage}
+                />
               </div>
             ) : (
-              <table className="xl:w-[1520px] md:w-[1130px] md:h-auto p-8 h-[497px] bg-[#29303F] rounded-[30px]">
-                <thead className="text-dimWhite bg-[#1E1E22]">
-                  <tr>
-                    <th className="text-start px-4 py-2">Transaction ID</th>
-                    <th className="text-start px-4 py-2">Date</th>
-                    <th className="text-start px-4 py-2">Subscription</th>
-                    <th className="text-start px-4 py-2">Plan Name</th>
-                    <th className="text-start px-4 py-2">User Number</th>
-                    <th className="text-start px-4 py-2">Amount</th>
-                  </tr>
-                </thead>
-                <tbody className="text-lightWhite">
-                  {filteredTransactions &&
-                    filteredTransactions
-                      .filter(
-                        (row) => row.subscription.trim() !== "No Subscrption"
-                      )
-                      .map((row, index) => (
-                        <tr
-                          key={index}
-                          className={index % 2 === 0 ? "bg-transparent" : "bg-[#1E1E22]"}
-                        >
-                          <td className="text-start font-[500] text-[16px] leading-[18px] px-4 py-2">
-                            {row.transactionId}
-                          </td>
-                          <td className="text-start font-[500] text-[16px] leading-[18px] px-4 py-2">
-                            {formatDate(row.subscribeDate)}
-                          </td>
-                          <td className="text-start font-[500] text-[16px] leading-[18px] px-4 py-2">
-                          {getExpertType(row.subscription)}
-                          </td>
-                          <td className="text-start font-[500] text-[16px] leading-[18px] px-4 py-2">
-                            {row.planType}
-                          </td>
-                          <td className="text-start font-[500] text-[16px] leading-[18px] px-4 py-2">
-                            {row.userMobileNo}
-                          </td>
-                          <td className="text-start font-[500] text-[16px] leading-[18px] px-4 py-2">
-                            {row.amount}
-                          </td>
-                        </tr>
-                      ))}
-                </tbody>
-              </table>
+              <div>
+                <table className="xl:w-[1520px] md:w-[1130px] md:h-auto p-8 h-[497px] bg-[#29303F] rounded-[30px]">
+                  <thead className="text-dimWhite bg-[#1E1E22]">
+                    <tr>
+                      <th className="text-start px-4 py-2">Transaction ID</th>
+                      <th className="text-start px-4 py-2">Date</th>
+                      <th className="text-start px-4 py-2">Subscription</th>
+                      <th className="text-start px-4 py-2">Plan Name</th>
+                      <th className="text-start px-4 py-2">User Number</th>
+                      <th className="text-start px-4 py-2">Amount</th>
+                    </tr>
+                  </thead>
+                  <tbody className="text-lightWhite">
+                    {currentPageData &&
+                      currentPageData
+                        .filter(
+                          (row) => row.subscription.trim() !== "No Subscription"
+                        )
+                        .map((row, index) => (
+                          <tr
+                            key={index}
+                            className={
+                              index % 2 === 0 ? "bg-transparent" : "bg-[#1E1E22]"
+                            }
+                          >
+                            <td className="text-start font-[500] text-[16px] leading-[18px] px-4 py-2">
+                              {row.transactionId}
+                            </td>
+                            <td className="text-start font-[500] text-[16px] leading-[18px] px-4 py-2">
+                              {formatDate(row.subscribeDate)}
+                            </td>
+                            <td className="text-start font-[500] text-[16px] leading-[18px] px-4 py-2">
+                              {getExpertType(row.subscription)}
+                            </td>
+                            <td className="text-start font-[500] text-[16px] leading-[18px] px-4 py-2">
+                              {row.planType}
+                            </td>
+                            <td className="text-start font-[500] text-[16px] leading-[18px] px-4 py-2">
+                              {row.userMobileNo}
+                            </td>
+                            <td className="text-start font-[500] text-[16px] leading-[18px] px-4 py-2">
+                              {row.amount}
+                            </td>
+                          </tr>
+                        ))}
+                  </tbody>
+                </table>
+                <Pagination
+                  currentPage={currentPage}
+                  totalPages={totalPages}
+                  onPageChange={setCurrentPage}
+                />
+              </div>
             )}
           </>
         )}
@@ -440,51 +443,67 @@ const Wallet = () => {
                     </span>
                   </div>
                 ))}
-                <button className="items-center mr-[6rem] mt-2 justify-center flex w-[110px] h-[30px] rounded-[6px] bg-lightWhite text-[10px] font-[500] leading-[12px]">
-                  Show More
-                </button>
+                <Pagination
+                  currentPage={currentPage}
+                  totalPages={totalPages}
+                  onPageChange={setCurrentPage}
+                />
               </div>
             ) : (
-              <table className="xl:w-[1520px] md:w-[1130px] md:h-auto h-[497px] px-[1rem] bg-[#29303F] rounded-[30px]">
-                <thead className="text-dimWhite">
-                  <tr>
-                    <th className="text-center px-4 py-2">Transaction ID</th>
-                    <th className="text-start px-4 py-2">Date</th>
-                    <th className="text-start px-4 py-2">Bank</th>
-                    <th className="text-start px-4 py-2">Account Number</th>
-                    <th className="text-start px-4 py-2">Amount</th>
-                  </tr>
-                </thead>
-                <tbody className="text-lightWhite">
-                  {Array.isArray(withdrawalReq) && withdrawalReq.map((row, index) => {
-                    return (
-                      row.requestAction === "A" && (
-                        <tr
-                          key={index}
-                          className={index % 2 === 0 ? "bg-[#1E1E22]" : ""}
-                        >
-                          <td className="text-center font-[500] text-[16px] leading-[18px] px-4 py-2">
-                            {row.transactionId}
-                          </td>
-                          <td className="text-start font-[500] text-[16px] leading-[18px] px-4 py-2">
-                            {formatDate(row.withdrawalRequestDate)}
-                          </td>
-                          <td className="text-start font-[500] text-[16px] leading-[18px] px-4 py-2">
-                            {row.bankDetails.bankName || row.bankDetails.upI_ID}
-                          </td>
-                          <td className="text-start font-[500] text-[16px] leading-[18px] px-4 py-2">
-                            {row.bankDetails.accountNumber ||
-                              row.bankDetails.upI_ID}
-                          </td>
-                          <td className="text-start font-[500] text-[16px] leading-[18px] px-4 py-2">
-                            {row.amount}
-                          </td>
-                        </tr>
-                      )
-                    );
-                  })}
-                </tbody>
-              </table>
+              <div>
+                <table className="xl:w-[1520px] md:w-[1130px] md:h-auto h-[497px] px-[1rem] bg-[#29303F] rounded-[30px]">
+                  <thead className="text-dimWhite">
+                    <tr>
+                      <th className="text-center px-4 py-2">Transaction ID</th>
+                      <th className="text-start px-4 py-2">Date</th>
+                      <th className="text-start px-4 py-2">Bank</th>
+                      <th className="text-start px-4 py-2">Account Number</th>
+                      <th className="text-start px-4 py-2">Amount</th>
+                    </tr>
+                  </thead>
+                  <tbody className="text-lightWhite">
+                    {withdrawalReq &&
+                      withdrawalReq.slice(
+                        (currentPage - 1) * pageSize,
+                        currentPage * pageSize
+                      ).map((row, index) => {
+                        return (
+                          row.requestAction === "A" && (
+                            <tr
+                              key={index}
+                              className={
+                                index % 2 === 0 ? "bg-[#1E1E22]" : ""
+                              }
+                            >
+                              <td className="text-center font-[500] text-[16px] leading-[18px] px-4 py-2">
+                                {row.transactionId}
+                              </td>
+                              <td className="text-start font-[500] text-[16px] leading-[18px] px-4 py-2">
+                                {formatDate(row.withdrawalRequestDate)}
+                              </td>
+                              <td className="text-start font-[500] text-[16px] leading-[18px] px-4 py-2">
+                                {row.bankDetails.bankName ||
+                                  row.bankDetails.upI_ID}
+                              </td>
+                              <td className="text-start font-[500] text-[16px] leading-[18px] px-4 py-2">
+                                {row.bankDetails.accountNumber ||
+                                  row.bankDetails.upI_ID}
+                              </td>
+                              <td className="text-start font-[500] text-[16px] leading-[18px] px-4 py-2">
+                                {row.amount}
+                              </td>
+                            </tr>
+                          )
+                        );
+                      })}
+                  </tbody>
+                </table>
+                <Pagination
+                  currentPage={currentPage}
+                  totalPages={totalPages}
+                  onPageChange={setCurrentPage}
+                />
+              </div>
             )}
           </>
         )}
@@ -549,29 +568,38 @@ const Wallet = () => {
                       </span>
                     </div>
                   ))}
-                <button className="items-center mr-[6rem] mt-2 justify-center flex w-[110px] h-[30px] rounded-[6px] bg-lightWhite text-[10px] font-[500] leading-[12px]">
-                  Show More
-                </button>
+                <Pagination
+                  currentPage={currentPage}
+                  totalPages={totalPages}
+                  onPageChange={setCurrentPage}
+                />
               </div>
             ) : (
-              <table className="xl:w-[1520px] md:w-[1130px] md:h-auto h-[497px] px-[1rem] bg-[#29303F] rounded-[30px]">
-                <thead className="text-dimWhite w-[1084px] h-[51px]">
-                  <tr>
-                    <th className="text-start pl-[4rem]">Request ID</th>
-                    <th className="text-start pl-[4rem]">Date</th>
-                    <th className="text-start">Bank</th>
-                    <th className="pl-[4rem] text-start">Account Number</th>
-                    <th className="text-start pl-[4rem]">Amount</th>
-                    <th className="text-start pl-[4rem]">Status</th>
-                  </tr>
-                </thead>
-                <tbody className="text-lightWhite w-[1084px] h-[81px]">
-                  {Array.isArray(withdrawalReq) && withdrawalReq.map(
-                    (row, index) =>
-                      row.requestAction !== "A" && (
+              <div>
+                <table className="xl:w-[1520px] md:w-[1130px] md:h-auto h-[497px] px-[1rem] bg-[#29303F] rounded-[30px]">
+                  <thead className="text-dimWhite w-[1084px] h-[51px]">
+                    <tr>
+                      <th className="text-start pl-[4rem]">Request ID</th>
+                      <th className="text-start pl-[4rem]">Date</th>
+                      <th className="text-start">Bank</th>
+                      <th className="pl-[4rem] text-start">Account Number</th>
+                      <th className="text-start pl-[4rem]">Amount</th>
+                      <th className="text-start pl-[4rem]">Status</th>
+                    </tr>
+                  </thead>
+                  <tbody className="text-lightWhite w-[1084px] h-[81px]">
+                    {withdrawalReq
+                      .filter((row) => row.requestAction !== "A")
+                      .slice(
+                        (currentPage - 1) * pageSize,
+                        currentPage * pageSize
+                      )
+                      .map((row, index) => (
                         <tr
                           key={index}
-                          className={index % 2 === 0 ? "bg-[#18181B]" : ""}
+                          className={
+                            index % 2 === 0 ? "bg-[#18181B]" : ""
+                          }
                         >
                           <td className="pl-[4rem] font-[500] text-[16px] leading-[18px]">
                             {Math.floor(row.id.length * 1110000)}
@@ -611,19 +639,24 @@ const Wallet = () => {
                             )}
                           </td>
                         </tr>
-                      )
-                  )}
-                  {isEditUpiOpen &&
-                    selectedRow &&
-                    selectedRow.requestAction === "R" && (
-                      <RejectUpiOpen
-                        isOpen={isEditUpiOpen}
-                        onClose={closeDialog}
-                        withdrawalReq={selectedRow}
-                      />
-                    )}
-                </tbody>
-              </table>
+                      ))}
+                    {isEditUpiOpen &&
+                      selectedRow &&
+                      selectedRow.requestAction === "R" && (
+                        <RejectUpiOpen
+                          isOpen={isEditUpiOpen}
+                          onClose={closeDialog}
+                          withdrawalReq={selectedRow}
+                        />
+                      )}
+                  </tbody>
+                </table>
+                <Pagination
+                  currentPage={currentPage}
+                  totalPages={totalPages}
+                  onPageChange={setCurrentPage}
+                />
+              </div>
             )}
           </>
         )}

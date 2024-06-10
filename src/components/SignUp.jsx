@@ -111,18 +111,6 @@ const SignUp = ({ setIsSignedUp }) => {
       ></div>
       <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-10 z-50 w-screen h-screen">
         <div className="w-[342px] bg-[#18181B] border-[1px] border-[#ffffff2a] m-4 p-6 rounded-lg w-96 relative text-center">
-          <div className="absolute top-3 right-0 text-right">
-            <button
-              className="text-gray-400 w-8 text-[20px] cursor-pointer hover:text-white"
-              aria-label="Close"
-            >
-              <img
-                src={closeIcon}
-                className="w-[32px] h-[32px] absolute top-2 right-6"
-                alt="close"
-              />
-            </button>
-          </div>
           <div className="mb-4">
             <h2 className="text-2xl font-semibold text-white">Login</h2>
           </div>
