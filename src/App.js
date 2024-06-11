@@ -6,8 +6,6 @@ import { Routes, Route, useLocation, Navigate } from "react-router-dom";
 import { Dashboard, Subscription, Wallet, Setting } from "./components";
 import SignUp from "./components/SignUp";
 import ForgetPassword from "./components/ForgetPassword";
-import { ToastContainer } from "react-toastify";
-import 'react-toastify/dist/ReactToastify.css';
 import NewPassword from "./components/NewPassword";
 import ConfirmPassword from "./components/ConfirmPassword";
 
@@ -79,7 +77,6 @@ function App() {
           </>
         </div>
       </div>
-      <ToastContainer />
     </div>
   );
 }

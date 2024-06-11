@@ -49,6 +49,8 @@ const BarGraph = ({
               usersLeft: 0,
             }));
 
+          const subscriptionCount = {};
+
           apiData.forEach((item) => {
             const date = item.userJoiningDate ? parseISO(item.userJoiningDate) : null;
             const dayOfWeek = date ? getDay(date) : null;
@@ -56,8 +58,13 @@ const BarGraph = ({
             const dayLabel = date ? format(date, "yyyy-MM-dd") : "Unknown Date";
 
             const totalVisit = 1;
-            const paidUser = item.subscription && item.subscription !== "No Subscription" && item.subscription !== "No Subscrption" ? 1 : 0;
+            const subscription = item.subscription && item.subscribeDate && item.subscription !== "No Subscription" && item.subscription !== "No Subscrption";
             const notInterested = item.subscription && (item.subscription === "No Subscription" || item.subscription === "No Subscrption") ? 1 : 0;
+
+            if (subscription) {
+              const subscribeDate = item.subscribeDate.split("T")[0]; // Use only the date part
+              subscriptionCount[subscribeDate] = (subscriptionCount[subscribeDate] || 0) + 1;
+            }
 
             if (!dailyData[dayLabel]) {
               dailyData[dayLabel] = {
@@ -68,20 +75,31 @@ const BarGraph = ({
               };
             }
             dailyData[dayLabel].totalVisit += totalVisit;
-            dailyData[dayLabel].paidUsers += paidUser;
             dailyData[dayLabel].usersLeft += notInterested;
 
             if (dayOfWeek !== null) {
               weeklyData[dayOfWeek].totalVisit += totalVisit;
-              weeklyData[dayOfWeek].paidUsers += paidUser;
               weeklyData[dayOfWeek].usersLeft += notInterested;
             }
 
             if (month !== null) {
               monthlyData[month].totalVisit += totalVisit;
-              monthlyData[month].paidUsers += paidUser;
               monthlyData[month].usersLeft += notInterested;
             }
+          });
+
+          Object.keys(subscriptionCount).forEach((subscribeDate) => {
+            const date = parseISO(subscribeDate);
+            const dayOfWeek = getDay(date);
+            const month = getMonth(date);
+            const dayLabel = format(date, "yyyy-MM-dd");
+
+            if (dailyData[dayLabel]) {
+              dailyData[dayLabel].paidUsers = subscriptionCount[subscribeDate];
+            }
+
+            weeklyData[dayOfWeek].paidUsers += subscriptionCount[subscribeDate];
+            monthlyData[month].paidUsers += subscriptionCount[subscribeDate];
           });
 
           setData({

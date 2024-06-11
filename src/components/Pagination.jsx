@@ -15,33 +15,55 @@ const Pagination = ({ currentPage, totalPages, onPageChange }) => {
 
   const renderPageNumbers = () => {
     const pageNumbers = [];
-    for (let i = 1; i <= totalPages; i++) {
+    // Always show the first page
+    pageNumbers.push(
+      <li key={1}>
+        <a
+          href="#"
+          onClick={(e) => {
+            e.preventDefault();
+            onPageChange(1);
+          }}
+          className={`flex items-center justify-center px-4 h-10 leading-tight border ${
+            currentPage === 1
+              ? "text-blue-600 border-blue-300 bg-blue-50 hover:bg-blue-100 hover:text-blue-700 dark:border-gray-700 dark:bg-gray-700 dark:text-white"
+              : "text-gray-500 bg-white border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
+          }`}
+        >
+          1
+        </a>
+      </li>
+    );
+
+    // Show the second page if totalPages > 1
+    if (totalPages > 1) {
       pageNumbers.push(
-        <li key={i}>
+        <li key={2}>
           <a
             href="#"
             onClick={(e) => {
               e.preventDefault();
-              onPageChange(i);
+              onPageChange(2);
             }}
             className={`flex items-center justify-center px-4 h-10 leading-tight border ${
-              currentPage === i
+              currentPage === 2
                 ? "text-blue-600 border-blue-300 bg-blue-50 hover:bg-blue-100 hover:text-blue-700 dark:border-gray-700 dark:bg-gray-700 dark:text-white"
                 : "text-gray-500 bg-white border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
             }`}
           >
-            {i}
+            2
           </a>
         </li>
       );
     }
+
     return pageNumbers;
   };
 
   return (
     <nav aria-label="Page navigation example">
       <ul className="flex items-center -space-x-px h-10 text-base justify-end mt-4">
-        <li >
+        <li>
           <a
             href="#"
             onClick={(e) => {

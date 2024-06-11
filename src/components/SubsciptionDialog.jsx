@@ -79,11 +79,12 @@ const SubscriptionDialog = ({ closeDialog, axiosServiceData, subTable }) => {
     try {
       const response = await axios.post('https://copartners.in:5009/api/Subscription', postData);
       if (response.status !== 200) {
-        handleError("Something Wrong happened!");
+        handleError("Something went wrong!");
+      } else {
+        handleSuccess();
+        closeDialog();
+        axiosServiceData();
       }
-      handleSuccess();
-      closeDialog();
-      axiosServiceData();
     } catch (error) {
       handleError('Failed to submit data. Please try again.');
       setError('Failed to submit data. Please try again.');
@@ -206,6 +207,30 @@ const SubscriptionDialog = ({ closeDialog, axiosServiceData, subTable }) => {
                       className="absolute inset-y-0 md:right-3 right-[-6px] w-[14px] h-[14px] top-[50%] transform -translate-y-1/2"
                     />
                   </div>
+                  {isSubscriptionOpen && (
+                    <div className="absolute z-10 mt-2 md:w-[482px] w-[345px] rounded-md bg-white shadow-lg">
+                      <ul className="py-1">
+                        <li
+                          onClick={() => handleSubClick(1)}
+                          className="cursor-pointer px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                        >
+                          Commodity
+                        </li>
+                        <li
+                          onClick={() => handleSubClick(2)}
+                          className="cursor-pointer px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                        >
+                          Equity
+                        </li>
+                        <li
+                          onClick={() => handleSubClick(3)}
+                          className="cursor-pointer px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                        >
+                          Futures & Options
+                        </li>
+                      </ul>
+                    </div>
+                  )}
                 </div>
               </div>
               <div className="relative">

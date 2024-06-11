@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { searchIcon } from "../assets";
+import { Link, invoiceImg, searchIcon } from "../assets";
 import WalletWithdrawal from "./WalletWithdrawal";
 import EarningAnalysis from "./EarningAnalysis";
 import RejectUpiOpen from "./RejectUpiOpen";
@@ -7,6 +7,7 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import axios from "axios";
 import Pagination from "./Pagination";
+import { toast } from "react-toastify";
 
 const Wallet = () => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -153,7 +154,7 @@ const Wallet = () => {
   const handleSearchChange = (e) => {
     const value = e.target.value;
     setSearchInput(value);
-    filterTransactions(value, startDate, endDate);
+    filterTransactions(value, startDate, endDate); // Use startDate and endDate here
   };
 
   const handleDateChange = (dates) => {
@@ -202,6 +203,168 @@ const Wallet = () => {
     }
   };
 
+  const handleTeleGramClicked = (telegramChannel) => {
+    navigator.clipboard
+      .writeText(telegramChannel)
+      .then(() => {
+        toast.success("Successfully Copied!", {
+          position: "top-right",
+        });
+      })
+      .catch((err) => {
+        console.error("Failed to copy the text to clipboard: ", err);
+      });
+  };
+
+  const handleDownloadSheet = () => {
+    const header = [
+      "Invoice ID",
+      "Transaction ID",
+      "User Mobile No",
+      "User Name",
+      "User Email",
+      "User Pan Card",
+      "User State",
+      "User Address",
+      "Ap Name",
+      "Subscription Date",
+      "Subscription",
+      "Plan Type",
+      "Amount",
+      "Premium Telegram",
+    ];
+
+    const rows = filteredTransactions.map((row) => [
+      row.invoiceId,
+      row.transactionId,
+      row.user.mobileNumber,
+      row.user.name,
+      row.userEmail,
+      row.user.pan,
+      row.user.state,
+      row.user.address,
+      row.apName,
+      formatDate(row.subscribeDate),
+      getExpertType(row.subscription),
+      row.planType,
+      row.amount,
+      row.premiumTelegramChannel,
+    ]);
+
+    let table = `<table border="1" style="border-collapse: collapse; margin: 20px;">` +
+      `<thead><tr>${header.map((col) => `<th style="padding: 8px; border: 1px solid #ddd;">${col}</th>`).join("")}</tr></thead>` +
+      `<tbody>${rows.map((row) => `<tr>${row.map((col) => `<td style="padding: 8px; border: 1px solid #ddd;">${col}</td>`).join("")}</tr>`).join("")}</tbody>` +
+      `</table>`;
+
+    let win = window.open("", "_blank");
+    win.document.write("<html><head><title>Transaction Data</title></head><body>");
+    win.document.write(table);
+    win.document.write("</body></html>");
+    win.document.close();
+    win.print();
+  };
+
+  const handleInvoiceClick = (row) => {
+    const {
+      subscriptionAmount,
+      raName,
+      gst,
+      transactionId,
+      invoiceId,
+      subscribeDate,
+      user,
+    } = row;
+    
+    const invoiceDate = new Date(subscribeDate).toLocaleDateString();
+    
+    const gstRate = 0.18;
+    const gstAmount = subscriptionAmount ? subscriptionAmount * gstRate : 0;
+    const amountWithoutGst = subscriptionAmount ? subscriptionAmount - gstAmount : 0;
+  
+    const win = window.open("", "_blank");
+    win.document.write(`
+      <html>
+        <head>
+          <title>Invoice</title>
+          <style>
+            body { font-family: Arial, sans-serif; margin: 20px; }
+            .receipt-container { width: 100%; max-width: 800px; margin: auto; padding: 20px; border: 1px solid #ddd; border-radius: 10px; }
+            .receipt-header { text-align: center; margin-bottom: 20px; }
+            .receipt-header h1 { margin: 0; }
+            .receipt-details { display: flex; justify-content: space-between; margin-bottom: 20px; }
+            .receipt-details div { width: 48%; }
+            .receipt-details p { margin: 5px 0; }
+            table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
+            table th, table td { border: 1px solid #ddd; padding: 8px; text-align: center; }
+            .terms { margin-top: 20px; }
+          </style>
+        </head>
+        <body>
+          <div class="receipt-container">
+            <div class="receipt-header">
+              <h1>Tax Invoice/Bill of Service</h1>
+              <p>Invoice No: ${invoiceId}</p>
+              <p>Original for Recipient</p>
+            </div>
+            <div class="receipt-details">
+              <div>
+                <h2>Service offered by</h2>
+                <p><strong>Creator Name:</strong> ${raName}</p>
+                <p><strong>Creator ID:</strong> ${stackholderId}</p>
+                <p><strong>PAN No:</strong> ${row.pan || 'N/A'}</p>
+                ${gst ? `<p><strong>Creator GSTIN:</strong> ${gst}</p>` : ""}
+                <p><strong>Transaction ID:</strong> ${transactionId}</p>
+                <p><strong>Bill Date:</strong> ${invoiceDate}</p>
+                <p><strong>State Code:</strong> ${gst ? gst.slice(0, 2) : 'N/A'}</p>
+              </div>
+              <div>
+                <h2>Billed To</h2>
+                <p>${user.name}</p>
+                <p>${user.mobileNumber}</p>
+                <p>${user.email}</p>
+                <p><strong>Billing Address:</strong> ${user.address || 'N/A'}</p>
+                <p><strong>State:</strong> ${user.state || 'N/A'}</p>
+                <p><strong>Place Of Supply:</strong> ${user.state || 'N/A'}</p>
+                <p><strong>HSN Code:</strong> 999299</p>
+                <p><strong>RCM Applicable:</strong> No</p>
+              </div>
+            </div>
+            <table>
+              <thead>
+                <tr>
+                  <th>Description</th>
+                  ${gst ? `<th>Price</th><th>IGST%</th><th>IGST Amt</th><th>Total Tax</th>` : ""}
+                  <th>Amount</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>${row.planType} Subscription</td>
+                  ${gst ? `
+                    <td>₹ ${amountWithoutGst.toFixed(2)}</td>
+                    <td>18%</td>
+                    <td>₹ ${gstAmount.toFixed(2)}</td>
+                    <td>₹ ${gstAmount.toFixed(2)}</td>
+                  ` : ""}
+                  <td>₹ ${subscriptionAmount.toFixed(2)}</td>
+                </tr>
+              </tbody>
+            </table>
+            <div class="terms">
+              <h2>TERMS & CONDITIONS</h2>
+              <p>No refund policy. Please read terms & conditions and disclaimer on our website.</p>
+              <p>All jurisdiction under ${row.state || 'N/A'}.</p>
+              <p>This is a computer-generated receipt and does not require a signature.</p>
+              <p>Contact support@copartner.in for technical support.</p>
+            </div>
+          </div>
+        </body>
+      </html>
+    `);
+    win.document.close();
+    win.print();
+  };  
+
   return (
     <div className="pb-[5rem] xl:pl-[12rem] md:pl-[10rem] pl-6 md:py-[6rem] pt-[8rem] bg-gradient min-h-screen">
       <div className="xl:w-[1520px] md:w-[1130px] w-[350px] flex md:flex-row flex-col justify-between">
@@ -236,12 +399,12 @@ const Wallet = () => {
       <div className="flex flex-col md:gap-6 gap-3">
         <div className="flex flex-row items-center justify-between md:ml-0 ml-[-8px]">
           <div className="xl:w-[1420px] md:w-[1030px] flex flex-col gap-8 mt-4">
-            <div className="flex md:justify-between items-center">
-              <span className="text-white md:w-[210px] w-[140px] h-[27px] font-inter font-[600] text-[22px] md:leading-[27px] leading-[24px] md:mt-0 mt-[-1rem]">
+            <div className="flex md:justify-between md:flex-row flex-col md:gap-0 gap-2">
+              <span className="text-white md:w-[210px] h-[27px] font-inter font-[600] text-[22px] md:leading-[27px] md:items-center items-start">
                 Transaction History
               </span>
               {showTransactions === "transaction" && (
-                <div className="flex md:flex-row flex-col md:gap-0 gap-2 items-center md:mr-[-6rem]">
+                <div className="flex md:flex-row flex-col md:gap-0 gap-2 items-center md:mr-[-6rem] mr-0">
                   <div className="relative md:mr-4 mr-0">
                     <img
                       src={searchIcon}
@@ -253,7 +416,7 @@ const Wallet = () => {
                       value={searchInput}
                       onChange={handleSearchChange}
                       placeholder="Search"
-                      className="pl-10 md:pr-4 bg-[#2E323C] md:w-[252px] h-[55px] text-white rounded-[10px]"
+                      className="pl-10 md:pr-4 bg-[#2E323C] md:w-[252px] w-[350px] h-[55px] text-white rounded-[10px]"
                     />
                   </div>
                   <div className="ml-0">
@@ -265,42 +428,54 @@ const Wallet = () => {
                       selectsRange
                       isClearable
                       placeholderText="Select Date range"
-                      className="bg-[#2E323C] md:w-[252px] h-[55px] text-white rounded-[10px] px-4"
+                      className="bg-[#2E323C] md:w-[252px] w-[350px] h-[55px] text-white rounded-[10px] px-4"
                     />
                   </div>
                 </div>
               )}
             </div>
-            <div className="flex flex-row md:gap-4 gap-2">
+            <div className="flex md:flex-row flex-col md:justify-between md:gap-0 gap-4">
+              <div className="flex flex-row md:gap-4 gap-2">
+                <button
+                  onClick={() => setShowTransactions("transaction")}
+                  className={`w-[120px] h-[40px] rounded-[10px] border-solid border-[1px] border-white text-black ${
+                    showTransactions === "transaction"
+                      ? "bg-[#ffffff] font-[600] font-inter text-[12px]"
+                      : "bg-transparent text-white font-[600] font-inter text-[12px]"
+                  }`}
+                >
+                  User Statement
+                </button>
+                <button
+                  onClick={() => setShowTransactions("withdrawal")}
+                  className={`w-[90px] h-[40px] rounded-[10px] border-solid border-[1px] border-white text-black ${
+                    showTransactions === "withdrawal"
+                      ? "bg-[#ffffff] font-[600] font-inter text-[12px]"
+                      : "bg-transparent text-white font-[600] font-inter text-[12px]"
+                  }`}
+                >
+                  Transaction
+                </button>
+                <button
+                  onClick={() => setShowTransactions("request")}
+                  className={`w-[140px] h-[40px] rounded-[10px] border-solid border-[1px] border-white text-black ${
+                    showTransactions === "request"
+                      ? "bg-[#ffffff] font-[600] font-inter text-[12px]"
+                      : "bg-transparent text-white font-[600] font-inter text-[12px]"
+                  }`}
+                >
+                  Withdrawal Request
+                </button>
+              </div>
               <button
-                onClick={() => setShowTransactions("transaction")}
-                className={`w-[120px] h-[40px] rounded-[10px] border-solid border-[1px] border-white text-black ${
-                  showTransactions === "transaction"
-                    ? "bg-[#ffffff] font-[600] font-inter text-[12px]"
-                    : "bg-transparent text-white font-[600] font-inter text-[12px]"
-                }`}
-              >
-                User Statement
-              </button>
-              <button
-                onClick={() => setShowTransactions("withdrawal")}
-                className={`w-[90px] h-[40px] rounded-[10px] border-solid border-[1px] border-white text-black ${
-                  showTransactions === "withdrawal"
-                    ? "bg-[#ffffff] font-[600] font-inter text-[12px]"
-                    : "bg-transparent text-white font-[600] font-inter text-[12px]"
-                }`}
-              >
-                Transaction
-              </button>
-              <button
-                onClick={() => setShowTransactions("request")}
-                className={`w-[140px] h-[40px] rounded-[10px] border-solid border-[1px] border-white text-black ${
+                onClick={handleDownloadSheet}
+                className={`w-[140px] h-[40px] rounded-[10px] md:mr-[-6rem] ml-[14rem] border-solid border-[1px] border-white text-black ${
                   showTransactions === "request"
                     ? "bg-[#ffffff] font-[600] font-inter text-[12px]"
                     : "bg-transparent text-white font-[600] font-inter text-[12px]"
                 }`}
               >
-                Withdrawal Request
+                Download Sheet
               </button>
             </div>
           </div>
@@ -313,7 +488,7 @@ const Wallet = () => {
                 {currentPageData &&
                   currentPageData
                     .filter(
-                      (row) => row.subscription.trim() !== "No Subscription"
+                      (row) => row.planType.trim() !== "No Plan"
                     )
                     .map((row, index) => (
                       <div
@@ -329,10 +504,10 @@ const Wallet = () => {
                           <span className="text-dimWhite">DATE:</span>{" "}
                           {formatDate(row.subscribeDate)}
                         </span>
-                        <span className="flex items-center justify-between sm:w-[305px] h-[34px] font-[500] text-[14px] leading-[12px] text-lightWhite">
+                        {/* <span className="flex items-center justify-between sm:w-[305px] h-[34px] font-[500] text-[14px] leading-[12px] text-lightWhite">
                           <span className="text-dimWhite">SUBSCRIPTION:</span>{" "}
                           {row.subscription}
-                        </span>
+                        </span> */}
                         <span className="flex items-center justify-between sm:w-[305px] h-[13px] font-[500] text-[14px] leading-[12px] text-lightWhite">
                           <span className="text-dimWhite">PLAN NAME:</span>{" "}
                           {row.planType}
@@ -341,9 +516,33 @@ const Wallet = () => {
                           <span className="text-dimWhite">User Number:</span>{" "}
                           {row.userMobileNo}
                         </span>
+                        <span
+                          onClick={() =>
+                            handleTeleGramClicked(row.premiumTelegramChannel)
+                          }
+                          className="flex items-center justify-between sm:w-[305px] h-[13px] font-[500] text-[14px] leading-[12px] text-lightWhite"
+                        >
+                          <span className="text-dimWhite">TELEGRAM LINK:</span>{" "}
+                          <img
+                            src={Link}
+                            alt="Link"
+                            className="w-[18px] h-[18px]"
+                          />
+                        </span>
                         <span className="flex items-center justify-between sm:w-[305px] h-[13px] font-[500] text-[14px] leading-[12px] text-lightWhite">
                           <span className="text-dimWhite">AMOUNT:</span>{" "}
                           {row.amount}
+                        </span>
+                        <span
+                          onClick={() => handleInvoiceClick(row)}
+                          className="flex items-center justify-between sm:w-[305px] h-[13px] font-[500] text-[14px] leading-[12px] text-lightWhite cursor-pointer"
+                        >
+                          <span className="text-dimWhite">Invoice:</span>{" "}
+                          <img
+                            src={invoiceImg}
+                            alt="INVOICE"
+                            className="w-[18px] h-[18px]"
+                          />
                         </span>
                       </div>
                     ))}
@@ -360,23 +559,26 @@ const Wallet = () => {
                     <tr>
                       <th className="text-start px-4 py-2">Transaction ID</th>
                       <th className="text-start px-4 py-2">Date</th>
-                      <th className="text-start px-4 py-2">Subscription</th>
                       <th className="text-start px-4 py-2">Plan Name</th>
                       <th className="text-start px-4 py-2">User Number</th>
+                      <th className="text-start px-4 py-2">Telegram Link</th>
                       <th className="text-start px-4 py-2">Amount</th>
+                      <th className="text-start px-4 py-2">Invoice</th>
                     </tr>
                   </thead>
                   <tbody className="text-lightWhite">
                     {currentPageData &&
                       currentPageData
                         .filter(
-                          (row) => row.subscription.trim() !== "No Subscription"
+                          (row) => row.planType.trim() !== "No Plan"
                         )
                         .map((row, index) => (
                           <tr
                             key={index}
                             className={
-                              index % 2 === 0 ? "bg-transparent" : "bg-[#1E1E22]"
+                              index % 2 === 0
+                                ? "bg-transparent"
+                                : "bg-[#1E1E22]"
                             }
                           >
                             <td className="text-start font-[500] text-[16px] leading-[18px] px-4 py-2">
@@ -385,17 +587,41 @@ const Wallet = () => {
                             <td className="text-start font-[500] text-[16px] leading-[18px] px-4 py-2">
                               {formatDate(row.subscribeDate)}
                             </td>
-                            <td className="text-start font-[500] text-[16px] leading-[18px] px-4 py-2">
+                            {/* <td className="text-start font-[500] text-[16px] leading-[18px] px-4 py-2">
                               {getExpertType(row.subscription)}
-                            </td>
+                            </td> */}
                             <td className="text-start font-[500] text-[16px] leading-[18px] px-4 py-2">
                               {row.planType}
                             </td>
                             <td className="text-start font-[500] text-[16px] leading-[18px] px-4 py-2">
                               {row.userMobileNo}
                             </td>
+                            <td
+                              onClick={() =>
+                                handleTeleGramClicked(
+                                  row.premiumTelegramChannel
+                                )
+                              }
+                              className="text-center font-[500] leading-[18px] px-14 py-2 cursor-pointer"
+                            >
+                              <img
+                                src={Link}
+                                alt="Link"
+                                className="w-[20px] h-[20px]"
+                              />
+                            </td>
                             <td className="text-start font-[500] text-[16px] leading-[18px] px-4 py-2">
                               {row.amount}
+                            </td>
+                            <td
+                              onClick={() => handleInvoiceClick(row)}
+                              className="text-center font-[500] leading-[18px] px-4 py-2 cursor-pointer"
+                            >
+                              <img
+                                src={invoiceImg}
+                                alt="INVOICE"
+                                className="w-[20px] h-[20px]"
+                              />
                             </td>
                           </tr>
                         ))}
@@ -463,39 +689,41 @@ const Wallet = () => {
                   </thead>
                   <tbody className="text-lightWhite">
                     {withdrawalReq &&
-                      withdrawalReq.slice(
-                        (currentPage - 1) * pageSize,
-                        currentPage * pageSize
-                      ).map((row, index) => {
-                        return (
-                          row.requestAction === "A" && (
-                            <tr
-                              key={index}
-                              className={
-                                index % 2 === 0 ? "bg-[#1E1E22]" : ""
-                              }
-                            >
-                              <td className="text-center font-[500] text-[16px] leading-[18px] px-4 py-2">
-                                {row.transactionId}
-                              </td>
-                              <td className="text-start font-[500] text-[16px] leading-[18px] px-4 py-2">
-                                {formatDate(row.withdrawalRequestDate)}
-                              </td>
-                              <td className="text-start font-[500] text-[16px] leading-[18px] px-4 py-2">
-                                {row.bankDetails.bankName ||
-                                  row.bankDetails.upI_ID}
-                              </td>
-                              <td className="text-start font-[500] text-[16px] leading-[18px] px-4 py-2">
-                                {row.bankDetails.accountNumber ||
-                                  row.bankDetails.upI_ID}
-                              </td>
-                              <td className="text-start font-[500] text-[16px] leading-[18px] px-4 py-2">
-                                {row.amount}
-                              </td>
-                            </tr>
-                          )
-                        );
-                      })}
+                      withdrawalReq
+                        .slice(
+                          (currentPage - 1) * pageSize,
+                          currentPage * pageSize
+                        )
+                        .map((row, index) => {
+                          return (
+                            row.requestAction === "A" && (
+                              <tr
+                                key={index}
+                                className={
+                                  index % 2 === 0 ? "bg-[#1E1E22]" : ""
+                                }
+                              >
+                                <td className="text-center font-[500] text-[16px] leading-[18px] px-4 py-2">
+                                  {row.transactionId}
+                                </td>
+                                <td className="text-start font-[500] text-[16px] leading-[18px] px-4 py-2">
+                                  {formatDate(row.withdrawalRequestDate)}
+                                </td>
+                                <td className="text-start font-[500] text-[16px] leading-[18px] px-4 py-2">
+                                  {row.bankDetails.bankName ||
+                                    row.bankDetails.upI_ID}
+                                </td>
+                                <td className="text-start font-[500] text-[16px] leading-[18px] px-4 py-2">
+                                  {row.bankDetails.accountNumber ||
+                                    row.bankDetails.upI_ID}
+                                </td>
+                                <td className="text-start font-[500] text-[16px] leading-[18px] px-4 py-2">
+                                  {row.amount}
+                                </td>
+                              </tr>
+                            )
+                          );
+                        })}
                   </tbody>
                 </table>
                 <Pagination
@@ -597,9 +825,7 @@ const Wallet = () => {
                       .map((row, index) => (
                         <tr
                           key={index}
-                          className={
-                            index % 2 === 0 ? "bg-[#18181B]" : ""
-                          }
+                          className={index % 2 === 0 ? "bg-[#18181B]" : ""}
                         >
                           <td className="pl-[4rem] font-[500] text-[16px] leading-[18px]">
                             {Math.floor(row.id.length * 1110000)}
@@ -608,8 +834,7 @@ const Wallet = () => {
                             {formatDate(row.withdrawalRequestDate)}
                           </td>
                           <td className="w-[143px] h-[36px] font-[500] text-[16px] leading-[18px]">
-                            {row.bankDetails.bankName ||
-                              row.bankDetails.upI_ID}
+                            {row.bankDetails.bankName || row.bankDetails.upI_ID}
                           </td>
                           <td className="px-[4rem] w-[143px] h-[36px] font-[500] text-[16px] leading-[18px]">
                             {row.bankDetails.accountNumber ||

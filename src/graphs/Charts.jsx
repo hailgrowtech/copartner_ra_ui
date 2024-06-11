@@ -16,7 +16,7 @@ const Charts = () => {
       try {
         if (stackholderId) {
           const response = await axios.get(
-            `https://copartners.in:5132/api/RADashboard/GetDashboardRAListingData/${stackholderId}`
+            `https://copartners.in:5132/api/RADashboard/GetDashboardRAListingData/${stackholderId}?page=1&pageSize=100000`
           );
 
           if (response.data.isSuccess) {

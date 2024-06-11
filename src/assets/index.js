@@ -53,6 +53,7 @@ import editDocument from "./editpopup.png";
 import eye from './Eye.png';
 import eyeClose from './eyeClosed.png';
 import login from './Login.png';
+import Link from './LinK.png'
 
 export {
     availableIcon,
@@ -101,5 +102,5 @@ export {
     pancard, card,
     editDocument, eye,
     eyeClose,
-    login
+    login, Link,
 }
