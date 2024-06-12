@@ -23,6 +23,7 @@ const Wallet = () => {
   const [searchInput, setSearchInput] = useState("");
   const [filteredTransactions, setFilteredTransactions] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
+  const [signatureImage, setSignatureImage] = useState("");
   const pageSize = 15;
 
   const stackholderId = sessionStorage.getItem("stackholderId");
@@ -32,6 +33,8 @@ const Wallet = () => {
   const TRANSACTION_API = `https://copartners.in:5132/api/RADashboard/GetDashboardRAListingData/${stackholderId}?page=1&pageSize=100000`;
 
   const WITHDRAWAL_REQ_API = `https://copartners.in:5135/api/Withdrawal/GetWithdrawalByUserId/${stackholderId}?userType=RA&page=1&pageSize=100000`;
+
+  const SIGNATURE_API = `https://copartners.in:5132/api/Experts/${stackholderId}`;
 
   const fetchBankDetails = async (withdrawalModeId) => {
     const BANK_API = `https://copartners.in:5135/api/Withdrawal/GetBankUPIById/${withdrawalModeId}`;
@@ -66,6 +69,15 @@ const Wallet = () => {
     }
   };
 
+  const fetchSignatureImage = async () => {
+    try {
+      const response = await axios.get(SIGNATURE_API);
+      setSignatureImage(response.data.data.signatureImage);
+    } catch (error) {
+      console.error("Error fetching the signature image:", error);
+    }
+  };
+
   useEffect(() => {
     const fetchWalletBalance = async () => {
       try {
@@ -79,6 +91,7 @@ const Wallet = () => {
 
     fetchWalletBalance();
     fetchWithdrawalRequests();
+    fetchSignatureImage();
   }, []);
 
   useEffect(() => {
@@ -274,15 +287,16 @@ const Wallet = () => {
       subscribeDate,
       user,
     } = row;
-    
+  
     const invoiceDate = new Date(subscribeDate).toLocaleDateString();
-    
+  
     const gstRate = 0.18;
     const gstAmount = subscriptionAmount ? subscriptionAmount * gstRate : 0;
     const amountWithoutGst = subscriptionAmount ? subscriptionAmount - gstAmount : 0;
   
-    const win = window.open("", "_blank");
-    win.document.write(`
+    const sanitizedImagePath = signatureImage ? signatureImage.replace(/</g, "&lt;").replace(/>/g, "&gt;") : "";
+  
+    const htmlContent = `
       <html>
         <head>
           <title>Invoice</title>
@@ -297,6 +311,8 @@ const Wallet = () => {
             table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
             table th, table td { border: 1px solid #ddd; padding: 8px; text-align: center; }
             .terms { margin-top: 20px; }
+            .user-image { text-align: center; margin-bottom: 10px; }
+            .user-image img { width: 300px; height: 200px; border-radius: 50%; }
           </style>
         </head>
         <body>
@@ -350,6 +366,9 @@ const Wallet = () => {
                 </tr>
               </tbody>
             </table>
+            <div class="user-image">
+              <img src="${sanitizedImagePath}" alt="User Image" />
+            </div>
             <div class="terms">
               <h2>TERMS & CONDITIONS</h2>
               <p>No refund policy. Please read terms & conditions and disclaimer on our website.</p>
@@ -360,10 +379,13 @@ const Wallet = () => {
           </div>
         </body>
       </html>
-    `);
+    `;
+  
+    const win = window.open("", "_blank");
+    win.document.write(htmlContent);
     win.document.close();
     win.print();
-  };  
+  };
 
   return (
     <div className="pb-[5rem] xl:pl-[12rem] md:pl-[10rem] pl-6 md:py-[6rem] pt-[8rem] bg-gradient min-h-screen">
@@ -504,10 +526,6 @@ const Wallet = () => {
                           <span className="text-dimWhite">DATE:</span>{" "}
                           {formatDate(row.subscribeDate)}
                         </span>
-                        {/* <span className="flex items-center justify-between sm:w-[305px] h-[34px] font-[500] text-[14px] leading-[12px] text-lightWhite">
-                          <span className="text-dimWhite">SUBSCRIPTION:</span>{" "}
-                          {row.subscription}
-                        </span> */}
                         <span className="flex items-center justify-between sm:w-[305px] h-[13px] font-[500] text-[14px] leading-[12px] text-lightWhite">
                           <span className="text-dimWhite">PLAN NAME:</span>{" "}
                           {row.planType}
@@ -587,9 +605,6 @@ const Wallet = () => {
                             <td className="text-start font-[500] text-[16px] leading-[18px] px-4 py-2">
                               {formatDate(row.subscribeDate)}
                             </td>
-                            {/* <td className="text-start font-[500] text-[16px] leading-[18px] px-4 py-2">
-                              {getExpertType(row.subscription)}
-                            </td> */}
                             <td className="text-start font-[500] text-[16px] leading-[18px] px-4 py-2">
                               {row.planType}
                             </td>

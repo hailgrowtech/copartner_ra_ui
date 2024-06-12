@@ -28,8 +28,8 @@ const Subscription = () => {
     const fetchActiveUser = async () => {
       try {
         const res = await axios.get(ACTIVE_USER);
-        setActiveUser(res.data.data);  // Set active user data
-        countPlanTypes(res.data.data);  // Count plan types
+        setActiveUser(res.data.data); 
+        countPlanTypes(res.data.data);  
       } catch (error) {
         console.error('Error fetching active user:', error);
       }
@@ -41,7 +41,6 @@ const Subscription = () => {
   const axiosServiceData = async () => {
     try {
       const res = await axios.get(SUB_TABLE);
-      console.log('ajxjejje', res.data.data)
       setSubTable(res.data.data);
     } catch (error) {
       console.log('Something went wrong', error);
