@@ -8,6 +8,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import axios from "axios";
 import Pagination from "./Pagination";
 import { toast } from "react-toastify";
+import * as XLSX from "xlsx";
 
 const Wallet = () => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -24,6 +25,9 @@ const Wallet = () => {
   const [filteredTransactions, setFilteredTransactions] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [signatureImage, setSignatureImage] = useState("");
+  const [jurisdiction, setJurisdiction] = useState("");
+  const [hoveredRow, setHoveredRow] = useState(null);
+  const [copiedRow, setCopiedRow] = useState(null);
   const pageSize = 15;
 
   const stackholderId = sessionStorage.getItem("stackholderId");
@@ -73,6 +77,7 @@ const Wallet = () => {
     try {
       const response = await axios.get(SIGNATURE_API);
       setSignatureImage(response.data.data.signatureImage);
+      setJurisdiction(response.data.data.state);
     } catch (error) {
       console.error("Error fetching the signature image:", error);
     }
@@ -216,13 +221,15 @@ const Wallet = () => {
     }
   };
 
-  const handleTeleGramClicked = (telegramChannel) => {
+  const handleTeleGramClicked = (telegramChannel, rowIndex) => {
     navigator.clipboard
       .writeText(telegramChannel)
       .then(() => {
         toast.success("Successfully Copied!", {
           position: "top-right",
         });
+        setCopiedRow(rowIndex);
+        setTimeout(() => setCopiedRow(null), 3000);
       })
       .catch((err) => {
         console.error("Failed to copy the text to clipboard: ", err);
@@ -246,7 +253,7 @@ const Wallet = () => {
       "Amount",
       "Premium Telegram",
     ];
-
+  
     const rows = filteredTransactions.map((row) => [
       row.invoiceId,
       row.transactionId,
@@ -263,18 +270,39 @@ const Wallet = () => {
       row.amount,
       row.premiumTelegramChannel,
     ]);
-
-    let table = `<table border="1" style="border-collapse: collapse; margin: 20px;">` +
-      `<thead><tr>${header.map((col) => `<th style="padding: 8px; border: 1px solid #ddd;">${col}</th>`).join("")}</tr></thead>` +
-      `<tbody>${rows.map((row) => `<tr>${row.map((col) => `<td style="padding: 8px; border: 1px solid #ddd;">${col}</td>`).join("")}</tr>`).join("")}</tbody>` +
-      `</table>`;
-
-    let win = window.open("", "_blank");
-    win.document.write("<html><head><title>Transaction Data</title></head><body>");
-    win.document.write(table);
-    win.document.write("</body></html>");
-    win.document.close();
-    win.print();
+  
+    const data = [header, ...rows];
+  
+    const worksheet = XLSX.utils.aoa_to_sheet(data);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Transactions");
+  
+    const binaryString = XLSX.write(workbook, {
+      bookType: "xlsx",
+      type: "binary",
+    });
+  
+    const blob = new Blob([s2ab(binaryString)], {
+      type: "application/octet-stream",
+    });
+  
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "transactions.xlsx";
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  };
+  
+  const s2ab = (s) => {
+    const buf = new ArrayBuffer(s.length);
+    const view = new Uint8Array(buf);
+    for (let i = 0; i < s.length; i++) {
+      view[i] = s.charCodeAt(i) & 0xff;
+    }
+    return buf;
   };
 
   const handleInvoiceClick = (row) => {
@@ -295,6 +323,7 @@ const Wallet = () => {
     const amountWithoutGst = subscriptionAmount ? subscriptionAmount - gstAmount : 0;
   
     const sanitizedImagePath = signatureImage ? signatureImage.replace(/</g, "&lt;").replace(/>/g, "&gt;") : "";
+    const jurisdictionAction = jurisdiction;
   
     const htmlContent = `
       <html>
@@ -313,6 +342,8 @@ const Wallet = () => {
             .terms { margin-top: 20px; }
             .user-image { text-align: center; margin-bottom: 10px; }
             .user-image img { width: 300px; height: 200px; border-radius: 50%; }
+            .print-button { display: block; width: 100%; text-align: center; margin-top: 20px; }
+            .print-button button { padding: 10px 20px; background-color: #4CAF50; color: #fff; border: none; border-radius: 5px; cursor: pointer; }
           </style>
         </head>
         <body>
@@ -372,19 +403,30 @@ const Wallet = () => {
             <div class="terms">
               <h2>TERMS & CONDITIONS</h2>
               <p>No refund policy. Please read terms & conditions and disclaimer on our website.</p>
-              <p>All jurisdiction under ${row.state || 'N/A'}.</p>
+              <p>All jurisdiction under ${jurisdictionAction}.</p>
               <p>This is a computer-generated receipt and does not require a signature.</p>
               <p>Contact support@copartner.in for technical support.</p>
+            </div>
+            <div class="print-button">
+              <button onclick="window.print()">Download Invoice</button>
             </div>
           </div>
         </body>
       </html>
     `;
   
-    const win = window.open("", "_blank");
-    win.document.write(htmlContent);
-    win.document.close();
-    win.print();
+    const newWindow = window.open("", "_blank");
+    newWindow.document.write(htmlContent);
+    newWindow.document.close();
+  };
+
+  const handleMouseEnter = (rowIndex) => {
+    setHoveredRow(rowIndex);
+  };
+
+  const handleMouseLeave = () => {
+    setHoveredRow(null);
+    setCopiedRow(null);
   };
 
   return (
@@ -535,10 +577,15 @@ const Wallet = () => {
                           {row.userMobileNo}
                         </span>
                         <span
+                          onMouseEnter={() => handleMouseEnter(index)}
+                          onMouseLeave={handleMouseLeave}
                           onClick={() =>
-                            handleTeleGramClicked(row.premiumTelegramChannel)
+                            handleTeleGramClicked(
+                              row.premiumTelegramChannel,
+                              index
+                            )
                           }
-                          className="flex items-center justify-between sm:w-[305px] h-[13px] font-[500] text-[14px] leading-[12px] text-lightWhite"
+                          className="relative flex items-center justify-between sm:w-[305px] h-[13px] font-[500] text-[14px] leading-[12px] text-lightWhite cursor-pointer"
                         >
                           <span className="text-dimWhite">TELEGRAM LINK:</span>{" "}
                           <img
@@ -546,6 +593,11 @@ const Wallet = () => {
                             alt="Link"
                             className="w-[18px] h-[18px]"
                           />
+                          {hoveredRow === index && (
+                            <span className="absolute -top-6 left-1/2 transform -translate-x-1/2 bg-gray-700 text-white text-xs rounded py-1 px-2">
+                              {copiedRow === index ? "Copied" : "Copy"}
+                            </span>
+                          )}
                         </span>
                         <span className="flex items-center justify-between sm:w-[305px] h-[13px] font-[500] text-[14px] leading-[12px] text-lightWhite">
                           <span className="text-dimWhite">AMOUNT:</span>{" "}
@@ -612,18 +664,26 @@ const Wallet = () => {
                               {row.userMobileNo}
                             </td>
                             <td
+                              onMouseEnter={() => handleMouseEnter(index)}
+                              onMouseLeave={handleMouseLeave}
                               onClick={() =>
                                 handleTeleGramClicked(
-                                  row.premiumTelegramChannel
+                                  row.premiumTelegramChannel,
+                                  index
                                 )
                               }
-                              className="text-center font-[500] leading-[18px] px-14 py-2 cursor-pointer"
+                              className="relative text-center font-[500] leading-[18px] px-14 py-2 cursor-pointer"
                             >
                               <img
                                 src={Link}
                                 alt="Link"
                                 className="w-[20px] h-[20px]"
                               />
+                              {hoveredRow === index && (
+                                <span className="absolute -top-6 left-1/2 transform -translate-x-1/2 bg-gray-700 text-white text-xs rounded py-1 px-2">
+                                  {copiedRow === index ? "Copied" : "Copy"}
+                                </span>
+                              )}
                             </td>
                             <td className="text-start font-[500] text-[16px] leading-[18px] px-4 py-2">
                               {row.amount}
