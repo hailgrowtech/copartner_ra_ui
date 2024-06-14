@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from "react";
 import SubscriptionDialog from "./SubsciptionDialog";
-import { deleteIcon } from "../assets";
+import { deleteIcon, edit } from "../assets";
 import SubscriptionEditService from "./SubscriptionEditService";
 import axios from "axios";
 import { toast } from "react-toastify";
+import SubscriptionCourse from "./SubscriptionCourse";
 
 const Subscription = () => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -41,6 +42,7 @@ const Subscription = () => {
   const axiosServiceData = async () => {
     try {
       const res = await axios.get(SUB_TABLE);
+      console.log('My date value', res.data.data)
       setSubTable(res.data.data);
     } catch (error) {
       console.log('Something went wrong', error);
@@ -220,7 +222,7 @@ const Subscription = () => {
                 <th className="text-center">DURATION</th>
                 <th className="text-center">AMOUNT</th>
                 <th className="text-center">ACTIVE USER</th>
-                <th className="text-center">ACTIVE</th>
+                <th className="text-center">ACTION</th>
               </tr>
             </thead>
             <tbody className="text-lightWhite h-[81px]">
@@ -245,7 +247,7 @@ const Subscription = () => {
                     {planTypeCounts[row.planType] || 0}/{activeUser.length}
                   </td>
                   <td className="flex flex-row items-center justify-center gap-2 py-[2rem]">
-                    {/* <button onClick={() => openEditDialog(row)}>
+                    <button onClick={() => openEditDialog(row)}>
                       <img
                         src={edit}
                         alt=""
@@ -258,7 +260,7 @@ const Subscription = () => {
                         closeDialog={closeDialog}
                         subTable={subTable}
                       />
-                    )} */}
+                    )}
                     <button onClick={() => handleDeleteTable(row.id)}>
                       <img
                         src={deleteIcon}
@@ -273,6 +275,7 @@ const Subscription = () => {
           </table>
         )}
       </div>
+      <SubscriptionCourse />
     </div>
   );
 };
