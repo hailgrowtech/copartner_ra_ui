@@ -317,6 +317,8 @@ const Wallet = () => {
     } = row;
   
     const invoiceDate = new Date(subscribeDate).toLocaleDateString();
+
+    console.log('My Invoice Data', row)
   
     const gstRate = 0.18;
     const gstAmount = subscriptionAmount ? subscriptionAmount * gstRate : 0;

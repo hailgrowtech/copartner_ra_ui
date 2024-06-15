@@ -426,21 +426,23 @@ const Dashboard = () => {
                 </div>
                 <div className="md:flex md:flex-row grid grid-cols-2 md:gap-[12rem] gap-2 md:px-[1rem] md:mt-[2rem] mt-14 md:py-0 py-8 items-center justify-center">
                   {sortedSubTable &&
-                    sortedSubTable.map((subUnit) => (
-                      <div
-                        key={subUnit.id}
-                        className="flex gap-[4rem] md:w-[165px] w-[150px] h-[38px] md:flex-col justify-center items-center"
-                      >
-                        <div className="md:w-auto md:h-[97px] md:gap-0 gap-0 flex md:flex-col flex-col justify-center items-center">
-                          <span className="text-gradient-2 md:w-auto md:h-[32px] font-inter font-[700] md:text-[23px] text-[12 px] text-center">
-                            {subUnit.planType}
-                          </span>
-                          <span className="text-white md:w-[120px] font-poppins font-[700] md:text-[36px] text-[11px] text-center">
-                            {subUnit.amount}
-                          </span>
+                    sortedSubTable
+                      .filter((subUnit) => !subUnit.isCustom)
+                      .map((subUnit) => (
+                        <div
+                          key={subUnit.id}
+                          className="flex gap-[4rem] md:w-[165px] w-[150px] h-[38px] md:flex-col justify-center items-center"
+                        >
+                          <div className="md:w-auto md:h-[97px] md:gap-0 gap-0 flex md:flex-col flex-col justify-center items-center">
+                            <span className="text-gradient-2 md:w-auto md:h-[32px] font-inter font-[700] md:text-[23px] text-[12 px] text-center">
+                              {subUnit.planType}
+                            </span>
+                            <span className="text-white md:w-[120px] font-poppins font-[700] md:text-[36px] text-[11px] text-center">
+                              {subUnit.amount}
+                            </span>
+                          </div>
                         </div>
-                      </div>
-                    ))}
+                      ))}
                 </div>
               </div>
             </div>

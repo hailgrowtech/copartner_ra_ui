@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import SubscriptionDialog from "./SubsciptionDialog";
 import { deleteIcon } from "../assets";
-import SubscriptionEditService from "./SubscriptionEditService";
 import axios from "axios";
 import { toast } from "react-toastify";
 
@@ -24,6 +23,10 @@ const Subscription = () => {
     });
   };
 
+  const calculateDiscountedAmount = (amount, discountPercentage) => {
+    return amount - (amount * (discountPercentage / 100));
+  };
+
   useEffect(() => {
     const fetchActiveUser = async () => {
       try {
@@ -41,7 +44,13 @@ const Subscription = () => {
   const axiosServiceData = async () => {
     try {
       const res = await axios.get(SUB_TABLE);
-      setSubTable(res.data.data);
+      const updatedData = res.data.data.map(sub => {
+        if (sub.isCustom) {
+          sub.discountedAmount = calculateDiscountedAmount(sub.amount, sub.discountPercentage);
+        }
+        return sub;
+      });
+      setSubTable(updatedData);
     } catch (error) {
       console.log('Something went wrong', error);
     }
@@ -160,19 +169,6 @@ const Subscription = () => {
                     {getSubscriptionTypeLabel(row.serviceType)}
                   </p>
                   <div className="flex gap-3">
-                    {/* <button onClick={() => openEditDialog(row)}>
-                      <img
-                        src={edit}
-                        alt=""
-                        className="w-[24px] h-[24px] text-white"
-                      />
-                    </button>
-                    {isEditDialogOpen && (
-                      <SubscriptionEditService
-                        isEditDialogOpen={isEditDialogOpen}
-                        closeDialog={closeDialog}
-                      />
-                    )} */}
                     <button onClick={() => handleDeleteTable(row.id)}>
                       <img
                         src={deleteIcon}
@@ -196,7 +192,7 @@ const Subscription = () => {
                   <span className="text-dimWhite">DURATION:</span> {row.durationMonth}
                 </span>
                 <span className="flex items-center justify-between sm:w-[305px] h-[13px] font-[500] text-[14px] leading-[12px] text-lightWhite">
-                  <span className="text-dimWhite">AMOUNT:</span> {row.amount}
+                  <span className="text-dimWhite">AMOUNT:</span> {row.isCustom ? calculateDiscountedAmount(row.amount, row.discountPercentage) : row.amount}
                 </span>
                 <span className="flex items-center justify-between sm:w-[305px] h-[13px] font-[500] text-[14px] leading-[12px] text-lightWhite">
                   <span className="text-dimWhite">ACTIVE USER:</span>{" "}
@@ -239,26 +235,12 @@ const Subscription = () => {
                     {row.durationMonth}
                   </td>
                   <td className="font-[500] text-center text-[16px] leading-[18px]">
-                    {row.amount}
+                    {row.isCustom ? calculateDiscountedAmount(row.amount, row.discountPercentage) : row.amount}
                   </td>
                   <td className="font-[500] text-center text-[16px] leading-[18px]">
                     {planTypeCounts[row.planType] || 0}/{activeUser.length}
                   </td>
                   <td className="flex flex-row items-center justify-center gap-2 py-[2rem]">
-                    {/* <button onClick={() => openEditDialog(row)}>
-                      <img
-                        src={edit}
-                        alt=""
-                        className="w-[21px] h-[21px] mx-auto"
-                      />
-                    </button>
-                    {isEditDialogOpen && (
-                      <SubscriptionEditService
-                        isEditDialogOpen={isEditDialogOpen}
-                        closeDialog={closeDialog}
-                        subTable={subTable}
-                      />
-                    )} */}
                     <button onClick={() => handleDeleteTable(row.id)}>
                       <img
                         src={deleteIcon}
