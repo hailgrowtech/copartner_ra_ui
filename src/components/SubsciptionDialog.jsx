@@ -6,7 +6,7 @@ import { toast } from "react-toastify";
 const SubscriptionDialog = ({ closeDialog, axiosServiceData, subTable }) => {
   const [subscriptionType, setSubscriptionType] = useState(null);
   const [planType, setPlanType] = useState("Select Plan Type");
-  // const [customPlanName, setCustomPlanName] = useState("");
+  const [customPlanName, setCustomPlanName] = useState("");
   const [durationType, setDurationType] = useState("");
   const [keyPointsType, setKeyPointsType] = useState("Plan Key Points");
   const [des, setDes] = useState('');
@@ -65,8 +65,8 @@ const SubscriptionDialog = ({ closeDialog, axiosServiceData, subTable }) => {
       expertsId: stackholderId,
       imagePath: "www.google.com/userjkdjfa",
       serviceType: subscriptionType,
-      planType: planType,
-      // planType: planType === "Custom" ? customPlanName : planType,
+      // planType: planType,
+      planType: planType === "Custom" ? customPlanName : planType,
       durationMonth: durationMonth,
       amount: amount,
       premiumTelegramLink: premiumTelegram,
@@ -241,14 +241,14 @@ const SubscriptionDialog = ({ closeDialog, axiosServiceData, subTable }) => {
                 </label>
                 <div className="relative">
                   <div className="relative">
-                  <input
+                  {/* <input
                       id="planType"
                       value={planType}
                       readOnly
                       onClick={togglePlanDropdown}
                       className={`md:w-[482px] w-[345px] md:px-4 px-2 py-2 rounded-md text-white border border-[#40495C] bg-[#282F3E] ${inputClassName}`}
-                    />
-                    {/* {planType === "Custom" ? (
+                    /> */}
+                    {planType === "Custom" ? (
                       <input
                         id="customPlanName"
                         value={customPlanName}
@@ -263,7 +263,7 @@ const SubscriptionDialog = ({ closeDialog, axiosServiceData, subTable }) => {
                         onClick={togglePlanDropdown}
                         className={`md:w-[482px] w-[345px] md:px-4 px-2 py-2 rounded-md text-white border border-[#40495C] bg-[#282F3E] ${inputClassName}`}
                       />
-                    )} */}
+                    )}
                     <img
                       src={dropdown}
                       alt="DropDown"
@@ -297,12 +297,12 @@ const SubscriptionDialog = ({ closeDialog, axiosServiceData, subTable }) => {
                         >
                           Yearly
                         </li>
-                        {/* <li
+                        <li
                           onClick={() => handlePlanClick("Custom")}
                           className="cursor-pointer px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                         >
                           Custom
-                        </li> */}
+                        </li>
                       </ul>
                     </div>
                   )}

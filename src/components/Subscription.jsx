@@ -4,6 +4,7 @@ import { deleteIcon, edit } from "../assets";
 import SubscriptionEditService from "./SubscriptionEditService";
 import axios from "axios";
 import { toast } from "react-toastify";
+import SubsriptionDiscountOffer from "./SubsriptionDiscountOffer";
 import SubscriptionCourse from "./SubscriptionCourse";
 
 const Subscription = () => {
@@ -275,6 +276,7 @@ const Subscription = () => {
           </table>
         )}
       </div>
+      <SubsriptionDiscountOffer />
       <SubscriptionCourse />
     </div>
   );

@@ -1,12 +1,54 @@
 import React, { useState, useEffect } from "react";
 import { deleteIcon } from "../assets";
-import SubscriptionEditCourse from "./SubscriptionEditCourse";
+import SubscriptionEditDiscount from "./SubscriptionEditDiscount";
+import axios from "axios";
+import { toast } from "react-toastify";
 
-const SubscriptionCourse = () => {
+const SubsriptionDiscountOffer = () => {
   const [smallScreen, setSmallScreen] = useState(false);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
-  const [courses, setCourses] = useState([]);
+  const [discount, setDiscount] = useState([]);
+
+//   const stackholderId = sessionStorage.getItem('stackholderId');
+//   const SUB_TABLE = `https://copartners.in:5009/api/Subscription/GetByExpertsId/${stackholderId}`;
+
+  const handleSuccess = () => {
+    toast.success("Successfully Deleted!", {
+      position: "top-right",
+    });
+  };
+
+//   const axiosServiceData = async () => {
+//     try {
+//       const res = await axios.get(SUB_TABLE);
+//       console.log('My date value', res.data.data)
+//       setDiscount(res.data.data);
+//     } catch (error) {
+//       console.log('Something went wrong', error);
+//     }
+//   };
+
+//   useEffect(() => {
+//     axiosServiceData();
+//   }, [SUB_TABLE]);
+
+  const handleDeleteTable = async (id) => {
+    const DELETE_TABLE = `https://copartners.in:5009/api/Subscription/${id}`;
+
+    try {
+      handleSuccess();
+      const response = await axios.delete(DELETE_TABLE);
+      if (response.status === 200) {
+        console.log("Subscription deleted successfully");
+        setDiscount(discount.filter(subscription => subscription.id !== id));
+      } else {
+        console.error("Failed to delete subscription, status:", response.status);
+      }
+    } catch (error) {
+      console.error("Error deleting subscription:", error);
+    }
+  };
 
   const openDialog = () => {
     setIsDialogOpen(true);
@@ -18,7 +60,7 @@ const SubscriptionCourse = () => {
   };
 
   const addCourse = (newCourse) => {
-    setCourses([...courses, newCourse]);
+    setDiscount([...discount, newCourse]);
     closeDialog();
   };
 
@@ -34,10 +76,10 @@ const SubscriptionCourse = () => {
   }, []);
 
   return (
-    <div className="bg-gradient">
+    <div className="md:py-[5rem] py-[4rem] bg-gradient">
       <div className="xl:w-[1520px] md:w-[1130px] w-[350px] flex items-center justify-between">
-        <span className="w-[176px] h-[27px] font-inter text-[22px] font-[600] leading-[27px] text-white md:ml-0 ml-2">
-          Course
+        <span className="md:w-[240px] w-[176px] h-[27px] font-inter text-[22px] font-[600] leading-[27px] text-white md:ml-0 ml-2">
+          Discount Offers Listing
         </span>
         <button
           onClick={openDialog}
@@ -46,7 +88,7 @@ const SubscriptionCourse = () => {
           +Add
         </button>
         {isDialogOpen && (
-          <SubscriptionEditCourse
+          <SubscriptionEditDiscount
             addCourse={addCourse}
             closeDialog={closeDialog}
           />
@@ -56,7 +98,7 @@ const SubscriptionCourse = () => {
       <div className="flex md:mt-[3rem] mt-1">
         {smallScreen ? (
           <div className="flex flex-wrap justify-center items-center ml-[-22px]">
-            {courses.map((row, index) => (
+            {discount.map((row, index) => (
               <div
                 key={index}
                 className="flex flex-col justify-around h-[248px] bg-[#18181B] bg-opacity-[50%] rounded-[30px] md:m-4 m-[10px] p-4 w-[90%] max-w-sm"
@@ -104,41 +146,37 @@ const SubscriptionCourse = () => {
             <thead className="text-[#BABABA] font-inter font-[600] text-[14px] leading-[20px] h-[51px]">
               <tr>
                 <th className="text-center">DATE</th>
-                <th className="text-center">COURSE NAME</th>
-                <th className="text-center">DURATION</th>
-                <th className="text-center">SESSION</th>
-                <th className="text-center">AMOUNT</th>
-                <th className="text-center">LEVEL</th>
-                <th className="text-center">ACTIVE USER</th>
-                <th className="text-center">ACTIVE</th>
+                <th className="text-center">START DATE</th>
+                <th className="text-center">END DATE</th>
+                <th className="text-center">PLAN</th>
+                <th className="text-center">DISCOUNT %</th>
+                <th className="text-center">DISCOUNTED AMT.</th>
+                <th className="text-center">ACTION</th>
               </tr>
             </thead>
             <tbody className="text-lightWhite h-[81px]">
-              {courses.map((row, index) => (
+              {discount.map((row, index) => (
                 <tr key={index} className={index % 2 === 0 ? "bg-[#1E1E22]" : ""}>
                   <td className="font-[500] text-center text-[16px] leading-[18px]">
                     {row.date}
                   </td>
                   <td className="font-[500] text-center text-[16px] leading-[18px]">
-                    {row.courseName}
+                    {row.startDate}
                   </td>
                   <td className="font-[500] text-center text-[16px] leading-[18px]">
-                    {row.duration}
+                    {row.endDate}
                   </td>
                   <td className="py-2 text-center font-[500] text-[16px] leading-[18px]">
-                    {row.session}
+                    {row.planType}
                   </td>
                   <td className="font-[500] text-center text-[16px] leading-[18px]">
-                    {row.amount}
+                    {row.discountPercentage}
                   </td>
                   <td className="font-[500] text-center text-[16px] leading-[18px]">
-                    {row.level}
-                  </td>
-                  <td className="font-[500] text-center text-[16px] leading-[18px]">
-                    {row.activeUser}
+                    {row.discountedAmount}
                   </td>
                   <td className="flex flex-row items-center justify-center gap-2 py-[2rem]">
-                    <button>
+                    <button onClick={() => handleDeleteTable(row.id)}>
                       <img
                         src={deleteIcon}
                         alt=""
@@ -156,4 +194,4 @@ const SubscriptionCourse = () => {
   );
 };
 
-export default SubscriptionCourse;
+export default SubsriptionDiscountOffer;
