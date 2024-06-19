@@ -15,14 +15,9 @@ const SubscriptionDialog = ({ closeDialog, axiosServiceData, subTable }) => {
   const [isPlanOpen, setIsPlanOpen] = useState(false);
   const [isDuration, setIsDuration] = useState(false);
   const [amount, setAmount] = useState(null);
-  const [discountPercentage, setDiscountPercentage] = useState(null);
-  const [discountedAmount, setdiscountedAmount] = useState(null);
-  const [startDate, setStartDate] = useState('');
-  const [endDate, setEndDate] = useState('');
   const [isKeyPointsOpen, setIsKeyPointsOpen] = useState(false);
   const [premiumTelegram, setPremiumTelegram] = useState('');
   const [changes, setChanges] = useState({});
-  const [isCustom, setIsCustom] = useState(false);
 
   const [selectedItems, setSelectedItems] = useState([]);
 
@@ -45,11 +40,6 @@ const SubscriptionDialog = ({ closeDialog, axiosServiceData, subTable }) => {
     });
   };
 
-  const handleCustom = (e) => {
-    setCustomPlanName(e.target.value);
-    setIsCustom(true);
-  }
-
   useEffect(() => {
     axios.get(`https://copartners.in:5132/api/Experts/${stackholderId}`)
       .then((res) => {
@@ -60,15 +50,6 @@ const SubscriptionDialog = ({ closeDialog, axiosServiceData, subTable }) => {
       .catch((err) => console.error(err));
   }, [stackholderId]);
 
-  useEffect(() => {
-    if (amount && discountPercentage) {
-      const discount = amount - (amount * (discountPercentage / 100));
-      setdiscountedAmount(discount.toFixed(2)); // Ensure discount amount is rounded to 2 decimal places
-    } else {
-      setdiscountedAmount(null);
-    }
-  }, [amount, discountPercentage]);
-
   const handleConfirm = async (e) => {
     setError("");
     setLoading(true);
@@ -78,27 +59,21 @@ const SubscriptionDialog = ({ closeDialog, axiosServiceData, subTable }) => {
       planType === "Quarterly" ? 3 :
       planType === "Half-Yearly" ? 6 :
       planType === "Yearly" ? 12 :
-      planType === "Custom" ? durationType : "";
+      planType === "Custom" ? durationType : ""; // Set durationMonth from custom input
 
     const postData = {
       expertsId: stackholderId,
       imagePath: "www.google.com/userjkdjfa",
       serviceType: subscriptionType,
+      // planType: planType,
       planType: planType === "Custom" ? customPlanName : planType,
       durationMonth: durationMonth,
       amount: amount,
-      discountPercentage: discountPercentage,
-      discountedAmount: discountedAmount,
-      startDate: startDate,
-      endDate: endDate,
       premiumTelegramLink: premiumTelegram,
       description: des || '',
-      isCustom: isCustom,
-      discountValidFrom: startDate,
-      discountValidTo: endDate
     };
 
-    if (!amount || !subscriptionType || !planType || !durationMonth || !premiumTelegram || !discountPercentage || !discountedAmount || !startDate || !endDate) {
+    if (!amount || !subscriptionType || !planType || !durationMonth || !premiumTelegram) {
       setError('Please fill out all required fields.');
       setLoading(false);
       return;
@@ -191,7 +166,7 @@ const SubscriptionDialog = ({ closeDialog, axiosServiceData, subTable }) => {
   return (
     <div className="fixed inset-0 z-[999] flex items-center py-[2rem] justify-center">
       <div className="fixed inset-0 z-[999] flex items-center py-[2rem] justify-center bg-black bg-opacity-[40%]">
-        <div className="bg-[#2E374B] rounded-lg md:w-[1084px] w-[378px] md:h-[620px] h-[600px] p-8 overflow-hidden">
+        <div className="bg-[#2E374B] rounded-lg md:w-[1084px] w-[378px] md:h-[620px] h-[600px] overflow-auto p-8">
           <div className="flex items-center justify-between">
             <h2 className="md:h-[52px] font-inter font-[700] md:text-[30px] text-[18px] md:leading-[51px] text-new md:ml-0 ml-[-0.8rem]">
               Add New Subscription
@@ -205,7 +180,7 @@ const SubscriptionDialog = ({ closeDialog, axiosServiceData, subTable }) => {
             </button>
           </div>
 
-          <div className="flex flex-col md:mt-0 mt-[1rem] gap-4 md:w-[1016px] md:h-[470px] overflow-y-auto">
+          <div className="flex flex-col md:mt-0 mt-[1rem] gap-4 md:w-[1006px] md:h-[470px]">
             <div className="flex md:flex-row flex-col md:gap-12 gap-4 md:mt-6 md:ml-0 ml-[-16px]">
               <div className="relative">
                 <label
@@ -266,11 +241,18 @@ const SubscriptionDialog = ({ closeDialog, axiosServiceData, subTable }) => {
                 </label>
                 <div className="relative">
                   <div className="relative">
+                  {/* <input
+                      id="planType"
+                      value={planType}
+                      readOnly
+                      onClick={togglePlanDropdown}
+                      className={`md:w-[482px] w-[345px] md:px-4 px-2 py-2 rounded-md text-white border border-[#40495C] bg-[#282F3E] ${inputClassName}`}
+                    /> */}
                     {planType === "Custom" ? (
                       <input
                         id="customPlanName"
                         value={customPlanName}
-                        onChange={handleCustom}
+                        onChange={(e) => setCustomPlanName(e.target.value)}
                         className="md:w-[482px] w-[345px] px-4 py-2 cursor-pointer rounded-md text-white border border-[#40495C] bg-[#282F3E]"
                       />
                     ) : (
@@ -381,72 +363,6 @@ const SubscriptionDialog = ({ closeDialog, axiosServiceData, subTable }) => {
               </div>
             </div>
 
-            <div className="flex md:flex-row flex-col md:gap-12 gap-4 md:ml-0 ml-[-16px]">
-              <div className="relative">
-                <label
-                  className="flex items-center justify-center bg-[#282F3E] text-white opacity-[50%]
-                  md:w-[140px] w-[134px] md:h-[26px] h-[25px] rounded-[8px] font-[400] md:text-[14px] text-[13px] md:leading-[16px] leading-[15px] text-center"
-                >
-                  Discount Percentage
-                </label>
-                <input
-                  type="number"
-                  id="default-input"
-                  value={discountPercentage}
-                  onChange={(e) => setDiscountPercentage(e.target.value)}
-                  className="md:w-[482px] w-[345px] px-4 py-2 rounded-md text-white border border-[#40495C] bg-[#282F3E]"
-                />
-              </div>
-              <div className="relative">
-                <label
-                  className="flex items-center justify-center bg-[#282F3E] text-white opacity-[50%]
-                  md:w-[140px] w-[134px] md:h-[26px] h-[25px] rounded-[8px] font-[400] md:text-[14px] text-[13px] md:leading-[16px] leading-[15px] text-center"
-                >
-                  Discount Amount
-                </label>
-                <input
-                  type="number"
-                  value={discountedAmount}
-                  id="default-input"
-                  readOnly
-                  className="md:w-[482px] w-[345px] px-4 py-2 rounded-md text-white border border-[#40495C] bg-[#282F3E]"
-                />
-              </div>
-            </div>
-
-            <div className="flex md:flex-row flex-col md:gap-12 gap-4 md:ml-0 ml-[-16px]">
-              <div className="relative">
-                <label
-                  className="flex items-center justify-center bg-[#282F3E] text-white opacity-[50%]
-                  md:w-[140px] w-[134px] md:h-[26px] h-[25px] rounded-[8px] font-[400] md:text-[14px] text-[13px] md:leading-[16px] leading-[15px] text-center"
-                >
-                  Start Date
-                </label>
-                <input
-                  type="datetime-local"
-                  value={startDate}
-                  id="default-input"
-                  onChange={(e) => setStartDate(e.target.value)}
-                  className="md:w-[482px] w-[345px] px-4 py-2 rounded-md text-white border border-[#40495C] bg-[#282F3E]"
-                />
-              </div>
-              <div className="relative">
-                <label
-                  className="flex items-center justify-center bg-[#282F3E] text-white opacity-[50%]
-                  md:w-[140px] w-[134px] md:h-[26px] h-[25px] rounded-[8px] font-[400] md:text-[14px] text-[13px] md:leading-[16px] leading-[15px] text-center"
-                >
-                  End Date
-                </label>
-                <input
-                  type="datetime-local"
-                  value={endDate}
-                  id="default-input"
-                  onChange={(e) => setEndDate(e.target.value)}
-                  className="md:w-[482px] w-[345px] px-4 py-2 rounded-md text-white border border-[#40495C] bg-[#282F3E]"
-                />
-              </div>
-            </div>
-
             <div className="relative md:ml-0 ml-[-16px]">
               <div className="mb-0">
                 <label
@@ -456,7 +372,7 @@ const SubscriptionDialog = ({ closeDialog, axiosServiceData, subTable }) => {
                   Premium Telegram Channel Link
                 </label>
                 <input
-                  value={premiumTelegram}
+                  value={changes.premiumTelegramChannel}
                   onChange={(e) => setPremiumTelegram(e.target.value)}
                   type="link"
                   id="default-input"
@@ -484,7 +400,7 @@ const SubscriptionDialog = ({ closeDialog, axiosServiceData, subTable }) => {
             </div>
           </div>
 
-          <div className="flex md:flex-row flex-col gap-2 justify-end mt-4">
+          <div className="flex md:flex-row flex-col gap-2 justify-end md:mt-0 mt-4">
             <button
               onClick={handleConfirm}
               disabled={loading}
