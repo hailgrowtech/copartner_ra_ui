@@ -7,11 +7,7 @@ import { toast } from "react-toastify";
 const SubsriptionDiscountOffer = () => {
   const [smallScreen, setSmallScreen] = useState(false);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const [discount, setDiscount] = useState([]);
-  const [discountPer, setDiscountPer] = useState("");
-  const [startDate, setStartDate] = useState("");
-  const [endDate, setEndDate] = useState("");
 
   const stackholderId = sessionStorage.getItem("stackholderId");
   const SUB_TABLE = `https://copartners.in:5009/api/Subscription/GetByExpertsId/${stackholderId}`;
@@ -27,7 +23,7 @@ const SubsriptionDiscountOffer = () => {
 
   useEffect(() => {
     axiosServiceData();
-  }, [SUB_TABLE]);
+  }, []); // Removed SUB_TABLE from dependency array
 
   const handleSuccess = () => {
     toast.success("Successfully Updated!", {
@@ -63,7 +59,6 @@ const SubsriptionDiscountOffer = () => {
       });
 
       if (response.status === 200) {
-        console.log("Subscription discount updated successfully");
         axiosServiceData();
         handleSuccess();
       } else {
@@ -80,7 +75,6 @@ const SubsriptionDiscountOffer = () => {
 
   const closeDialog = () => {
     setIsDialogOpen(false);
-    setIsEditDialogOpen(false);
   };
 
   const addCourse = (newCourse) => {
@@ -155,10 +149,10 @@ const SubsriptionDiscountOffer = () => {
                 </span>
                 <span className="flex items-center justify-between sm:w-[305px] h-[34px] font-[500] text-[14px] leading-[12px] text-lightWhite">
                   <span className="text-dimWhite">START DATE:</span>{" "}
-                  {formatDate(row.discountValidFrom)}
+                  {new Date(row.discountValidFrom).toLocaleString()}
                 </span>
                 <span className="flex items-center justify-between sm:w-[305px] h-[13px] font-[500] text-[14px] leading-[12px] text-lightWhite">
-                  <span className="text-dimWhite">END DATE:</span> {formatDate(row.discountValidTo)}
+                  <span className="text-dimWhite">END DATE:</span> {new Date(row.discountValidTo).toLocaleString()}
                 </span>
                 <span className="flex items-center justify-between sm:w-[305px] h-[13px] font-[500] text-[14px] leading-[12px] text-lightWhite">
                   <span className="text-dimWhite">PLAN:</span> {row.planType}
@@ -204,10 +198,10 @@ const SubsriptionDiscountOffer = () => {
                       {formatDate(row.createdOn)}
                     </td>
                     <td className="font-[500] text-center text-[16px] leading-[18px]">
-                      {formatDate(row.discountValidFrom)}
+                      {new Date(row.discountValidFrom).toLocaleString()}
                     </td>
                     <td className="font-[500] text-center text-[16px] leading-[18px]">
-                      {formatDate(row.discountValidTo)}
+                      {new Date(row.discountValidTo).toLocaleString()}
                     </td>
                     <td className="py-2 text-center font-[500] text-[16px] leading-[18px]">
                       {row.planType}

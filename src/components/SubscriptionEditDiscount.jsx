@@ -9,8 +9,8 @@ const SubscriptionEditDiscount = ({ closeDialog, addCourse }) => {
   const [planName, setPlanName] = useState("");
   const [discountPer, setDiscountPer] = useState("");
   const [planAmt, setPlanAmt] = useState("");
-  const [discountAmt, setDiscountAmt] = useState("");
-  const [isDiscountAmtOpen, setIsDiscountAmtOpen] = useState(false);
+  const [discountedAmount, setdiscountedAmount] = useState("");
+  const [isdiscountedAmountOpen, setIsdiscountedAmountOpen] = useState(false);
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
   const [offersDuration, setOffersDuration] = useState("");
@@ -27,9 +27,12 @@ const SubscriptionEditDiscount = ({ closeDialog, addCourse }) => {
           `https://copartners.in:5009/api/Subscription/GetByExpertsId/${stackholderId}`
         );
         if (response.data.isSuccess) {
-          setPlans(response.data.data);
+          const filteredPlans = response.data.data.filter(
+            (plan) => plan.discountPercentage === null || plan.discountPercentage === 0
+          );
+          setPlans(filteredPlans);
           const uniquePlans = [
-            ...new Set(response.data.data.map((plan) => plan.planType)),
+            ...new Set(filteredPlans.map((plan) => plan.planType)),
           ];
           setUniquePlanTypes(uniquePlans);
         } else {
@@ -45,8 +48,8 @@ const SubscriptionEditDiscount = ({ closeDialog, addCourse }) => {
 
   useEffect(() => {
     if (planAmt && discountPer) {
-      const calculatedDiscountAmt = planAmt - planAmt * (discountPer / 100);
-      setDiscountAmt(calculatedDiscountAmt.toFixed(2));
+      const calculateddiscountedAmount = planAmt - planAmt * (discountPer / 100);
+      setdiscountedAmount(calculateddiscountedAmount.toFixed(2));
     }
   }, [planAmt, discountPer]);
 
@@ -67,7 +70,7 @@ const SubscriptionEditDiscount = ({ closeDialog, addCourse }) => {
       !planName ||
       !discountPer ||
       !planAmt ||
-      !discountAmt ||
+      !discountedAmount ||
       !startDate ||
       !endDate
     ) {
@@ -82,12 +85,12 @@ const SubscriptionEditDiscount = ({ closeDialog, addCourse }) => {
       {
         path: "discountValidTo",
         op: "replace",
-        value: new Date(endDate).toISOString(),
+        value: new Date(endDate).toISOString(), // Convert to UTC
       },
       {
         path: "discountValidFrom",
         op: "replace",
-        value: new Date(startDate).toISOString(),
+        value: new Date(startDate).toISOString(), // Convert to UTC
       },
       {
         path: "discountPercentage",
@@ -117,10 +120,10 @@ const SubscriptionEditDiscount = ({ closeDialog, addCourse }) => {
           planType: planName,
           discountPercentage: discountPer,
           amount: planAmt,
-          discountedAmount: discountAmt,
-          discountValidFrom: new Date(startDate).toISOString(),
-          discountValidTo: new Date(endDate).toISOString(),
-          createdOn: new Date().toISOString(),
+          discountedAmount: discountedAmount,
+          discountValidFrom: startDate, // Convert to UTC
+          discountValidTo: new Date(endDate).toISOString(), // Convert to UTC
+          createdOn: new Date().toISOString(), // Convert to UTC
         };
 
         addCourse(newCourse);
@@ -245,9 +248,9 @@ const SubscriptionEditDiscount = ({ closeDialog, addCourse }) => {
                 <div className="relative">
                   <input
                     type="text"
-                    value={discountAmt}
+                    value={discountedAmount}
                     readOnly
-                    onClick={() => setIsDiscountAmtOpen(!isDiscountAmtOpen)}
+                    onClick={() => setIsdiscountedAmountOpen(!isdiscountedAmountOpen)}
                     className="md:w-[482px] w-[345px] px-4 py-2 rounded-md text-white border border-[#40495C] bg-[#282F3E] cursor-pointer"
                   />
                 </div>
@@ -258,7 +261,7 @@ const SubscriptionEditDiscount = ({ closeDialog, addCourse }) => {
               <div className="relative">
                 <label
                   className="flex items-center justify-center bg-[#282F3E] text-white opacity-[50%]
-          md:w-[140px] w-[80px] md:h-[26px] h-[25px] rounded-[8px] font-[400] md:text-[14px] text-[13px] md:leading-[16px] leading-[15px] text-center"
+          md:w-[90px] w-[80px] md:h-[26px] h-[25px] rounded-[8px] font-[400] md:text-[14px] text-[13px] md:leading-[16px] leading-[15px] text-center"
                 >
                   Start Date
                 </label>
@@ -273,7 +276,7 @@ const SubscriptionEditDiscount = ({ closeDialog, addCourse }) => {
               <div className="relative">
                 <label
                   className="flex items-center justify-center bg-[#282F3E] text-white opacity-[50%]
-          md:w-[140px] w-[80px] md:h-[26px] h-[25px] rounded-[8px] font-[400] md:text-[14px] text-[13px] md:leading-[16px] leading-[15px] text-center"
+          md:w-[90px] w-[80px] md:h-[26px] h-[25px] rounded-[8px] font-[400] md:text-[14px] text-[13px] md:leading-[16px] leading-[15px] text-center"
                 >
                   End Date
                 </label>

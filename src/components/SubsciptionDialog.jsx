@@ -28,6 +28,8 @@ const SubscriptionDialog = ({ closeDialog, axiosServiceData, subTable }) => {
 
   const stackholderId = sessionStorage.getItem('stackholderId');
 
+  const [isCustom, setIsCustom] = useState(false);
+
   const handleSuccess = () => {
     toast.success("Subscription saved!", {
       position: "top-right",
@@ -71,6 +73,7 @@ const SubscriptionDialog = ({ closeDialog, axiosServiceData, subTable }) => {
       amount: amount,
       premiumTelegramLink: premiumTelegram,
       description: des || '',
+      isCustom: isCustom
     };
 
     if (!amount || !subscriptionType || !planType || !durationMonth || !premiumTelegram) {
@@ -142,6 +145,11 @@ const SubscriptionDialog = ({ closeDialog, axiosServiceData, subTable }) => {
     }
   };
 
+  const handleCustom = (e) => {
+    setCustomPlanName(e.target.value);
+    setIsCustom(true);
+  }
+
   const toggleSubscriptionDropdown = () => {
     setIsSubscriptionOpen(!isSubscriptionOpen);
     setIsPlanOpen(false);
@@ -195,7 +203,7 @@ const SubscriptionDialog = ({ closeDialog, axiosServiceData, subTable }) => {
                     <input
                       id="subscriptionType"
                       value={getSubscriptionTypeLabel(subscriptionType)}
-                      readOnly
+                      disabled
                       onClick={toggleSubscriptionDropdown}
                       className={`md:w-[482px] w-[345px] md:px-4 px-2 py-2 cursor-pointer rounded-md border border-[#40495C] bg-[#282F3E] ${inputClassName}`}
                     />
@@ -252,7 +260,7 @@ const SubscriptionDialog = ({ closeDialog, axiosServiceData, subTable }) => {
                       <input
                         id="customPlanName"
                         value={customPlanName}
-                        onChange={(e) => setCustomPlanName(e.target.value)}
+                        onChange={handleCustom}
                         className="md:w-[482px] w-[345px] px-4 py-2 cursor-pointer rounded-md text-white border border-[#40495C] bg-[#282F3E]"
                       />
                     ) : (

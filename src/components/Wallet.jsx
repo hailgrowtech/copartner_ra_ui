@@ -253,7 +253,7 @@ const Wallet = () => {
       "Amount",
       "Premium Telegram",
     ];
-  
+
     const rows = filteredTransactions.map((row) => [
       row.invoiceId,
       row.transactionId,
@@ -267,25 +267,25 @@ const Wallet = () => {
       formatDate(row.subscribeDate),
       getExpertType(row.subscription),
       row.planType,
-      row.amount,
+      row.subscriptionAmount,
       row.premiumTelegramChannel,
     ]);
-  
+
     const data = [header, ...rows];
-  
+
     const worksheet = XLSX.utils.aoa_to_sheet(data);
     const workbook = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(workbook, worksheet, "Transactions");
-  
+
     const binaryString = XLSX.write(workbook, {
       bookType: "xlsx",
       type: "binary",
     });
-  
+
     const blob = new Blob([s2ab(binaryString)], {
       type: "application/octet-stream",
     });
-  
+
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
@@ -295,7 +295,7 @@ const Wallet = () => {
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
   };
-  
+
   const s2ab = (s) => {
     const buf = new ArrayBuffer(s.length);
     const view = new Uint8Array(buf);
@@ -315,18 +315,20 @@ const Wallet = () => {
       subscribeDate,
       user,
     } = row;
-  
+
     const invoiceDate = new Date(subscribeDate).toLocaleDateString();
 
-    console.log('My Invoice Data', row)
-  
     const gstRate = 0.18;
     const gstAmount = subscriptionAmount ? subscriptionAmount * gstRate : 0;
-    const amountWithoutGst = subscriptionAmount ? subscriptionAmount - gstAmount : 0;
-  
-    const sanitizedImagePath = signatureImage ? signatureImage.replace(/</g, "&lt;").replace(/>/g, "&gt;") : "";
+    const amountWithoutGst = subscriptionAmount
+      ? subscriptionAmount - gstAmount
+      : 0;
+
+    const sanitizedImagePath = signatureImage
+      ? signatureImage.replace(/</g, "&lt;").replace(/>/g, "&gt;")
+      : "";
     const jurisdictionAction = jurisdiction;
-  
+
     const htmlContent = `
       <html>
         <head>
@@ -360,20 +362,24 @@ const Wallet = () => {
                 <h2>Service offered by</h2>
                 <p><strong>Creator Name:</strong> ${raName}</p>
                 <p><strong>Creator ID:</strong> ${stackholderId}</p>
-                <p><strong>PAN No:</strong> ${row.pan || 'N/A'}</p>
+                <p><strong>PAN No:</strong> ${row.pan || "N/A"}</p>
                 ${gst ? `<p><strong>Creator GSTIN:</strong> ${gst}</p>` : ""}
                 <p><strong>Transaction ID:</strong> ${transactionId}</p>
                 <p><strong>Bill Date:</strong> ${invoiceDate}</p>
-                <p><strong>State Code:</strong> ${gst ? gst.slice(0, 2) : 'N/A'}</p>
+                <p><strong>State Code:</strong> ${
+                  gst ? gst.slice(0, 2) : "N/A"
+                }</p>
               </div>
               <div>
                 <h2>Billed To</h2>
                 <p>${user.name}</p>
                 <p>${user.mobileNumber}</p>
                 <p>${user.email}</p>
-                <p><strong>Billing Address:</strong> ${user.address || 'N/A'}</p>
-                <p><strong>State:</strong> ${user.state || 'N/A'}</p>
-                <p><strong>Place Of Supply:</strong> ${user.state || 'N/A'}</p>
+                <p><strong>Billing Address:</strong> ${
+                  user.address || "N/A"
+                }</p>
+                <p><strong>State:</strong> ${user.state || "N/A"}</p>
+                <p><strong>Place Of Supply:</strong> ${user.state || "N/A"}</p>
                 <p><strong>HSN Code:</strong> 999299</p>
                 <p><strong>RCM Applicable:</strong> No</p>
               </div>
@@ -382,19 +388,27 @@ const Wallet = () => {
               <thead>
                 <tr>
                   <th>Description</th>
-                  ${gst ? `<th>Price</th><th>IGST%</th><th>IGST Amt</th><th>Total Tax</th>` : ""}
+                  ${
+                    gst
+                      ? `<th>Price</th><th>IGST%</th><th>IGST Amt</th><th>Total Tax</th>`
+                      : ""
+                  }
                   <th>Amount</th>
                 </tr>
               </thead>
               <tbody>
                 <tr>
                   <td>${row.planType} Subscription</td>
-                  ${gst ? `
+                  ${
+                    gst
+                      ? `
                     <td>₹ ${amountWithoutGst.toFixed(2)}</td>
                     <td>18%</td>
                     <td>₹ ${gstAmount.toFixed(2)}</td>
                     <td>₹ ${gstAmount.toFixed(2)}</td>
-                  ` : ""}
+                  `
+                      : ""
+                  }
                   <td>₹ ${subscriptionAmount.toFixed(2)}</td>
                 </tr>
               </tbody>
@@ -416,7 +430,7 @@ const Wallet = () => {
         </body>
       </html>
     `;
-  
+
     const newWindow = window.open("", "_blank");
     newWindow.document.write(htmlContent);
     newWindow.document.close();
@@ -553,9 +567,7 @@ const Wallet = () => {
               <div className="flex flex-col pl-[5rem] flex-wrap justify-center items-center">
                 {currentPageData &&
                   currentPageData
-                    .filter(
-                      (row) => row.planType.trim() !== "No Plan"
-                    )
+                    .filter((row) => row.planType.trim() !== "No Plan")
                     .map((row, index) => (
                       <div
                         key={index}
@@ -568,7 +580,8 @@ const Wallet = () => {
                         </div>
                         <span className="flex items-center justify-between sm:w-[305px] h-[13px] font-[500] text-[14px] leading-[12px] text-lightWhite">
                           <span className="text-dimWhite">DATE:</span>{" "}
-                          {formatDate(row.subscribeDate)}
+                          {/* {formatDate(row.subscribeDate)} */}
+                          {new Date(row.subscribeDate).toLocaleString()}
                         </span>
                         <span className="flex items-center justify-between sm:w-[305px] h-[13px] font-[500] text-[14px] leading-[12px] text-lightWhite">
                           <span className="text-dimWhite">PLAN NAME:</span>{" "}
@@ -589,7 +602,7 @@ const Wallet = () => {
                           }
                           className="relative flex items-center justify-between sm:w-[305px] h-[13px] font-[500] text-[14px] leading-[12px] text-lightWhite cursor-pointer"
                         >
-                          <span className="text-dimWhite">TELEGRAM LINK:</span>{" "}
+                          <span className="text-dimWhite">TELEGRAM:</span>{" "}
                           <img
                             src={Link}
                             alt="Link"
@@ -600,6 +613,10 @@ const Wallet = () => {
                               {copiedRow === index ? "Copied" : "Copy"}
                             </span>
                           )}
+                        </span>
+                        <span className="flex items-center justify-between sm:w-[305px] h-[13px] font-[500] text-[14px] leading-[12px] text-lightWhite">
+                          <span className="text-dimWhite">KYC:</span>{" "}
+                          {row.user.isKYC ? "Y" : "N"}
                         </span>
                         <span className="flex items-center justify-between sm:w-[305px] h-[13px] font-[500] text-[14px] leading-[12px] text-lightWhite">
                           <span className="text-dimWhite">AMOUNT:</span>{" "}
@@ -630,20 +647,19 @@ const Wallet = () => {
                   <thead className="text-dimWhite bg-[#1E1E22]">
                     <tr>
                       <th className="text-start px-4 py-2">Transaction ID</th>
-                      <th className="text-start px-4 py-2">Date</th>
+                      <th className="text-center py-2">Date</th>
                       <th className="text-start px-4 py-2">Plan Name</th>
                       <th className="text-start px-4 py-2">User Number</th>
-                      <th className="text-start px-4 py-2">Telegram Link</th>
-                      <th className="text-start px-4 py-2">Amount</th>
+                      <th className="text-start px-4 py-2">Telegram</th>
+                      <th className="text-center px-8 py-2">KYC</th>
+                      <th className="text-center py-2">Amount</th>
                       <th className="text-start px-4 py-2">Invoice</th>
                     </tr>
                   </thead>
                   <tbody className="text-lightWhite">
                     {currentPageData &&
                       currentPageData
-                        .filter(
-                          (row) => row.planType.trim() !== "No Plan"
-                        )
+                        .filter((row) => row.planType.trim() !== "No Plan")
                         .map((row, index) => (
                           <tr
                             key={index}
@@ -657,7 +673,8 @@ const Wallet = () => {
                               {row.transactionId}
                             </td>
                             <td className="text-start font-[500] text-[16px] leading-[18px] px-4 py-2">
-                              {formatDate(row.subscribeDate)}
+                              {/* {formatDate(row.subscribeDate)} */}
+                              {new Date(row.subscribeDate).toLocaleString()}
                             </td>
                             <td className="text-start font-[500] text-[16px] leading-[18px] px-4 py-2">
                               {row.planType}
@@ -674,7 +691,7 @@ const Wallet = () => {
                                   index
                                 )
                               }
-                              className="relative text-center font-[500] leading-[18px] px-14 py-2 cursor-pointer"
+                              className="relative text-center font-[500] leading-[18px] px-10 py-2 cursor-pointer"
                             >
                               <img
                                 src={Link}
@@ -687,7 +704,10 @@ const Wallet = () => {
                                 </span>
                               )}
                             </td>
-                            <td className="text-start font-[500] text-[16px] leading-[18px] px-4 py-2">
+                            <td className="text-center font-[500] text-[16px] leading-[18px] px-4 py-2">
+                              {row.user.isKYC ? "Y" : "N"}
+                            </td>
+                            <td className="text-center font-[500] text-[16px] leading-[18px] py-2">
                               {row.amount}
                             </td>
                             <td
