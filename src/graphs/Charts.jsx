@@ -63,7 +63,7 @@ const Charts = () => {
         <div className="custom-tooltip rounded-[10px] p-2 bg-gradient border border-[#ffffff31]">
           {payload.map((entry, index) => (
             <p key={`tooltip-${index}`} style={{ color: entry.color }}>
-              {`${entry.name} : ${entry.value}`}
+              {`${entry.name} : ${entry.value.toFixed(2)}`}
             </p>
           ))}
         </div>
