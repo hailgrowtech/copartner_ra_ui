@@ -250,9 +250,11 @@ const Wallet = () => {
       "Subscription",
       "Plan Type",
       "Amount",
+      "Discounted Percentage",
+      "Discounted Amount",
       "Premium Telegram",
     ];
-
+  
     const rows = filteredTransactions.map((row) => [
       row.invoiceId,
       row.transactionId,
@@ -266,34 +268,39 @@ const Wallet = () => {
       getExpertType(row.subscription),
       row.planType,
       row.subscriptionAmount,
+      `${row.discountPercentage}%`,
+      row.totalAmount,
       row.premiumTelegramChannel,
     ]);
-
+  
     const data = [header, ...rows];
-
+  
     const worksheet = XLSX.utils.aoa_to_sheet(data);
     const workbook = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(workbook, worksheet, "Transactions");
-
+  
     const binaryString = XLSX.write(workbook, {
       bookType: "xlsx",
       type: "binary",
     });
-
+  
     const blob = new Blob([s2ab(binaryString)], {
       type: "application/octet-stream",
     });
-
+  
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
-    a.download = "transactions.xlsx";
+  
+    const firstInvoiceId = filteredTransactions.length > 0 ? filteredTransactions[0].invoiceId : 'transactions';
+    a.download = `${firstInvoiceId}.xlsx`;
+  
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
   };
-
+  
   const s2ab = (s) => {
     const buf = new ArrayBuffer(s.length);
     const view = new Uint8Array(buf);
@@ -301,7 +308,7 @@ const Wallet = () => {
       view[i] = s.charCodeAt(i) & 0xff;
     }
     return buf;
-  };
+  };  
 
   const handleInvoiceClick = (row) => {
     const {
@@ -311,22 +318,24 @@ const Wallet = () => {
       transactionId,
       invoiceId,
       subscribeDate,
+      totalAmount,
+      discountPercentage,
       user,
     } = row;
-
+  
     const invoiceDate = new Date(subscribeDate).toLocaleDateString();
-
+  
     const gstRate = 0.18;
     const gstAmount = subscriptionAmount ? subscriptionAmount * gstRate : 0;
-    const amountWithoutGst = subscriptionAmount
-      ? subscriptionAmount - gstAmount
-      : 0;
-
+    const amountWithoutGst = subscriptionAmount ? subscriptionAmount - gstAmount : 0;
+  
     const sanitizedImagePath = signatureImage
       ? signatureImage.replace(/</g, "&lt;").replace(/>/g, "&gt;")
       : "";
     const jurisdictionAction = jurisdiction;
-
+  
+    const totalAmountData = subscriptionAmount !== totalAmount ? `₹ ${totalAmount.toFixed(2)}` : "";
+  
     const htmlContent = `
       <html>
         <head>
@@ -364,18 +373,14 @@ const Wallet = () => {
                 ${gst ? `<p><strong>Creator GSTIN:</strong> ${gst}</p>` : ""}
                 <p><strong>Transaction ID:</strong> ${transactionId}</p>
                 <p><strong>Bill Date:</strong> ${invoiceDate}</p>
-                <p><strong>State Code:</strong> ${
-                  gst ? gst.slice(0, 2) : "N/A"
-                }</p>
+                <p><strong>State Code:</strong> ${gst ? gst.slice(0, 2) : "N/A"}</p>
               </div>
               <div>
                 <h2>Billed To</h2>
                 <p>${user.name}</p>
                 <p>${user.mobileNumber}</p>
                 <p>${user.email}</p>
-                <p><strong>Billing Address:</strong> ${
-                  user.address || "N/A"
-                }</p>
+                <p><strong>Billing Address:</strong> ${user.address || "N/A"}</p>
                 <p><strong>State:</strong> ${user.state || "N/A"}</p>
                 <p><strong>Place Of Supply:</strong> ${user.state || "N/A"}</p>
                 <p><strong>HSN Code:</strong> 999299</p>
@@ -386,28 +391,24 @@ const Wallet = () => {
               <thead>
                 <tr>
                   <th>Description</th>
-                  ${
-                    gst
-                      ? `<th>Price</th><th>IGST%</th><th>IGST Amt</th><th>Total Tax</th>`
-                      : ""
-                  }
+                  ${gst ? `<th>Price</th><th>IGST%</th><th>IGST Amt</th><th>Total Tax</th>` : ""}
                   <th>Amount</th>
+                  <th>Discount Percentage</th>
+                  <th>Paid Amount</th>
                 </tr>
               </thead>
               <tbody>
                 <tr>
                   <td>${row.planType} Subscription</td>
-                  ${
-                    gst
-                      ? `
-                    <td>₹ ${amountWithoutGst.toFixed(2)}</td>
-                    <td>18%</td>
-                    <td>₹ ${gstAmount.toFixed(2)}</td>
-                    <td>₹ ${gstAmount.toFixed(2)}</td>
-                  `
-                      : ""
-                  }
+                  ${gst ? `
+                  <td>₹ ${amountWithoutGst.toFixed(2)}</td>
+                  <td>18%</td>
+                  <td>₹ ${gstAmount.toFixed(2)}</td>
+                  <td>₹ ${gstAmount.toFixed(2)}</td>
+                  ` : ""}
                   <td>₹ ${subscriptionAmount.toFixed(2)}</td>
+                  <td>${discountPercentage} %</td>
+                  <td>${totalAmountData}</td>
                 </tr>
               </tbody>
             </table>
@@ -428,11 +429,12 @@ const Wallet = () => {
         </body>
       </html>
     `;
-
+  
     const newWindow = window.open("", "_blank");
     newWindow.document.write(htmlContent);
     newWindow.document.close();
   };
+  
 
   const handleMouseEnter = (rowIndex) => {
     setHoveredRow(rowIndex);
