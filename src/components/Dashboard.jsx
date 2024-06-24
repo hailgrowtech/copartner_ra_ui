@@ -11,8 +11,7 @@ const Dashboard = () => {
   const [customStartDate, setCustomStartDate] = useState(null);
   const [customEndDate, setCustomEndDate] = useState(null);
   const [isCustomPickerVisible, setIsCustomPickerVisible] = useState(false);
-  const [activeButtonSecondSection, setActiveButtonSecondSection] =
-    useState("today");
+  const [activeButtonSecondSection, setActiveButtonSecondSection] = useState("today");
   const [totalVisits, setTotalVisits] = useState(0);
   const [paidUsers, setPaidUsers] = useState(0);
   const [notInterested, setNotInterested] = useState(0);
@@ -21,19 +20,21 @@ const Dashboard = () => {
 
   const stackholderId = sessionStorage.getItem("stackholderId");
 
-  const SUB_TABLE = `https://copartners.in:5009/api/Subscription/GetByExpertsId/${stackholderId}`;
+  const SUB_TABLE_URL = `https://copartners.in:5009/api/Subscription/GetByExpertsId/${stackholderId}`;
 
-  const axiosServiceData = () =>
+  const fetchSubscriptionData = () => {
     axios
-      .get(SUB_TABLE)
+      .get(SUB_TABLE_URL)
       .then((res) => {
         setSubTable(res.data.data);
       })
       .catch((error) => {
         console.log("Something went wrong", error);
       });
+  };
+
   useEffect(() => {
-    axiosServiceData();
+    fetchSubscriptionData();
   }, []);
 
   useEffect(() => {
@@ -41,6 +42,9 @@ const Dashboard = () => {
       .get(`https://copartners.in:5132/api/Experts/${stackholderId}`)
       .then((res) => {
         setMyCard(res.data.data);
+      })
+      .catch((error) => {
+        console.log("Something went wrong", error);
       });
   }, []);
 
@@ -79,7 +83,11 @@ const Dashboard = () => {
     }
   };
 
-  const sortedSubTable = [...subTable].sort((a, b) => a.amount - b.amount);
+  const sortedSubTable = subTable ? [...subTable].sort((a, b) => a.amount - b.amount) : [];
+
+  if (!sortedSubTable) {
+    return <div>No data found</div>;
+  }
 
   return (
     <div className="xl:pl-[12rem] md:pl-[10rem] pl-6 md:py-[6rem] xl:py-[6rem] md:pt-[8rem] pt-[6rem]">
@@ -200,9 +208,7 @@ const Dashboard = () => {
                     />
                     <DatePicker
                       selected={customEndDate}
-                      onChange={(date) =>
-                        handleDateChange(customStartDate, date)
-                      }
+                      onChange={(date) => handleDateChange(customStartDate, date)}
                       selectsEnd
                       startDate={customStartDate}
                       endDate={customEndDate}
@@ -434,7 +440,7 @@ const Dashboard = () => {
                           className="flex gap-[4rem] md:w-[165px] w-[150px] h-[38px] md:flex-col justify-center items-center"
                         >
                           <div className="md:w-auto md:h-[97px] md:gap-0 gap-0 flex md:flex-col flex-col justify-center items-center">
-                            <span className="text-gradient-2 md:w-auto md:h-[32px] font-inter font-[700] md:text-[23px] text-[12 px] text-center">
+                            <span className="text-gradient-2 md:w-auto md:h-[32px] font-inter font-[700] md:text-[23px] text-[12px] text-center">
                               {subUnit.planType}
                             </span>
                             <span className="text-white md:w-[120px] font-poppins font-[700] md:text-[36px] text-[11px] text-center">

@@ -15,7 +15,7 @@ const SubsriptionDiscountOffer = () => {
   const axiosServiceData = async () => {
     try {
       const res = await axios.get(SUB_TABLE);
-      setDiscount(res.data.data);
+      setDiscount(res.data.data || []);
     } catch (error) {
       console.log("Something went wrong", error);
     }
@@ -23,7 +23,7 @@ const SubsriptionDiscountOffer = () => {
 
   useEffect(() => {
     axiosServiceData();
-  }, []); // Removed SUB_TABLE from dependency array
+  }, []);
 
   const handleSuccess = () => {
     toast.success("Successfully Updated!", {

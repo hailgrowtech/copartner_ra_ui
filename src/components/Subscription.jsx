@@ -11,7 +11,7 @@ const Subscription = () => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const [smallScreen, setSmallScreen] = useState(false);
-  const [subTable, setSubTable] = useState([]);
+  const [subTable, setSubTable] = useState([]); // Ensure initial state is an empty array
   const [activeUser, setActiveUser] = useState([]);
   const [currentSubscription, setCurrentSubscription] = useState(null);
   const [planTypeCounts, setPlanTypeCounts] = useState({});
@@ -124,8 +124,7 @@ const Subscription = () => {
     setPlanTypeCounts(counts);
   };
 
-  // Sort subTable by amount in ascending order
-  const sortedSubTable = [...subTable].sort((a, b) => a.amount - b.amount);
+  const sortedSubTable = subTable ? [...subTable].sort((a, b) => a.amount - b.amount) : [];
 
   return (
     <div className="pb-[5rem] xl:pl-[12rem] md:pl-[10rem] pl-6 md:py-[6rem] pt-[8rem] bg-gradient min-h-screen">
@@ -281,4 +280,4 @@ const Subscription = () => {
   );
 };
 
-export default Subscription
+export default Subscription;
