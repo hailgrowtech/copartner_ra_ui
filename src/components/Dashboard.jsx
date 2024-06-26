@@ -6,12 +6,14 @@ import ReferralLinkComponent from "./ReferralLinkComponent";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import axios from "axios";
+import { Link } from "react-router-dom";
 
 const Dashboard = () => {
   const [customStartDate, setCustomStartDate] = useState(null);
   const [customEndDate, setCustomEndDate] = useState(null);
   const [isCustomPickerVisible, setIsCustomPickerVisible] = useState(false);
-  const [activeButtonSecondSection, setActiveButtonSecondSection] = useState("today");
+  const [activeButtonSecondSection, setActiveButtonSecondSection] =
+    useState("today");
   const [totalVisits, setTotalVisits] = useState(0);
   const [paidUsers, setPaidUsers] = useState(0);
   const [notInterested, setNotInterested] = useState(0);
@@ -83,7 +85,9 @@ const Dashboard = () => {
     }
   };
 
-  const sortedSubTable = subTable ? [...subTable].sort((a, b) => a.amount - b.amount) : [];
+  const sortedSubTable = subTable
+    ? [...subTable].sort((a, b) => a.amount - b.amount)
+    : [];
 
   if (!sortedSubTable) {
     return <div>No data found</div>;
@@ -208,7 +212,9 @@ const Dashboard = () => {
                     />
                     <DatePicker
                       selected={customEndDate}
-                      onChange={(date) => handleDateChange(customStartDate, date)}
+                      onChange={(date) =>
+                        handleDateChange(customStartDate, date)
+                      }
                       selectsEnd
                       startDate={customStartDate}
                       endDate={customEndDate}
@@ -292,35 +298,43 @@ const Dashboard = () => {
                 onDataUpdate={handleDataUpdate}
               />
             </div>
+
             <div className="leaderDiv w-full md:w-1/3 flex md:flex-col justify-center items-center bg_cards rounded-[30px] p-2 md:mt-0 mt-3 md:ml-0 ml-[-6px]">
-              <img
-                src={telegramIcon}
-                alt=""
-                className="md:w-[70px] w-[60px] border-[2px] rounded-full p-4"
-              />
-              <div className="px-4">
-                <h3 className="text-left md:text-[2rem] text-[1.4rem] xl:text-[4rem] font-bold text-gradient">
-                  User Analysis Board
-                </h3>
-                <div className="flex flex-row justify-between md:text-xl xl:text-2xl">
-                  <span className="text-white">Total Visit:</span>
-                  <span className="font-semibold text-[#247673]">
-                    {totalVisits}
-                  </span>
+              <Link
+                to="/analysis_board"
+                className="w-full flex flex-col items-center md:gap-8 gap-0"
+              >
+                <div className="w-full flex justify-center">
+                  <img
+                    src={telegramIcon}
+                    alt=""
+                    className="md:w-[100px] w-[60px] border-[2px] rounded-full p-4"
+                  />
                 </div>
-                <div className="flex flex-row justify-between md:text-xl xl:text-2xl">
-                  <span className="text-white">Paid Users:</span>
-                  <span className="font-semibold text-[#25A2DE]">
-                    {paidUsers}
-                  </span>
+                <div className="px-4 w-full flex flex-col md:gap-4 gap-0">
+                  <h3 className="text-left md:text-[2rem] text-[1.4rem] xl:text-[4rem] font-bold text-gradient">
+                    User Analysis Board
+                  </h3>
+                  <div className="flex flex-row justify-between md:text-xl xl:text-2xl">
+                    <span className="text-white">Total Visit:</span>
+                    <span className="font-semibold text-[#247673]">
+                      {totalVisits}
+                    </span>
+                  </div>
+                  <div className="flex flex-row justify-between md:text-xl xl:text-2xl">
+                    <span className="text-white">Paid Users:</span>
+                    <span className="font-semibold text-[#25A2DE]">
+                      {paidUsers}
+                    </span>
+                  </div>
+                  <div className="flex flex-row justify-between md:text-xl xl:text-2xl">
+                    <span className="text-white">Not Interested:</span>
+                    <span className="font-semibold text-[#D0667A]">
+                      {notInterested}
+                    </span>
+                  </div>
                 </div>
-                <div className="flex flex-row justify-between md:text-xl xl:text-2xl">
-                  <span className="text-white">Not Interested:</span>
-                  <span className="font-semibold text-[#D0667A]">
-                    {notInterested}
-                  </span>
-                </div>
-              </div>
+              </Link>
             </div>
           </div>
 

@@ -53,7 +53,8 @@ import editDocument from "./editpopup.png";
 import eye from './Eye.png';
 import eyeClose from './eyeClosed.png';
 import login from './Login.png';
-import Link from './LinK.png'
+import Link from './LinK.png';
+import backImg from './backImg.png';
 
 export {
     availableIcon,
@@ -103,4 +104,5 @@ export {
     editDocument, eye,
     eyeClose,
     login, Link,
+    backImg,
 }

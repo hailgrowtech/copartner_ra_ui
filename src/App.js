@@ -8,6 +8,7 @@ import SignUp from "./components/SignUp";
 import ForgetPassword from "./components/ForgetPassword";
 import NewPassword from "./components/NewPassword";
 import ConfirmPassword from "./components/ConfirmPassword";
+import AnalysisBoard from "./components/AnalysisBoard";
 
 function App() {
   const [isSmallScreen, setIsSmallScreen] = useState(window.innerWidth < 768);
@@ -61,6 +62,7 @@ function App() {
                   signUp ? <Dashboard /> : <Navigate to="/signup" replace={true} />
                 }
               />
+              <Route path="/analysis_board" element={<AnalysisBoard />} />
               <Route path="/subscription" element={<Subscription />} />
               <Route path="/wallet" element={<Wallet />} />
               <Route path="/setting" element={<Setting />} />

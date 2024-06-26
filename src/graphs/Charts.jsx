@@ -21,7 +21,6 @@ const Charts = () => {
 
           if (response.data.isSuccess) {
             const apiData = response.data.data;
-            console.log('MY CHART DATA IS', response.data.data)
 
             const monthlyData = Array(12).fill().map((_, index) => ({
               name: format(new Date(2024, index, 1), 'MMMM'), // Generate month names
