@@ -10,7 +10,6 @@ import {
   Legend,
   ResponsiveContainer,
 } from "recharts";
-import { parseISO, getDay, getMonth, format, isWithinInterval } from "date-fns";
 
 const BarGraph = ({
   activeButton,
@@ -22,6 +21,31 @@ const BarGraph = ({
   const [error, setError] = useState("");
   const stackholderId = sessionStorage.getItem("stackholderId");
 
+  const formatDate = (date) => {
+    const d = new Date(date);
+    let month = "" + (d.getMonth() + 1);
+    let day = "" + d.getDate();
+    const year = d.getFullYear();
+
+    if (month.length < 2) month = "0" + month;
+    if (day.length < 2) day = "0" + day;
+
+    return [year, month, day].join("-");
+  };
+
+  const startOfWeek = (date) => {
+    const d = new Date(date);
+    const day = d.getDay();
+    const diff = d.getDate() - day + (day === 0 ? -6 : 1);
+    return new Date(d.setDate(diff));
+  };
+
+  const addDays = (date, days) => {
+    const result = new Date(date);
+    result.setDate(result.getDate() + days);
+    return result;
+  };
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -32,18 +56,26 @@ const BarGraph = ({
           const apiData = response.data.data;
 
           const dailyData = {};
+          const startOfCurrentWeek = startOfWeek(new Date());
+
           const weeklyData = Array(7)
             .fill()
-            .map((_, index) => ({
-              name: format(new Date(2024, 0, 1 + index), "EEEE"),
-              totalVisit: 0,
-              paidUsers: 0,
-              usersLeft: 0,
-            }));
+            .map((_, index) => {
+              const date = addDays(startOfCurrentWeek, index);
+              return {
+                name: formatDate(date),
+                totalVisit: 0,
+                paidUsers: 0,
+                usersLeft: 0,
+              };
+            });
+
           const monthlyData = Array(12)
             .fill()
             .map((_, index) => ({
-              name: format(new Date(2024, index, 1), "MMMM"),
+              name: new Date(2024, index, 1).toLocaleString("default", {
+                month: "long",
+              }),
               totalVisit: 0,
               paidUsers: 0,
               usersLeft: 0,
@@ -52,18 +84,29 @@ const BarGraph = ({
           const subscriptionCount = {};
 
           apiData.forEach((item) => {
-            const date = item.userJoiningDate ? parseISO(item.userJoiningDate) : null;
-            const dayOfWeek = date ? getDay(date) : null;
-            const month = date ? getMonth(date) : null;
-            const dayLabel = date ? format(date, "yyyy-MM-dd") : "Unknown Date";
+            const date = item.userJoiningDate
+              ? new Date(item.userJoiningDate)
+              : null;
+            const dayLabel = date ? formatDate(date) : "Unknown Date";
+            const month = date ? date.getMonth() : null;
 
             const totalVisit = 1;
-            const subscription = item.subscription && item.subscribeDate && item.subscription !== "No Subscription" && item.subscription !== "No Subscrption";
-            const notInterested = item.subscription && (item.subscription === "No Subscription" || item.subscription === "No Subscrption") ? 1 : 0;
+            const subscription =
+              item.subscription &&
+              item.subscribeDate &&
+              item.subscription !== "No Subscription" &&
+              item.subscription !== "No Subscrption";
+            const notInterested =
+              item.subscription &&
+              (item.subscription === "No Subscription" ||
+                item.subscription === "No Subscrption")
+                ? 1
+                : 0;
 
             if (subscription) {
-              const subscribeDate = item.subscribeDate.split("T")[0]; // Use only the date part
-              subscriptionCount[subscribeDate] = (subscriptionCount[subscribeDate] || 0) + 1;
+              const subscribeDate = item.subscribeDate.split("T")[0];
+              subscriptionCount[subscribeDate] =
+                (subscriptionCount[subscribeDate] || 0) + 1;
             }
 
             if (!dailyData[dayLabel]) {
@@ -77,9 +120,10 @@ const BarGraph = ({
             dailyData[dayLabel].totalVisit += totalVisit;
             dailyData[dayLabel].usersLeft += notInterested;
 
-            if (dayOfWeek !== null) {
-              weeklyData[dayOfWeek].totalVisit += totalVisit;
-              weeklyData[dayOfWeek].usersLeft += notInterested;
+            if (date && date >= startOfCurrentWeek && date <= addDays(startOfCurrentWeek, 6)) {
+              const index = Math.floor((date - startOfCurrentWeek) / (1000 * 60 * 60 * 24));
+              weeklyData[index].totalVisit += totalVisit;
+              weeklyData[index].usersLeft += notInterested;
             }
 
             if (month !== null) {
@@ -89,16 +133,19 @@ const BarGraph = ({
           });
 
           Object.keys(subscriptionCount).forEach((subscribeDate) => {
-            const date = parseISO(subscribeDate);
-            const dayOfWeek = getDay(date);
-            const month = getMonth(date);
-            const dayLabel = format(date, "yyyy-MM-dd");
+            const date = new Date(subscribeDate);
+            const dayLabel = formatDate(date);
+            const month = date.getMonth();
 
             if (dailyData[dayLabel]) {
               dailyData[dayLabel].paidUsers = subscriptionCount[subscribeDate];
             }
 
-            weeklyData[dayOfWeek].paidUsers += subscriptionCount[subscribeDate];
+            if (date >= startOfCurrentWeek && date <= addDays(startOfCurrentWeek, 6)) {
+              const index = Math.floor((date - startOfCurrentWeek) / (1000 * 60 * 60 * 24));
+              weeklyData[index].paidUsers += subscriptionCount[subscribeDate];
+            }
+
             monthlyData[month].paidUsers += subscriptionCount[subscribeDate];
           });
 
@@ -135,7 +182,7 @@ const BarGraph = ({
   }, [data, activeButton, customStartDate, customEndDate, onDataUpdate]);
 
   const selectData = () => {
-    const today = format(new Date(), "yyyy-MM-dd");
+    const today = formatDate(new Date());
     switch (activeButton) {
       case "today":
         const todayData = data.daily.filter((d) => d.name === today);
@@ -149,11 +196,8 @@ const BarGraph = ({
       case "custom":
         if (customStartDate && customEndDate) {
           return data.daily.filter((d) => {
-            const currentDate = parseISO(d.name);
-            return isWithinInterval(currentDate, {
-              start: customStartDate,
-              end: customEndDate,
-            });
+            const currentDate = new Date(d.name);
+            return currentDate >= customStartDate && currentDate <= customEndDate;
           });
         }
         return [];
