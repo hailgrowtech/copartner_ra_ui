@@ -17,6 +17,7 @@ const SubscriptionEditDiscount = ({ closeDialog, addCourse }) => {
   const [plans, setPlans] = useState([]);
   const [uniquePlanTypes, setUniquePlanTypes] = useState([]);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
 
   const stackholderId = sessionStorage.getItem("stackholderId");
 
@@ -66,6 +67,11 @@ const SubscriptionEditDiscount = ({ closeDialog, addCourse }) => {
   };
 
   const handleSubmit = async () => {
+    if (discountPer > 70) {
+      setErrorMessage("Can't give more than 70% discount");
+      return;
+    }
+
     if (
       !planName ||
       !discountPer ||
@@ -148,6 +154,17 @@ const SubscriptionEditDiscount = ({ closeDialog, addCourse }) => {
     setOffersDuration(`${duration} days`);
   };
 
+  const handleDiscountChange = (e) => {
+    const value = e.target.value;
+    if (value > 70) {
+      setErrorMessage("Can't give more than 70% discount");
+      setDiscountPer("");
+    } else {
+      setErrorMessage("");
+      setDiscountPer(value);
+    }
+  };
+
   return (
     <div className="fixed inset-0 z-[999] flex items-center justify-center">
       <div className="fixed inset-0 z-[999] flex items-center justify-center bg-black bg-opacity-[40%]">
@@ -215,10 +232,13 @@ const SubscriptionEditDiscount = ({ closeDialog, addCourse }) => {
                 <input
                   type="number"
                   value={discountPer}
-                  onChange={(e) => setDiscountPer(e.target.value)}
+                  onChange={handleDiscountChange}
                   id="default-input"
                   className="md:w-[482px] w-[345px] px-4 py-2 rounded-md text-white border border-[#40495C] bg-[#282F3E]"
                 />
+                {errorMessage && (
+                  <p className="text-red-500 text-sm mt-1">{errorMessage}</p>
+                )}
               </div>
             </div>
 
