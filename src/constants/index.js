@@ -34,13 +34,13 @@ export const sideBar = [
     title: "Subscription",
     path: '/subscription'
   },
-  {
-    id: 'webinar',
-    activeIcon: webinarIcon,
-    inactiveIcon: webinarIcon,
-    title: "Webinar",
-    path: '/webinar'
-  },
+  // {
+  //   id: 'webinar',
+  //   activeIcon: webinarIcon,
+  //   inactiveIcon: webinarIcon,
+  //   title: "Webinar",
+  //   path: '/webinar'
+  // },
   // {
   //   id: 'availability',
   //   icon: availableIcon,

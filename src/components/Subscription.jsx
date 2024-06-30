@@ -275,7 +275,7 @@ const Subscription = () => {
         )}
       </div>
       <SubsriptionDiscountOffer />
-      <SubscriptionCourse />
+      {/* <SubscriptionCourse /> */}
     </div>
   );
 };

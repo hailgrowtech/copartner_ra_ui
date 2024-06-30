@@ -64,7 +64,7 @@ function App() {
                 }
               />
               <Route path="/analysis_board" element={<AnalysisBoard />} />
-              <Route path="/webinar" element={<Webinar />} />
+              {/* <Route path="/webinar" element={<Webinar />} /> */}
               <Route path="/subscription" element={<Subscription />} />
               <Route path="/wallet" element={<Wallet />} />
               <Route path="/setting" element={<Setting />} />
