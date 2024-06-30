@@ -62,7 +62,7 @@ const SubscriptionCourse = () => {
                 className="flex flex-col justify-around h-[248px] bg-[#18181B] bg-opacity-[50%] rounded-[30px] md:m-4 m-[10px] p-4 w-[90%] max-w-sm"
               >
                 <div className="flex flex-row justify-between">
-                  <p className="w-[173px] h-[26px] font-[600] text-[16px] leading-[25px] text-lightWhite">
+                  <p className="w-[173px] h-[26px] font-[600] text-[14px] leading-[25px] text-lightWhite">
                     {row.courseName}
                   </p>
                   <div className="flex gap-3">

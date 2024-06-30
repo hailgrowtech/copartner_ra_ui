@@ -336,6 +336,8 @@ const Wallet = () => {
   
     const totalAmountData = subscriptionAmount !== totalAmount ? `₹ ${totalAmount.toFixed(2)}` : "";
   
+    const isSameState = user.state === row.state;
+  
     const htmlContent = `
       <html>
         <head>
@@ -391,7 +393,8 @@ const Wallet = () => {
               <thead>
                 <tr>
                   <th>Description</th>
-                  ${gst ? `<th>Price</th><th>IGST%</th><th>IGST Amt</th><th>Total Tax</th>` : ""}
+                  ${gst ? `<th>Price</th>` : ""}
+                  ${isSameState ? `<th>CGST%</th><th>SGST%</th><th>Total Tax</th>` : `<th>IGST%</th><th>IGST Amt</th><th>Total Tax</th>`}
                   <th>Amount</th>
                   <th>Discount Percentage</th>
                   <th>Paid Amount</th>
@@ -402,9 +405,15 @@ const Wallet = () => {
                   <td>${row.planType} Subscription</td>
                   ${gst ? `
                   <td>₹ ${amountWithoutGst.toFixed(2)}</td>
+                  ${isSameState ? `
+                  <td>9%<br/>₹ ${(gstAmount / 2).toFixed(2)}</td>
+                  <td>9%<br/>₹ ${(gstAmount / 2).toFixed(2)}</td>
+                  <td>₹ ${gstAmount.toFixed(2)}</td>
+                  ` : `
                   <td>18%</td>
                   <td>₹ ${gstAmount.toFixed(2)}</td>
                   <td>₹ ${gstAmount.toFixed(2)}</td>
+                  `}
                   ` : ""}
                   <td>₹ ${subscriptionAmount.toFixed(2)}</td>
                   <td>${discountPercentage} %</td>
@@ -433,8 +442,7 @@ const Wallet = () => {
     const newWindow = window.open("", "_blank");
     newWindow.document.write(htmlContent);
     newWindow.document.close();
-  };
-  
+  };  
 
   const handleMouseEnter = (rowIndex) => {
     setHoveredRow(rowIndex);

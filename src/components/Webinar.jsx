@@ -1,13 +1,12 @@
 import React, { useState, useEffect } from "react";
-import SubscriptionDialog from "./SubsciptionDialog";
 import { deleteIcon, edit } from "../assets";
-// import SubscriptionEditService from "./SubscriptionEditService";
+import WebinarDialog from "./WebinarDialog";
 import axios from "axios";
 import { toast } from "react-toastify";
 import SubsriptionDiscountOffer from "./SubsriptionDiscountOffer";
 import SubscriptionCourse from "./SubscriptionCourse";
 
-const Subscription = () => {
+const Webinar = () => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const [smallScreen, setSmallScreen] = useState(false);
@@ -130,7 +129,7 @@ const Subscription = () => {
     <div className="pb-[5rem] xl:pl-[12rem] md:pl-[10rem] pl-6 md:py-[6rem] pt-[8rem] bg-gradient min-h-screen">
       <div className="xl:w-[1520px] md:w-[1130px] w-[350px] flex items-center justify-between">
         <span className="w-[176px] h-[27px] font-inter text-[22px] font-[600] leading-[27px] text-white md:ml-0 ml-2">
-          Service
+          Webinar
         </span>
         <button
           onClick={openDialog}
@@ -139,11 +138,9 @@ const Subscription = () => {
           +Add
         </button>
         {isDialogOpen && (
-          <SubscriptionDialog
-            axiosServiceData={axiosServiceData}
+          <WebinarDialog
             isDialogOpen={isDialogOpen}
             closeDialog={closeDialog}
-            subTable={subTable}
           />
         )}
       </div>
@@ -280,4 +277,4 @@ const Subscription = () => {
   );
 };
 
-export default Subscription;
+export default Webinar;

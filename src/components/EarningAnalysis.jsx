@@ -56,10 +56,10 @@ const EarningAnalysis = () => {
 
         data.forEach((item) => {
           if (item.amount !== null && item.subscription !== "No Subscription") {
-            if (item.amount !== item.subscriptionAmount) {
+            if (item.subscriptionAmount * 0.3 > item.amount) {
               copartnerEarning += item.amount;
             } else {
-              personalEarning += item.subscriptionAmount;
+              personalEarning += item.amount;
             }
           }
         });
