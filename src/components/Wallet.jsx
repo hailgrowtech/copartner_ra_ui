@@ -106,11 +106,11 @@ const Wallet = () => {
         const sortedData = response.data.data.sort(
           (a, b) => new Date(b.subscribeDate) - new Date(a.subscribeDate)
         );
-        setTransactionTable(sortedData);
-        setFilteredTransactions(sortedData);
+        const filteredData = sortedData.filter(row => row.subscription !== "No Subscrption");
+        setFilteredTransactions(filteredData);
       } catch (error) {
         console.error("Error fetching the transaction table:", error);
-        setTransactionTable("Error");
+        setFilteredTransactions([]);
       }
     };
 
@@ -254,13 +254,13 @@ const Wallet = () => {
       "Discounted Amount",
       "Premium Telegram",
     ];
-  
+
     const rows = filteredTransactions.map((row) => [
       row.invoiceId,
       row.transactionId,
       row.user.mobileNumber,
       row.user.name,
-      row.userEmail,
+      row.user.email,
       row.user.pan,
       row.user.state,
       row.user.address,
@@ -272,29 +272,29 @@ const Wallet = () => {
       row.totalAmount,
       row.premiumTelegramChannel,
     ]);
-  
+
     const data = [header, ...rows];
-  
+
     const worksheet = XLSX.utils.aoa_to_sheet(data);
     const workbook = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(workbook, worksheet, "Transactions");
-  
+
     const binaryString = XLSX.write(workbook, {
       bookType: "xlsx",
       type: "binary",
     });
-  
+
     const blob = new Blob([s2ab(binaryString)], {
       type: "application/octet-stream",
     });
-  
+
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
-  
+
     const firstInvoiceId = filteredTransactions.length > 0 ? filteredTransactions[0].invoiceId : 'transactions';
     a.download = `${firstInvoiceId}.xlsx`;
-  
+
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);

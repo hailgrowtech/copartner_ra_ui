@@ -30,8 +30,9 @@ const Subscription = () => {
     const fetchActiveUser = async () => {
       try {
         const res = await axios.get(ACTIVE_USER);
-        setActiveUser(res.data.data); 
-        countPlanTypes(res.data.data);  
+        const filteredUsers = res.data.data.filter(user => user.subscription !== "No Subscrption");
+        setActiveUser(filteredUsers);
+        countPlanTypes(filteredUsers);
       } catch (error) {
         console.error('Error fetching active user:', error);
       }

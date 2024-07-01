@@ -26,7 +26,7 @@ const ForgetPassword = () => {
   useEffect(() => {
     const fetchUserId = async () => {
       try {
-        const response = await axios.get("https://copartners.in:5130/api/Users?userType=RA&page=1&pageSize=10");
+        const response = await axios.get("https://copartners.in:5130/api/Users?userType=RA&page=1&pageSize=100000");
         const users = response.data.data;
         const user = users.find((user) => user.email.toLowerCase() === emailId.toLowerCase());
 
