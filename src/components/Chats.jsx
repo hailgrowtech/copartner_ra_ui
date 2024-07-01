@@ -6,7 +6,7 @@ import { toast } from "react-toastify";
 import SubsriptionDiscountOffer from "./SubsriptionDiscountOffer";
 import SubscriptionCourse from "./SubscriptionCourse";
 
-const Webinar = () => {
+const Chats = () => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const [smallScreen, setSmallScreen] = useState(false);
@@ -15,7 +15,7 @@ const Webinar = () => {
   const [currentSubscription, setCurrentSubscription] = useState(null);
   const [planTypeCounts, setPlanTypeCounts] = useState({});
 
-  const stackholderId = sessionStorage.getItem('stackholderId');
+  const stackholderId = sessionStorage.getItem("stackholderId");
   const SUB_TABLE = `https://copartners.in:5009/api/Subscription/GetByExpertsId/${stackholderId}`;
   const ACTIVE_USER = `https://copartners.in:5132/api/RADashboard/GetDashboardRAListingData/${stackholderId}?page=1&pageSize=100000`;
 
@@ -29,10 +29,10 @@ const Webinar = () => {
     const fetchActiveUser = async () => {
       try {
         const res = await axios.get(ACTIVE_USER);
-        setActiveUser(res.data.data); 
-        countPlanTypes(res.data.data);  
+        setActiveUser(res.data.data);
+        countPlanTypes(res.data.data);
       } catch (error) {
-        console.error('Error fetching active user:', error);
+        console.error("Error fetching active user:", error);
       }
     };
 
@@ -44,7 +44,7 @@ const Webinar = () => {
       const res = await axios.get(SUB_TABLE);
       setSubTable(res.data.data);
     } catch (error) {
-      console.log('Something went wrong', error);
+      console.log("Something went wrong", error);
     }
   };
 
@@ -85,9 +85,12 @@ const Webinar = () => {
       const response = await axios.delete(DELETE_TABLE);
       if (response.status === 200) {
         console.log("Subscription deleted successfully");
-        setSubTable(subTable.filter(subscription => subscription.id !== id));
+        setSubTable(subTable.filter((subscription) => subscription.id !== id));
       } else {
-        console.error("Failed to delete subscription, status:", response.status);
+        console.error(
+          "Failed to delete subscription, status:",
+          response.status
+        );
       }
     } catch (error) {
       console.error("Error deleting subscription:", error);
@@ -96,19 +99,19 @@ const Webinar = () => {
 
   const formatDate = (dateString) => {
     const date = new Date(dateString);
-    const day = String(date.getDate()).padStart(2, '0');
-    const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are 0-based
+    const day = String(date.getDate()).padStart(2, "0");
+    const month = String(date.getMonth() + 1).padStart(2, "0"); // Months are 0-based
     const year = date.getFullYear();
     return `${day}-${month}-${year}`;
   };
 
   const getSubscriptionTypeLabel = (type) => {
     switch (type) {
-      case '3':
+      case "3":
         return "Futures & Options";
-      case '1':
+      case "1":
         return "Commodity";
-      case '2':
+      case "2":
         return "Equity";
       default:
         return "Select Subscription Type";
@@ -123,26 +126,53 @@ const Webinar = () => {
     setPlanTypeCounts(counts);
   };
 
-  const sortedSubTable = subTable ? [...subTable].sort((a, b) => a.amount - b.amount) : [];
+  const sortedSubTable = subTable
+    ? [...subTable].sort((a, b) => a.amount - b.amount)
+    : [];
 
   return (
-    <div className="pb-[5rem] xl:pl-[12rem] md:pl-[10rem] pl-6 md:py-[6rem] pt-[8rem] bg-gradient min-h-screen">
-      <div className="xl:w-[1520px] md:w-[1130px] w-[350px] flex items-center justify-between">
+    <div className="pb-[5rem] xl:pl-[12rem] md:pl-[10rem] pl-[1rem] md:py-[6rem] pt-[8rem] bg-gradient min-h-screen">
+      <div className="xl:w-[1520px] md:w-[1130px] w-[370px] flex items-center justify-between">
         <span className="w-[176px] h-[27px] font-inter text-[22px] font-[600] leading-[27px] text-white md:ml-0 ml-2">
-          Webinar
+          Chats Status
         </span>
-        <button
-          onClick={openDialog}
-          className="md:w-[100px] w-[70px] md:h-[40px] h-[30px] rounded-[10px] text-white font-[600] font-inter md:text-[12px] text-[14px] border-solid border-[1px] border-white md:mr-4 mr-2"
-        >
-          +Add
-        </button>
-        {isDialogOpen && (
-          <WebinarDialog
-            isDialogOpen={isDialogOpen}
-            closeDialog={closeDialog}
-          />
-        )}
+        <label class="inline-flex items-center me-5 cursor-pointer">
+          <input type="checkbox" value="" class="sr-only peer" checked />
+          <div class="relative w-11 h-6 bg-gray-200 rounded-full peer dark:bg-gray-700 peer-focus:ring-4 peer-focus:ring-green-300 dark:peer-focus:ring-green-800 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-green-600"></div>
+        </label>
+      </div>
+
+      <div className="flex py-[4rem]">
+        <div className="flex xl:w-[1520px] md:w-[1120px] md:gap-6 gap-2">
+          <div className="md:h-[230px] h-[160px] border border-white border-opacity-50 rounded-lg w-full p-4 flex flex-col gap-4">
+            <span className="font-[700] md:text-[26px] text-[14px] md:leading-[35px] leading-[20px] text-gradient-2">
+              Paid Active Queries:
+            </span>
+            <span className="font-[700] md:text-[52px] text-[22px] md:leading-[50px] leading-[12px] text-white">
+              10
+            </span>
+            <span className="text-white opacity-[50%] font-[500] md:text-[16px] text-[12px] md:leading-[18px] leading-[12px]">
+              5 Minutes Access
+            </span>
+            <button className="px-4 w-[100%] py-2 bg-blue-500 text-white md:text-[14px] text-[14px] rounded-lg hover:bg-blue-600">
+              Response
+            </button>
+          </div>
+          <div className="md:h-[230px] h-[160px] border border-white border-opacity-50 rounded-lg w-full p-4 flex flex-col gap-4">
+            <span className="font-[700] md:text-[26px] text-[14px] md:leading-[35px] leading-[20px] text-gradient-2">
+              Paid Active Queries:
+            </span>
+            <span className="font-[700] md:text-[52px] text-[22px] md:leading-[50px] leading-[12px] text-white">
+              10
+            </span>
+            <span className="text-white opacity-[50%] font-[500] md:text-[16px] text-[12px] md:leading-[18px] leading-[12px]">
+              5 Minutes Access
+            </span>
+            <button className="px-4 w-[100%] py-2 bg-blue-500 text-white md:text-[14px] text-[14px] rounded-lg hover:bg-blue-600">
+              Response
+            </button>
+          </div>
+        </div>
       </div>
 
       <div className="flex md:mt-[3rem] mt-1">
@@ -181,17 +211,20 @@ const Webinar = () => {
                   </div>
                 </div>
                 <span className="flex items-center justify-between sm:w-[305px] h-[13px] font-[500] text-[14px] leading-[12px] text-lightWhite">
-                  <span className="text-dimWhite">DATE:</span> {formatDate(row.createdOn)}
+                  <span className="text-dimWhite">DATE:</span>{" "}
+                  {formatDate(row.createdOn)}
                 </span>
                 <span className="flex items-center justify-between sm:w-[305px] h-[34px] font-[500] text-[14px] leading-[12px] text-lightWhite">
                   <span className="text-dimWhite">SERVICE TYPE:</span>{" "}
                   {getSubscriptionTypeLabel(row.serviceType)}
                 </span>
                 <span className="flex items-center justify-between sm:w-[305px] h-[13px] font-[500] text-[14px] leading-[12px] text-lightWhite">
-                  <span className="text-dimWhite">PLAN NAME:</span> {row.planType}
+                  <span className="text-dimWhite">PLAN NAME:</span>{" "}
+                  {row.planType}
                 </span>
                 <span className="flex items-center justify-between sm:w-[305px] h-[13px] font-[500] text-[14px] leading-[12px] text-lightWhite">
-                  <span className="text-dimWhite">DURATION:</span> {row.durationMonth}
+                  <span className="text-dimWhite">DURATION:</span>{" "}
+                  {row.durationMonth}
                 </span>
                 <span className="flex items-center justify-between sm:w-[305px] h-[13px] font-[500] text-[14px] leading-[12px] text-lightWhite">
                   <span className="text-dimWhite">AMOUNT:</span> {row.amount}
@@ -223,7 +256,10 @@ const Webinar = () => {
             </thead>
             <tbody className="text-lightWhite h-[81px]">
               {sortedSubTable.map((row, index) => (
-                <tr key={index} className={index % 2 === 0 ? "bg-[#1E1E22]" : ""}>
+                <tr
+                  key={index}
+                  className={index % 2 === 0 ? "bg-[#1E1E22]" : ""}
+                >
                   <td className="font-[500] text-center text-[16px] leading-[18px]">
                     {formatDate(row.createdOn)}
                   </td>
@@ -277,4 +313,4 @@ const Webinar = () => {
   );
 };
 
-export default Webinar;
+export default Chats;

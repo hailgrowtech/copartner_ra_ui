@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { deleteIcon } from "../assets";
-import SubscriptionEditCourse from "./SubscriptionChatDialog";
+import SubscriptionChatDiscountDialog from "./SubscriptionChatDiscountDialog";
 
-const SubscriptionCourse = () => {
+const SubscriptionChatDiscount = () => {
   const [smallScreen, setSmallScreen] = useState(false);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
@@ -34,10 +34,10 @@ const SubscriptionCourse = () => {
   }, []);
 
   return (
-    <div className="bg-gradient">
+    <div className="bg-gradient md:pt-[5rem] py-[4rem]">
       <div className="xl:w-[1520px] md:w-[1130px] w-[350px] flex items-center justify-between">
-        <span className="w-[176px] h-[27px] font-inter text-[22px] font-[600] leading-[27px] text-white md:ml-0 ml-2">
-          Course
+        <span className="font-inter text-[22px] font-[600] leading-[27px] text-white md:ml-0 ml-2">
+          Chat Discount Offer
         </span>
         <button
           onClick={openDialog}
@@ -46,7 +46,7 @@ const SubscriptionCourse = () => {
           +Add
         </button>
         {isDialogOpen && (
-          <SubscriptionEditCourse
+          <SubscriptionChatDiscountDialog
             addCourse={addCourse}
             closeDialog={closeDialog}
           />
@@ -104,13 +104,12 @@ const SubscriptionCourse = () => {
             <thead className="text-[#BABABA] font-inter font-[600] text-[14px] leading-[20px] h-[51px]">
               <tr>
                 <th className="text-center">DATE</th>
-                <th className="text-center">COURSE NAME</th>
-                <th className="text-center">DURATION</th>
-                <th className="text-center">SESSION</th>
-                <th className="text-center">AMOUNT</th>
-                <th className="text-center">LEVEL</th>
-                <th className="text-center">ACTIVE USER</th>
-                <th className="text-center">ACTIVE</th>
+                <th className="text-center">START DATE</th>
+                <th className="text-center">END DATE</th>
+                <th className="text-center">PLAN</th>
+                <th className="text-center">DISCOUNT %</th>
+                <th className="text-center">DISCOUNT AMT</th>
+                <th className="text-center">ACTION</th>
               </tr>
             </thead>
             <tbody className="text-lightWhite h-[81px]">
@@ -156,4 +155,4 @@ const SubscriptionCourse = () => {
   );
 };
 
-export default SubscriptionCourse;
+export default SubscriptionChatDiscount;

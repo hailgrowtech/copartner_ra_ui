@@ -54,12 +54,13 @@ export const sideBar = [
     title: "Wallet",
     path: '/wallet'
   },
-  // {
-  //   id: 'chats',
-  //   icon: chatIcon,
-  //   title: "Chats",
-  //   path: '/chats'
-  // },
+  {
+    id: 'chats',
+    activeIcon: chatIcon,
+    inactiveIcon: chatIcon,
+    title: "Chats",
+    path: '/chats'
+  },
   // {
   //   id: 'marketing',
   //   icon: marketingIcon,

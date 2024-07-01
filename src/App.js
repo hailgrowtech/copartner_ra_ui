@@ -10,6 +10,7 @@ import NewPassword from "./components/NewPassword";
 import ConfirmPassword from "./components/ConfirmPassword";
 import AnalysisBoard from "./components/AnalysisBoard";
 import Webinar from "./components/Webinar";
+import Chats from "./components/Chats";
 
 function App() {
   const [isSmallScreen, setIsSmallScreen] = useState(window.innerWidth < 768);
@@ -67,6 +68,7 @@ function App() {
               {/* <Route path="/webinar" element={<Webinar />} /> */}
               <Route path="/subscription" element={<Subscription />} />
               <Route path="/wallet" element={<Wallet />} />
+              <Route path="/chats" element={<Chats />} />
               <Route path="/setting" element={<Setting />} />
             </Routes>
             <Routes>

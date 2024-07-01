@@ -1,12 +1,17 @@
 import React, { useState, useEffect } from "react";
 import { deleteIcon } from "../assets";
-import SubscriptionEditCourse from "./SubscriptionChatDialog";
+import SubscriptionChatDialog from './SubscriptionChatDialog';
+import SubscriptionChatDiscount from "./SubscriptionChatDiscount";
 
-const SubscriptionCourse = () => {
+const SubscriptionChat = () => {
   const [smallScreen, setSmallScreen] = useState(false);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
-  const [courses, setCourses] = useState([]);
+  const [chat, setChat] = useState([]);
+
+  useEffect(() => {
+    const storedChat = JSON.parse(localStorage.getItem("chatData")) || [];
+    setChat(storedChat);
+  }, []);
 
   const openDialog = () => {
     setIsDialogOpen(true);
@@ -14,11 +19,12 @@ const SubscriptionCourse = () => {
 
   const closeDialog = () => {
     setIsDialogOpen(false);
-    setIsEditDialogOpen(false);
   };
 
   const addCourse = (newCourse) => {
-    setCourses([...courses, newCourse]);
+    const updatedChat = [...chat, newCourse];
+    setChat(updatedChat);
+    localStorage.setItem("chatData", JSON.stringify(updatedChat));
     closeDialog();
   };
 
@@ -34,10 +40,10 @@ const SubscriptionCourse = () => {
   }, []);
 
   return (
-    <div className="bg-gradient">
+    <div className="bg-gradient md:pt-[5rem] py-[4rem]">
       <div className="xl:w-[1520px] md:w-[1130px] w-[350px] flex items-center justify-between">
         <span className="w-[176px] h-[27px] font-inter text-[22px] font-[600] leading-[27px] text-white md:ml-0 ml-2">
-          Course
+          Chat Service
         </span>
         <button
           onClick={openDialog}
@@ -46,7 +52,7 @@ const SubscriptionCourse = () => {
           +Add
         </button>
         {isDialogOpen && (
-          <SubscriptionEditCourse
+          <SubscriptionChatDialog
             addCourse={addCourse}
             closeDialog={closeDialog}
           />
@@ -56,14 +62,14 @@ const SubscriptionCourse = () => {
       <div className="flex md:mt-[2rem] mt-1">
         {smallScreen ? (
           <div className="flex flex-wrap justify-center items-center ml-[-22px]">
-            {courses.map((row, index) => (
+            {chat.map((row, index) => (
               <div
                 key={index}
                 className="flex flex-col justify-around h-[248px] bg-[#18181B] bg-opacity-[50%] rounded-[30px] md:m-4 m-[10px] p-4 w-[90%] max-w-sm"
               >
                 <div className="flex flex-row justify-between">
                   <p className="w-[173px] h-[26px] font-[600] text-[14px] leading-[25px] text-lightWhite">
-                    {row.courseName}
+                    {row.planName}
                   </p>
                   <div className="flex gap-3">
                     <button>
@@ -82,16 +88,7 @@ const SubscriptionCourse = () => {
                   <span className="text-dimWhite">DURATION:</span> {row.duration}
                 </span>
                 <span className="flex items-center justify-between sm:w-[305px] h-[13px] font-[500] text-[14px] leading-[12px] text-lightWhite">
-                  <span className="text-dimWhite">SESSION:</span> {row.session}
-                </span>
-                <span className="flex items-center justify-between sm:w-[305px] h-[13px] font-[500] text-[14px] leading-[12px] text-lightWhite">
                   <span className="text-dimWhite">AMOUNT:</span> {row.amount}
-                </span>
-                <span className="flex items-center justify-between sm:w-[305px] h-[13px] font-[500] text-[14px] leading-[12px] text-lightWhite">
-                  <span className="text-dimWhite">LEVEL:</span> {row.level}
-                </span>
-                <span className="flex items-center justify-between sm:w-[305px] h-[13px] font-[500] text-[14px] leading-[12px] text-lightWhite">
-                  <span className="text-dimWhite">ACTIVE USER:</span> {row.activeUser}
                 </span>
               </div>
             ))}
@@ -104,38 +101,26 @@ const SubscriptionCourse = () => {
             <thead className="text-[#BABABA] font-inter font-[600] text-[14px] leading-[20px] h-[51px]">
               <tr>
                 <th className="text-center">DATE</th>
-                <th className="text-center">COURSE NAME</th>
+                <th className="text-center">PLAN NAME</th>
                 <th className="text-center">DURATION</th>
-                <th className="text-center">SESSION</th>
                 <th className="text-center">AMOUNT</th>
-                <th className="text-center">LEVEL</th>
-                <th className="text-center">ACTIVE USER</th>
-                <th className="text-center">ACTIVE</th>
+                <th className="text-center">ACTION</th>
               </tr>
             </thead>
             <tbody className="text-lightWhite h-[81px]">
-              {courses.map((row, index) => (
+              {chat.map((row, index) => (
                 <tr key={index} className={index % 2 === 0 ? "bg-[#1E1E22]" : ""}>
                   <td className="font-[500] text-center text-[16px] leading-[18px]">
                     {row.date}
                   </td>
                   <td className="font-[500] text-center text-[16px] leading-[18px]">
-                    {row.courseName}
+                    {row.planName}
                   </td>
                   <td className="font-[500] text-center text-[16px] leading-[18px]">
                     {row.duration}
                   </td>
-                  <td className="py-2 text-center font-[500] text-[16px] leading-[18px]">
-                    {row.session}
-                  </td>
                   <td className="font-[500] text-center text-[16px] leading-[18px]">
                     {row.amount}
-                  </td>
-                  <td className="font-[500] text-center text-[16px] leading-[18px]">
-                    {row.level}
-                  </td>
-                  <td className="font-[500] text-center text-[16px] leading-[18px]">
-                    {row.activeUser}
                   </td>
                   <td className="flex flex-row items-center justify-center gap-2 py-[2rem]">
                     <button>
@@ -152,8 +137,9 @@ const SubscriptionCourse = () => {
           </table>
         )}
       </div>
+      <SubscriptionChatDiscount />
     </div>
   );
 };
 
-export default SubscriptionCourse;
+export default SubscriptionChat;
