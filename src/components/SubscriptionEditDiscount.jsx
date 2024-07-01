@@ -11,8 +11,8 @@ const SubscriptionEditDiscount = ({ closeDialog, addCourse }) => {
   const [planAmt, setPlanAmt] = useState("");
   const [discountedAmount, setdiscountedAmount] = useState("");
   const [isdiscountedAmountOpen, setIsdiscountedAmountOpen] = useState(false);
-  const [startDate, setStartDate] = useState("");
-  const [endDate, setEndDate] = useState("");
+  const [startDate, setStartDate] = useState(null);
+  const [endDate, setEndDate] = useState(null);
   const [offersDuration, setOffersDuration] = useState("");
   const [plans, setPlans] = useState([]);
   const [uniquePlanTypes, setUniquePlanTypes] = useState([]);
@@ -67,11 +67,6 @@ const SubscriptionEditDiscount = ({ closeDialog, addCourse }) => {
   };
 
   const handleSubmit = async () => {
-    if (discountPer > 70) {
-      setErrorMessage("Can't give more than 70% discount");
-      return;
-    }
-
     if (
       !planName ||
       !discountPer ||
@@ -127,9 +122,9 @@ const SubscriptionEditDiscount = ({ closeDialog, addCourse }) => {
           discountPercentage: discountPer,
           amount: planAmt,
           discountedAmount: discountedAmount,
-          discountValidFrom: startDate, // Convert to UTC
-          discountValidTo: new Date(endDate).toISOString(), // Convert to UTC
-          createdOn: new Date().toISOString(), // Convert to UTC
+          discountValidFrom: new Date(startDate).toISOString(),
+          discountValidTo: new Date(endDate).toISOString(),
+          createdOn: new Date().toISOString(), 
         };
 
         addCourse(newCourse);
