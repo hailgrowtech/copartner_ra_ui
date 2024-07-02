@@ -125,7 +125,7 @@ const SubsriptionDiscountOffer = () => {
       <div className="flex md:mt-[3rem] mt-1">
         {smallScreen ? (
           <div className="flex flex-wrap justify-center items-center ml-[-22px]">
-            {discount.filter((row) => row.amount !== row.discountedAmount).map((row, index) => (
+            {discount.filter((row) => row.discountPercentage > 0).map((row, index) => (
               <div
                 key={index}
                 className="flex flex-col justify-around h-[248px] bg-[#18181B] bg-opacity-[50%] rounded-[30px] md:m-4 m-[10px] p-4 w-[90%] max-w-sm"
@@ -188,7 +188,7 @@ const SubsriptionDiscountOffer = () => {
             </thead>
             <tbody className="text-lightWhite h-[81px]">
               {discount
-                .filter((row) => row.amount !== row.discountedAmount)
+                .filter((row) => row.discountPercentage > 0)
                 .map((row, index) => (
                   <tr
                     key={index}
