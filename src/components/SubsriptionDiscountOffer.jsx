@@ -189,7 +189,7 @@ const SubsriptionDiscountOffer = () => {
             </thead>
             <tbody className="text-lightWhite h-[81px]">
               {discount
-                .filter((row) => row.amount !== row.discountedAmount)
+                .filter((row) => row.discountPercentage > 0)
                 .map((row, index) => (
                   <tr
                     key={index}

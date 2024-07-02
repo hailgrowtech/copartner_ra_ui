@@ -55,6 +55,8 @@ import eyeClose from './eyeClosed.png';
 import login from './Login.png';
 import Link from './LinK.png';
 import backImg from './backImg.png';
+import webinarWhite from './webnarWhite.png';
+import chatWhite from './chatWhite.png'
 
 export {
     availableIcon,
@@ -105,4 +107,6 @@ export {
     eyeClose,
     login, Link,
     backImg,
+    webinarWhite,
+    chatWhite,
 }

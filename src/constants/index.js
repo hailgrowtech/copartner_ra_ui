@@ -16,7 +16,7 @@ import {
   edit, deleteIcon,
   invoiceImg,
   hdfc, kotak, icici,
-  googlepay, paytm, phonepe,
+  googlepay, paytm, phonepe, webinarWhite, chatWhite
 } from "../assets";
 
 export const sideBar = [
@@ -36,7 +36,7 @@ export const sideBar = [
   },
   // {
   //   id: 'webinar',
-  //   activeIcon: webinarIcon,
+  //   activeIcon: webinarWhite,
   //   inactiveIcon: webinarIcon,
   //   title: "Webinar",
   //   path: '/webinar'
@@ -56,7 +56,7 @@ export const sideBar = [
   },
   {
     id: 'chats',
-    activeIcon: chatIcon,
+    activeIcon: chatWhite,
     inactiveIcon: chatIcon,
     title: "Chats",
     path: '/chats'
@@ -124,6 +124,7 @@ export const subscriptionData = [
     subType: 'Futures & Options',
     plan: "Basic",
     duration: "1 month",
+    phNum: '9910382771',
     amount: "₹1,999 ",
     activeUser: '2000',
     activeEdit: edit,
@@ -134,6 +135,7 @@ export const subscriptionData = [
     subType: 'Commodity',
     plan: "Standard",
     duration: "3 month",
+    phNum: '7129991181',
     amount: "₹5,999 ",
     activeUser: '5000',
     activeEdit: edit,
