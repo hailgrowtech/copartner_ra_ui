@@ -11,6 +11,9 @@ import ConfirmPassword from "./components/ConfirmPassword";
 import AnalysisBoard from "./components/AnalysisBoard";
 import Webinar from "./components/Webinar";
 import Chats from "./components/Chats";
+import ChatsPaid from "./components/ChatsPaid";
+import ChatsFree from "./components/ChatsHistory";
+import ChatsHistory from "./components/ChatsHistory";
 
 function App() {
   const [isSmallScreen, setIsSmallScreen] = useState(window.innerWidth < 768);
@@ -65,10 +68,11 @@ function App() {
                 }
               />
               <Route path="/analysis_board" element={<AnalysisBoard />} />
-              {/* <Route path="/webinar" element={<Webinar />} /> */}
+              <Route path="/webinar" element={<Webinar />} />
               <Route path="/subscription" element={<Subscription />} />
               <Route path="/wallet" element={<Wallet />} />
               <Route path="/chats" element={<Chats />} />
+              <Route path="/chats/chats_history" element={<ChatsHistory />} />
               <Route path="/setting" element={<Setting />} />
             </Routes>
             <Routes>

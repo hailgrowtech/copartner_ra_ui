@@ -5,7 +5,7 @@ import { toast } from "react-toastify";
 import { subscriptionData } from "../constants";
 import DatePicker from "react-datepicker";
 
-const Chats = () => {
+const ChatsHistory = () => {
   const [smallScreen, setSmallScreen] = useState(false);
   const [subTable, setSubTable] = useState([]);
   const [activeUser, setActiveUser] = useState([]);
@@ -42,7 +42,7 @@ const Chats = () => {
     <div className="pb-[5rem] xl:pl-[12rem] md:pl-[10rem] pl-[1rem] md:py-[6rem] pt-[8rem] bg-gradient min-h-screen">
       <div className="xl:w-[1520px] md:w-[1130px] w-[370px] flex items-center justify-between">
         <span className="w-[176px] h-[27px] font-inter text-[22px] font-[600] leading-[27px] text-white md:ml-0 ml-2">
-          Chats Status
+          Chats History 
         </span>
         <label class="inline-flex items-center me-5 cursor-pointer">
           <input type="checkbox" value="" class="sr-only peer" checked />
@@ -195,4 +195,4 @@ const Chats = () => {
   );
 };
 
-export default Chats;
+export default ChatsHistory;
