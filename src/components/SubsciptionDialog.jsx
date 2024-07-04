@@ -203,7 +203,6 @@ const SubscriptionDialog = ({ closeDialog, axiosServiceData, subTable }) => {
                     <input
                       id="subscriptionType"
                       value={getSubscriptionTypeLabel(subscriptionType)}
-                      disabled
                       onClick={toggleSubscriptionDropdown}
                       className={`md:w-[482px] w-[345px] md:px-4 px-2 py-2 cursor-pointer rounded-md border border-[#40495C] bg-[#282F3E] ${inputClassName}`}
                     />

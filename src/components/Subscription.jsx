@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import SubscriptionDialog from "./SubsciptionDialog";
 import { deleteIcon, edit } from "../assets";
-// import SubscriptionEditService from "./SubscriptionEditService";
+import SubscriptionEditService from "./SubscriptionEditService";
 import axios from "axios";
 import { toast } from "react-toastify";
 import SubsriptionDiscountOffer from "./SubsriptionDiscountOffer";
@@ -15,8 +15,9 @@ const Subscription = () => {
   const [activeUser, setActiveUser] = useState([]);
   const [currentSubscription, setCurrentSubscription] = useState(null);
   const [planTypeCounts, setPlanTypeCounts] = useState({});
+  const [showSubscriptionType, setShowSubscriptionType] = useState("1"); // Default to Commodity
 
-  const stackholderId = sessionStorage.getItem('stackholderId');
+  const stackholderId = sessionStorage.getItem("stackholderId");
   const SUB_TABLE = `https://copartners.in:5009/api/Subscription/GetByExpertsId/${stackholderId}`;
   const ACTIVE_USER = `https://copartners.in:5132/api/RADashboard/GetDashboardRAListingData/${stackholderId}?page=1&pageSize=100000`;
 
@@ -30,11 +31,13 @@ const Subscription = () => {
     const fetchActiveUser = async () => {
       try {
         const res = await axios.get(ACTIVE_USER);
-        const filteredUsers = res.data.data.filter(user => user.subscription !== "No Subscrption");
+        const filteredUsers = res.data.data.filter(
+          (user) => user.subscription !== "No Subscrption"
+        );
         setActiveUser(filteredUsers);
         countPlanTypes(filteredUsers);
       } catch (error) {
-        console.error('Error fetching active user:', error);
+        console.error("Error fetching active user:", error);
       }
     };
 
@@ -46,7 +49,7 @@ const Subscription = () => {
       const res = await axios.get(SUB_TABLE);
       setSubTable(res.data.data);
     } catch (error) {
-      console.log('Something went wrong', error);
+      console.log("Something went wrong", error);
     }
   };
 
@@ -87,9 +90,12 @@ const Subscription = () => {
       const response = await axios.delete(DELETE_TABLE);
       if (response.status === 200) {
         console.log("Subscription deleted successfully");
-        setSubTable(subTable.filter(subscription => subscription.id !== id));
+        setSubTable(subTable.filter((subscription) => subscription.id !== id));
       } else {
-        console.error("Failed to delete subscription, status:", response.status);
+        console.error(
+          "Failed to delete subscription, status:",
+          response.status
+        );
       }
     } catch (error) {
       console.error("Error deleting subscription:", error);
@@ -98,19 +104,19 @@ const Subscription = () => {
 
   const formatDate = (dateString) => {
     const date = new Date(dateString);
-    const day = String(date.getDate()).padStart(2, '0');
-    const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are 0-based
+    const day = String(date.getDate()).padStart(2, "0");
+    const month = String(date.getMonth() + 1).padStart(2, "0"); // Months are 0-based
     const year = date.getFullYear();
     return `${day}-${month}-${year}`;
   };
 
   const getSubscriptionTypeLabel = (type) => {
     switch (type) {
-      case '3':
+      case "3":
         return "Futures & Options";
-      case '1':
+      case "1":
         return "Commodity";
-      case '2':
+      case "2":
         return "Equity";
       default:
         return "Select Subscription Type";
@@ -125,7 +131,11 @@ const Subscription = () => {
     setPlanTypeCounts(counts);
   };
 
-  const sortedSubTable = subTable ? [...subTable].sort((a, b) => a.amount - b.amount) : [];
+  const filteredSubTable = (subTable || []).filter(
+    (row) => row.serviceType === showSubscriptionType
+  );
+
+  const sortedSubTable = filteredSubTable.sort((a, b) => a.amount - b.amount);
 
   return (
     <div className="pb-[5rem] xl:pl-[12rem] md:pl-[10rem] pl-6 md:py-[6rem] pt-[8rem] bg-gradient min-h-screen">
@@ -149,6 +159,41 @@ const Subscription = () => {
         )}
       </div>
 
+      <div className="flex md:flex-row flex-col md:justify-between md:gap-0 gap-0 md:mt-[3rem] mt-4">
+        <div className="flex flex-row md:gap-4 gap-6">
+          <button
+            onClick={() => setShowSubscriptionType("1")}
+            className={`md:w-[120px] w-[100px] h-[40px] rounded-[10px] border-solid border-[1px] border-white text-black ${
+              showSubscriptionType === "1"
+                ? "bg-[#ffffff] font-[600] font-inter md:text-[12px] text-[12px]"
+                : "bg-transparent text-white font-[600] font-inter md:text-[12px] text-[12px]"
+            }`}
+          >
+            Commodity
+          </button>
+          <button
+            onClick={() => setShowSubscriptionType("2")}
+            className={`md:w-[90px] w-[70px] h-[40px] rounded-[10px] border-solid border-[1px] border-white text-black ${
+              showSubscriptionType === "2"
+                ? "bg-[#ffffff] font-[600] font-inter md:text-[12px] text-[12px]"
+                : "bg-transparent text-white font-[600] font-inter md:text-[12px] text-[12px]"
+            }`}
+          >
+            Equity
+          </button>
+          <button
+            onClick={() => setShowSubscriptionType("3")}
+            className={`md:w-[140px] w-[120px] h-[40px] rounded-[10px] border-solid border-[1px] border-white text-black ${
+              showSubscriptionType === "3"
+                ? "bg-[#ffffff] font-[600] font-inter md:text-[12px] text-[12px]"
+                : "bg-transparent text-white font-[600] font-inter md:text-[12px] text-[12px]"
+            }`}
+          >
+            Futures & Options
+          </button>
+        </div>
+      </div>
+
       <div className="flex md:mt-[3rem] mt-1">
         {smallScreen ? (
           <div className="flex flex-wrap justify-center items-center ml-[-22px]">
@@ -162,7 +207,7 @@ const Subscription = () => {
                     {getSubscriptionTypeLabel(row.serviceType)}
                   </p>
                   <div className="flex gap-3">
-                    {/* <button onClick={() => openEditDialog(row)}>
+                    <button onClick={() => openEditDialog(row)}>
                       <img
                         src={edit}
                         alt=""
@@ -171,10 +216,12 @@ const Subscription = () => {
                     </button>
                     {isEditDialogOpen && (
                       <SubscriptionEditService
-                        isEditDialogOpen={isEditDialogOpen}
-                        closeDialog={closeDialog}
-                      />
-                    )} */}
+                      isEditDialogOpen={isEditDialogOpen}
+                      closeDialog={closeDialog}
+                      subTable={row}
+                      axiosServiceData={axiosServiceData}
+                    />
+                    )}
                     <button onClick={() => handleDeleteTable(row.id)}>
                       <img
                         src={deleteIcon}
@@ -185,17 +232,20 @@ const Subscription = () => {
                   </div>
                 </div>
                 <span className="flex items-center justify-between sm:w-[305px] h-[13px] font-[500] text-[14px] leading-[12px] text-lightWhite">
-                  <span className="text-dimWhite">DATE:</span> {formatDate(row.createdOn)}
+                  <span className="text-dimWhite">DATE:</span>{" "}
+                  {formatDate(row.createdOn)}
                 </span>
                 <span className="flex items-center justify-between sm:w-[305px] h-[34px] font-[500] text-[14px] leading-[12px] text-lightWhite">
                   <span className="text-dimWhite">SERVICE TYPE:</span>{" "}
                   {getSubscriptionTypeLabel(row.serviceType)}
                 </span>
                 <span className="flex items-center justify-between sm:w-[305px] h-[13px] font-[500] text-[14px] leading-[12px] text-lightWhite">
-                  <span className="text-dimWhite">PLAN NAME:</span> {row.planType}
+                  <span className="text-dimWhite">PLAN NAME:</span>{" "}
+                  {row.planType}
                 </span>
                 <span className="flex items-center justify-between sm:w-[305px] h-[13px] font-[500] text-[14px] leading-[12px] text-lightWhite">
-                  <span className="text-dimWhite">DURATION:</span> {row.durationMonth}
+                  <span className="text-dimWhite">DURATION:</span>{" "}
+                  {row.durationMonth}
                 </span>
                 <span className="flex items-center justify-between sm:w-[305px] h-[13px] font-[500] text-[14px] leading-[12px] text-lightWhite">
                   <span className="text-dimWhite">AMOUNT:</span> {row.amount}
@@ -227,7 +277,10 @@ const Subscription = () => {
             </thead>
             <tbody className="text-lightWhite h-[81px]">
               {sortedSubTable.map((row, index) => (
-                <tr key={index} className={index % 2 === 0 ? "bg-[#1E1E22]" : ""}>
+                <tr
+                  key={index}
+                  className={index % 2 === 0 ? "bg-[#1E1E22]" : ""}
+                >
                   <td className="font-[500] text-center text-[16px] leading-[18px]">
                     {formatDate(row.createdOn)}
                   </td>
@@ -247,7 +300,7 @@ const Subscription = () => {
                     {planTypeCounts[row.planType] || 0}/{activeUser.length}
                   </td>
                   <td className="flex flex-row items-center justify-center gap-2 py-[2rem]">
-                    {/* <button onClick={() => openEditDialog(row)}>
+                    <button onClick={() => openEditDialog(row)}>
                       <img
                         src={edit}
                         alt=""
@@ -258,9 +311,10 @@ const Subscription = () => {
                       <SubscriptionEditService
                         isEditDialogOpen={isEditDialogOpen}
                         closeDialog={closeDialog}
-                        subTable={subTable}
+                        subTable={row}
+                        axiosServiceData={axiosServiceData}
                       />
-                    )} */}
+                    )}
                     <button onClick={() => handleDeleteTable(row.id)}>
                       <img
                         src={deleteIcon}
@@ -282,3 +336,4 @@ const Subscription = () => {
 };
 
 export default Subscription;
+

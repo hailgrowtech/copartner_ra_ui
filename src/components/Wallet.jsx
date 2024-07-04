@@ -249,52 +249,78 @@ const Wallet = () => {
       "Subscription Date",
       "Subscription",
       "Plan Type",
+      "CGST%",
+      "SGST%",
+      "IGST%",
+      "IGST Amt",
+      "Total Tax",
       "Amount",
       "Discounted Percentage",
       "Discounted Amount",
       "Premium Telegram",
     ];
-
-    const rows = filteredTransactions.map((row) => [
-      row.invoiceId,
-      row.transactionId,
-      row.user.mobileNumber,
-      row.user.name,
-      row.user.email,
-      row.user.pan,
-      row.user.state,
-      row.user.address,
-      formatDate(row.subscribeDate),
-      getExpertType(row.subscription),
-      row.planType,
-      row.subscriptionAmount,
-      `${row.discountPercentage}%`,
-      row.totalAmount,
-      row.premiumTelegramChannel,
-    ]);
-
+  
+    const rows = filteredTransactions.map((row) => {
+      const gstRate = 0.18;
+      const gstAmount = row.subscriptionAmount ? row.subscriptionAmount * gstRate : 0;
+      const amountWithoutGst = row.subscriptionAmount ? row.subscriptionAmount - gstAmount : 0;
+  
+      const isSameState = row.user.state === row.state;
+  
+      const cgst = isSameState ? 9 : 0;
+      const sgst = isSameState ? 9 : 0;
+      const igst = isSameState ? 0 : 18;
+      const cgstAmount = isSameState ? gstAmount / 2 : 0;
+      const sgstAmount = isSameState ? gstAmount / 2 : 0;
+      const igstAmount = isSameState ? 0 : gstAmount;
+      const totalTax = gstAmount.toFixed(2);
+  
+      return [
+        row.invoiceId,
+        row.transactionId,
+        row.user.mobileNumber,
+        row.user.name,
+        row.user.email,
+        row.user.pan,
+        row.user.state,
+        row.user.address,
+        formatDate(row.subscribeDate),
+        getExpertType(row.subscription),
+        row.planType,
+        `${cgst}%`,
+        `${sgst}%`,
+        `${igst}%`,
+        `${igstAmount.toFixed(2)}`,
+        `${totalTax}`,
+        row.subscriptionAmount,
+        `${row.discountPercentage}%`,
+        row.totalAmount,
+        row.premiumTelegramChannel,
+      ];
+    });
+  
     const data = [header, ...rows];
-
+  
     const worksheet = XLSX.utils.aoa_to_sheet(data);
     const workbook = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(workbook, worksheet, "Transactions");
-
+  
     const binaryString = XLSX.write(workbook, {
       bookType: "xlsx",
       type: "binary",
     });
-
+  
     const blob = new Blob([s2ab(binaryString)], {
       type: "application/octet-stream",
     });
-
+  
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
-
+  
     const firstInvoiceId = filteredTransactions.length > 0 ? filteredTransactions[0].invoiceId : 'transactions';
     a.download = `${firstInvoiceId}.xlsx`;
-
+  
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
@@ -308,7 +334,7 @@ const Wallet = () => {
       view[i] = s.charCodeAt(i) & 0xff;
     }
     return buf;
-  };  
+  };
 
   const handleInvoiceClick = (row) => {
     const {

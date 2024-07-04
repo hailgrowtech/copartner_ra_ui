@@ -77,8 +77,8 @@ const SubsriptionDiscountOffer = () => {
     setIsDialogOpen(false);
   };
 
-  const addCourse = (newCourse) => {
-    setDiscount([...discount, newCourse]);
+  const addCourse = () => {
+    axiosServiceData();
     closeDialog();
   };
 
@@ -100,6 +100,19 @@ const SubsriptionDiscountOffer = () => {
     const month = String(date.getMonth() + 1).padStart(2, "0"); // Months are 0-based
     const year = date.getFullYear();
     return `${day}-${month}-${year}`;
+  };
+
+  const getSubscriptionTypeLabel = (type) => {
+    switch (type) {
+      case "3":
+        return "Futures & Options";
+      case "1":
+        return "Commodity";
+      case "2":
+        return "Equity";
+      default:
+        return "Select Subscription Type";
+    }
   };
 
   return (
@@ -132,7 +145,7 @@ const SubsriptionDiscountOffer = () => {
               >
                 <div className="flex flex-row justify-between">
                   <p className="w-[173px] h-[26px] font-[600] text-[16px] leading-[25px] text-lightWhite">
-                    {row.courseName}
+                    {row.planType}
                   </p>
                   <div className="flex gap-3">
                     <button onClick={() => handleDeleteTable(row.id)}>
@@ -158,6 +171,9 @@ const SubsriptionDiscountOffer = () => {
                   <span className="text-dimWhite">PLAN:</span> {row.planType}
                 </span>
                 <span className="flex items-center justify-between sm:w-[305px] h-[13px] font-[500] text-[14px] leading-[12px] text-lightWhite">
+                  <span className="text-dimWhite">SERVICE TYPE:</span> {getSubscriptionTypeLabel(row.serviceType)}
+                </span>
+                <span className="flex items-center justify-between sm:w-[305px] h-[13px] font-[500] text-[14px] leading-[12px] text-lightWhite">
                   <span className="text-dimWhite">DISCOUNT %:</span> 
                   {row.discountPercentage
                         ? `${row.discountPercentage}%`
@@ -181,6 +197,7 @@ const SubsriptionDiscountOffer = () => {
                 <th className="text-center">START DATE</th>
                 <th className="text-center">END DATE</th>
                 <th className="text-center">PLAN</th>
+                <th className="text-center">SERVICE TYPE</th>
                 <th className="text-center">DISCOUNT %</th>
                 <th className="text-center">DISCOUNTED AMT.</th>
                 <th className="text-center">ACTION</th>
@@ -205,6 +222,9 @@ const SubsriptionDiscountOffer = () => {
                     </td>
                     <td className="py-2 text-center font-[500] text-[16px] leading-[18px]">
                       {row.planType}
+                    </td>
+                    <td className="py-2 text-center font-[500] text-[16px] leading-[18px]">
+                    {getSubscriptionTypeLabel(row.serviceType)}
                     </td>
                     <td className="font-[500] text-center text-[16px] leading-[18px]">
                       {row.discountPercentage
