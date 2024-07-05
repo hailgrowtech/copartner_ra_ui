@@ -238,90 +238,108 @@ const Wallet = () => {
 
   const handleDownloadSheet = () => {
     const header = [
-      "Invoice ID",
-      "Transaction ID",
-      "User Mobile No",
-      "User Name",
-      "User Email",
-      "User Pan Card",
-      "User State",
-      "User Address",
-      "Subscription Date",
-      "Subscription",
-      "Plan Type",
-      "IGST%",
-      "IGST Amt",
-      "Price",
-      "Amount",
-      "Discounted Percentage",
-      "Paid Amount",
-      "Premium Telegram",
+        "Invoice ID",
+        "Transaction ID",
+        "User Mobile No",
+        "User Name",
+        "User Email",
+        "User Pan Card",
+        "User State",
+        "User Address",
+        "Subscription Date",
+        "Subscription",
+        "Plan Type",
+        "CGST%",
+        "CGST Amt",
+        "SGST%",
+        "SGST Amt",
+        "IGST%",
+        "IGST Amt",
+        "Total Tax",
+        "Price",
+        "Amount",
+        "Discounted Percentage",
+        "Paid Amount",
+        "Premium Telegram",
     ];
-  
+
     const rows = filteredTransactions.map((row) => {
-      const gstRate = 0.18;
-      const paidAmount = row.discountPercentage === 0 ? row.totalAmount : row.amount;
-      const igstAmount = paidAmount * gstRate;
-      const price = paidAmount - igstAmount;
-  
-      return [
-        row.invoiceId,
-        row.transactionId,
-        row.user.mobileNumber,
-        row.user.name,
-        row.user.email,
-        row.user.pan,
-        row.user.state,
-        row.user.address,
-        formatDate(row.subscribeDate),
-        getExpertType(row.subscription),
-        row.planType,
-        `${gstRate * 100}%`,
-        `${igstAmount.toFixed(2)}`,
-        `${price.toFixed(2)}`,
-        row.subscriptionAmount,
-        `${row.discountPercentage}%`,
-        paidAmount.toFixed(2),
-        row.premiumTelegramChannel,
-      ];
+        const gstRate = 0.18;
+        const gstAmount = row.subscriptionAmount ? row.subscriptionAmount * gstRate : 0;
+        const amountWithoutGst = row.subscriptionAmount ? row.subscriptionAmount - gstAmount : 0;
+
+        const isSameState = row.user.state === row.state;
+
+        const cgst = isSameState ? 9 : 0;
+        const sgst = isSameState ? 9 : 0;
+        const igst = isSameState ? 0 : 18;
+        const cgstAmount = isSameState ? gstAmount / 2 : 0;
+        const sgstAmount = isSameState ? gstAmount / 2 : 0;
+        const igstAmount = isSameState ? 0 : gstAmount;
+        const totalTax = gstAmount.toFixed(2);
+
+        return [
+            row.invoiceId,
+            row.transactionId,
+            row.user.mobileNumber,
+            row.user.name,
+            row.user.email,
+            row.user.pan,
+            row.user.state,
+            row.user.address,
+            formatDate(row.subscribeDate),
+            getExpertType(row.subscription),
+            row.planType,
+            `${cgst}%`,
+            `${cgstAmount.toFixed(2)}`,
+            `${sgst}%`,
+            `${sgstAmount.toFixed(2)}`,
+            `${igst}%`,
+            `${igstAmount.toFixed(2)}`,
+            `${totalTax}`,
+            row.subscriptionAmount,
+            `${row.discountPercentage}%`,
+            row.totalAmount,
+            row.premiumTelegramChannel,
+        ];
     });
-  
+
     const data = [header, ...rows];
-  
+
     const worksheet = XLSX.utils.aoa_to_sheet(data);
     const workbook = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(workbook, worksheet, "Transactions");
-  
+
     const binaryString = XLSX.write(workbook, {
-      bookType: "xlsx",
-      type: "binary",
+        bookType: "xlsx",
+        type: "binary",
     });
-  
+
     const blob = new Blob([s2ab(binaryString)], {
-      type: "application/octet-stream",
+        type: "application/octet-stream",
     });
-  
+
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
-  
+
     const firstInvoiceId = filteredTransactions.length > 0 ? filteredTransactions[0].invoiceId : 'transactions';
     a.download = `${firstInvoiceId}.xlsx`;
-  
+
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
-  };
-  
-  const s2ab = (s) => {
+};
+
+const s2ab = (s) => {
     const buf = new ArrayBuffer(s.length);
     const view = new Uint8Array(buf);
     for (let i = 0; i < s.length; i++) {
-      view[i] = s.charCodeAt(i) & 0xff;
+        view[i] = s.charCodeAt(i) & 0xff;
     }
     return buf;
-  };
+};
 
   const handleInvoiceClick = (row) => {
     const {
