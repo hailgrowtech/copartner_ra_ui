@@ -249,31 +249,20 @@ const Wallet = () => {
       "Subscription Date",
       "Subscription",
       "Plan Type",
-      "CGST%",
-      "SGST%",
       "IGST%",
       "IGST Amt",
-      "Total Tax",
+      "Price",
       "Amount",
       "Discounted Percentage",
-      "Discounted Amount",
+      "Paid Amount",
       "Premium Telegram",
     ];
   
     const rows = filteredTransactions.map((row) => {
       const gstRate = 0.18;
-      const gstAmount = row.subscriptionAmount ? row.subscriptionAmount * gstRate : 0;
-      const amountWithoutGst = row.subscriptionAmount ? row.subscriptionAmount - gstAmount : 0;
-  
-      const isSameState = row.user.state === row.state;
-  
-      const cgst = isSameState ? 9 : 0;
-      const sgst = isSameState ? 9 : 0;
-      const igst = isSameState ? 0 : 18;
-      const cgstAmount = isSameState ? gstAmount / 2 : 0;
-      const sgstAmount = isSameState ? gstAmount / 2 : 0;
-      const igstAmount = isSameState ? 0 : gstAmount;
-      const totalTax = gstAmount.toFixed(2);
+      const paidAmount = row.discountPercentage === 0 ? row.totalAmount : row.amount;
+      const igstAmount = paidAmount * gstRate;
+      const price = paidAmount - igstAmount;
   
       return [
         row.invoiceId,
@@ -287,14 +276,12 @@ const Wallet = () => {
         formatDate(row.subscribeDate),
         getExpertType(row.subscription),
         row.planType,
-        `${cgst}%`,
-        `${sgst}%`,
-        `${igst}%`,
+        `${gstRate * 100}%`,
         `${igstAmount.toFixed(2)}`,
-        `${totalTax}`,
+        `${price.toFixed(2)}`,
         row.subscriptionAmount,
         `${row.discountPercentage}%`,
-        row.totalAmount,
+        paidAmount.toFixed(2),
         row.premiumTelegramChannel,
       ];
     });
@@ -338,32 +325,33 @@ const Wallet = () => {
 
   const handleInvoiceClick = (row) => {
     const {
-      subscriptionAmount,
-      raName,
-      gst,
-      transactionId,
-      invoiceId,
-      subscribeDate,
-      totalAmount,
-      discountPercentage,
-      user,
+        subscriptionAmount,
+        raName,
+        gst,
+        transactionId,
+        invoiceId,
+        subscribeDate,
+        totalAmount,
+        discountPercentage,
+        user,
     } = row;
-  
+
     const invoiceDate = new Date(subscribeDate).toLocaleDateString();
-  
+
+    const paidAmount = discountPercentage === 0 ? totalAmount : row.amount;
     const gstRate = 0.18;
-    const gstAmount = subscriptionAmount ? subscriptionAmount * gstRate : 0;
-    const amountWithoutGst = subscriptionAmount ? subscriptionAmount - gstAmount : 0;
-  
+    const igstAmount = paidAmount * gstRate;
+    const price = paidAmount - igstAmount;
+
     const sanitizedImagePath = signatureImage
-      ? signatureImage.replace(/</g, "&lt;").replace(/>/g, "&gt;")
-      : "";
+        ? signatureImage.replace(/</g, "&lt;").replace(/>/g, "&gt;")
+        : "";
     const jurisdictionAction = jurisdiction;
-  
-    const totalAmountData = subscriptionAmount !== totalAmount ? `₹ ${totalAmount.toFixed(2)}` : "";
-  
+
     const isSameState = user.state === row.state;
-  
+
+    const cgstSgstAmount = isSameState ? igstAmount / 2 : 0;
+
     const htmlContent = `
       <html>
         <head>
@@ -419,8 +407,18 @@ const Wallet = () => {
               <thead>
                 <tr>
                   <th>Description</th>
-                  ${gst ? `<th>Price</th>` : ""}
-                  ${isSameState ? `<th>CGST%</th><th>SGST%</th><th>Total Tax</th>` : `<th>IGST%</th><th>IGST Amt</th><th>Total Tax</th>`}
+                  <th>Price</th>
+                  ${isSameState ? `
+                    <th>CGST%</th>
+                    <th>CGST Amt</th>
+                    <th>SGST%</th>
+                    <th>SGST Amt</th>
+                    <th>Total Tax</th>
+                  ` : `
+                    <th>IGST%</th>
+                    <th>IGST Amt</th>
+                    <th>Total Tax</th>
+                  `}
                   <th>Amount</th>
                   <th>Discount Percentage</th>
                   <th>Paid Amount</th>
@@ -429,21 +427,21 @@ const Wallet = () => {
               <tbody>
                 <tr>
                   <td>${row.planType} Subscription</td>
-                  ${gst ? `
-                  <td>₹ ${amountWithoutGst.toFixed(2)}</td>
+                  <td>₹ ${price.toFixed(2)}</td>
                   ${isSameState ? `
-                  <td>9%<br/>₹ ${(gstAmount / 2).toFixed(2)}</td>
-                  <td>9%<br/>₹ ${(gstAmount / 2).toFixed(2)}</td>
-                  <td>₹ ${gstAmount.toFixed(2)}</td>
+                    <td>9%</td>
+                    <td>₹ ${cgstSgstAmount.toFixed(2)}</td>
+                    <td>9%</td>
+                    <td>₹ ${cgstSgstAmount.toFixed(2)}</td>
+                    <td>₹ ${(cgstSgstAmount * 2).toFixed(2)}</td>
                   ` : `
-                  <td>18%</td>
-                  <td>₹ ${gstAmount.toFixed(2)}</td>
-                  <td>₹ ${gstAmount.toFixed(2)}</td>
+                    <td>18%</td>
+                    <td>₹ ${igstAmount.toFixed(2)}</td>
+                    <td>₹ ${igstAmount.toFixed(2)}</td>
                   `}
-                  ` : ""}
                   <td>₹ ${subscriptionAmount.toFixed(2)}</td>
                   <td>${discountPercentage} %</td>
-                  <td>${totalAmountData}</td>
+                  <td>₹ ${paidAmount.toFixed(2)}</td>
                 </tr>
               </tbody>
             </table>
@@ -464,11 +462,11 @@ const Wallet = () => {
         </body>
       </html>
     `;
-  
+
     const newWindow = window.open("", "_blank");
     newWindow.document.write(htmlContent);
     newWindow.document.close();
-  };  
+};  
 
   const handleMouseEnter = (rowIndex) => {
     setHoveredRow(rowIndex);
