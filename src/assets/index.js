@@ -55,6 +55,8 @@ import eyeClose from './eyeClosed.png';
 import login from './Login.png';
 import Link from './LinK.png';
 import backImg from './backImg.png';
+import telegramChannelActive from './telegramChannelActive.png';
+import telegramChannelInactive from './telegramChannelInactive.png';
 
 export {
     availableIcon,
@@ -105,4 +107,5 @@ export {
     eyeClose,
     login, Link,
     backImg,
+    telegramChannelActive, telegramChannelInactive
 }

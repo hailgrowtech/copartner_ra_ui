@@ -16,7 +16,7 @@ import {
   edit, deleteIcon,
   invoiceImg,
   hdfc, kotak, icici,
-  googlepay, paytm, phonepe,
+  googlepay, paytm, phonepe, telegramChannelActive, telegramChannelInactive,
 } from "../assets";
 
 export const sideBar = [
@@ -66,6 +66,13 @@ export const sideBar = [
   //   title: "Marketing",
   //   path: '/market'
   // },
+  {
+    id: 'telegram_channel',
+    activeIcon: telegramChannelActive,
+    inactiveIcon: telegramChannelInactive,
+    title: "Telegram Channel",
+    path: '/telegram_channel'
+  },
   {
     id: 'setting',
     activeIcon: settingIconactive,
