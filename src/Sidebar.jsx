@@ -3,7 +3,7 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { sideBar } from "./constants";
 import { closeIcon, login, logo } from "./assets";
 
-const Sidebar = ({ activeTab, setActiveTab, setShowSidebar }) => {
+const Sidebar = ({ activeTab, setActiveTab, setShowSidebar, telegramData }) => { // Accept telegramData as a prop
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -73,36 +73,38 @@ const Sidebar = ({ activeTab, setActiveTab, setShowSidebar }) => {
       </Link>
       <div className="flex gap-[1rem] flex-col mt-[2rem]">
         {sideBar.map((side) => (
-          <Link
-            to={side.path}
-            key={side.id}
-            onClick={() => {
-              scrollToTop();
-              setActiveTab(side.title);
-              handleSidebarTabClick();
-            }}
-            className={`flex w-[260px] h-[74px] rounded-[16px] text-white flex-row cursor-pointer ${
-              window.innerWidth >= 768 ? "md:ml-[-4rem] xl:ml-[-4rem]" : ""
-            } ${
-              window.innerWidth >= 768 &&
-              (activeTab === side.title
-                ? "tab-btn text-[#fff]"
-                : "text-white opacity-[50%]")
-            }`}
-          >
-            <div className="flex flex-row justify-center gap-4 items-center ml-[4rem]">
-              <img
-                src={
-                  activeTab === side.title ? side.activeIcon : side.inactiveIcon
-                }
-                alt={side.title}
-                className="md:w-[24px] w-[30px] md:h-[24px] h-[30px]"
-              />
-              <span className="font-[400] md:text-[16px] text-[18px]">
-                {side.title}
-              </span>
-            </div>
-          </Link>
+          (side.title !== "Telegram Channel" || telegramData.length > 0) && (
+            <Link
+              to={side.path}
+              key={side.id}
+              onClick={() => {
+                scrollToTop();
+                setActiveTab(side.title);
+                handleSidebarTabClick();
+              }}
+              className={`flex w-[260px] h-[74px] rounded-[16px] text-white flex-row cursor-pointer ${
+                window.innerWidth >= 768 ? "md:ml-[-4rem] xl:ml-[-4rem]" : ""
+              } ${
+                window.innerWidth >= 768 &&
+                (activeTab === side.title
+                  ? "tab-btn text-[#fff]"
+                  : "text-white opacity-[50%]")
+              }`}
+            >
+              <div className="flex flex-row justify-center gap-4 items-center ml-[4rem]">
+                <img
+                  src={
+                    activeTab === side.title ? side.activeIcon : side.inactiveIcon
+                  }
+                  alt={side.title}
+                  className="md:w-[24px] w-[30px] md:h-[24px] h-[30px]"
+                />
+                <span className="font-[400] md:text-[16px] text-[18px]">
+                  {side.title}
+                </span>
+              </div>
+            </Link>
+          )
         ))}
       </div>
       <div className="relative">
