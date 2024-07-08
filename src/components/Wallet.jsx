@@ -107,6 +107,7 @@ const Wallet = () => {
           (a, b) => new Date(b.subscribeDate) - new Date(a.subscribeDate)
         );
         const filteredData = sortedData.filter(row => row.subscription !== "No Subscrption");
+        setTransactionTable(filteredData);
         setFilteredTransactions(filteredData);
       } catch (error) {
         console.error("Error fetching the transaction table:", error);
@@ -144,10 +145,6 @@ const Wallet = () => {
     setSelectedRow(null);
   };
 
-  const handleTab = (id) => {
-    setShowTransactions(id);
-  };
-
   const formatDate = (dateString) => {
     const date = new Date(dateString);
     const day = String(date.getDate()).padStart(2, "0");
@@ -172,35 +169,37 @@ const Wallet = () => {
   const handleSearchChange = (e) => {
     const value = e.target.value;
     setSearchInput(value);
-    filterTransactions(value, startDate, endDate); // Use startDate and endDate here
   };
 
   const handleDateChange = (dates) => {
     const [start, end] = dates;
     setStartDate(start);
     setEndDate(end);
-    filterTransactions(searchInput, start, end);
   };
 
-  const filterTransactions = (searchValue, start, end) => {
-    let filtered = transactionTable;
+  useEffect(() => {
+    const filterTransactions = () => {
+      let filtered = transactionTable;
 
-    if (searchValue) {
-      filtered = filtered.filter((row) =>
-        row.userMobileNo.includes(searchValue)
-      );
-    }
+      if (searchInput) {
+        filtered = filtered.filter((row) =>
+          row.user.mobileNumber.includes(searchInput)
+        );
+      }
 
-    if (start && end) {
-      filtered = filtered.filter((row) => {
-        const subscribeDate = new Date(row.subscribeDate);
-        return subscribeDate >= start && subscribeDate <= end;
-      });
-    }
+      if (startDate && endDate) {
+        filtered = filtered.filter((row) => {
+          const subscribeDate = new Date(row.subscribeDate);
+          return subscribeDate >= startDate && subscribeDate <= endDate;
+        });
+      }
 
-    setFilteredTransactions(filtered);
-    setCurrentPage(1); // Reset to first page when filtering
-  };
+      setFilteredTransactions(filtered);
+      setCurrentPage(1); // Reset to first page when filtering
+    };
+
+    filterTransactions();
+  }, [searchInput, startDate, endDate, transactionTable]);
 
   const totalPages = Math.ceil(filteredTransactions.length / pageSize);
   const currentPageData = filteredTransactions.slice(
@@ -238,253 +237,256 @@ const Wallet = () => {
 
   const handleDownloadSheet = () => {
     const header = [
-        "Invoice ID",
-        "Transaction ID",
-        "User Mobile No",
-        "User Name",
-        "User Email",
-        "User Pan Card",
-        "User State",
-        "User Address",
-        "Subscription Date",
-        "Subscription",
-        "Plan Type",
-        "CGST%",
-        "CGST Amt",
-        "SGST%",
-        "SGST Amt",
-        "IGST%",
-        "IGST Amt",
-        "Total Tax",
-        "Price",
-        "Amount",
-        "Discounted Percentage",
-        "Paid Amount",
-        "Premium Telegram",
+      "Invoice ID",
+      "Transaction ID",
+      "User Mobile No",
+      "User Name",
+      "User Email",
+      "User Pan Card",
+      "User State",
+      "User Address",
+      "Subscription Date",
+      "Subscription",
+      "Plan Type",
+      "CGST%",
+      "CGST Amt",
+      "SGST%",
+      "SGST Amt",
+      "IGST%",
+      "IGST Amt",
+      "Total Tax",
+      "Price",
+      "Amount",
+      "Discounted Percentage",
+      "Paid Amount",
+      "Premium Telegram",
     ];
-
+  
     const rows = filteredTransactions.map((row) => {
-        const gstRate = 0.18;
-        const gstAmount = row.subscriptionAmount ? row.subscriptionAmount * gstRate : 0;
-        const amountWithoutGst = row.subscriptionAmount ? row.subscriptionAmount - gstAmount : 0;
-
-        const isSameState = row.user.state === row.state;
-
-        const cgst = isSameState ? 9 : 0;
-        const sgst = isSameState ? 9 : 0;
-        const igst = isSameState ? 0 : 18;
-        const cgstAmount = isSameState ? gstAmount / 2 : 0;
-        const sgstAmount = isSameState ? gstAmount / 2 : 0;
-        const igstAmount = isSameState ? 0 : gstAmount;
-        const totalTax = gstAmount.toFixed(2);
-
-        return [
-            row.invoiceId,
-            row.transactionId,
-            row.user.mobileNumber,
-            row.user.name,
-            row.user.email,
-            row.user.pan,
-            row.user.state,
-            row.user.address,
-            formatDate(row.subscribeDate),
-            getExpertType(row.subscription),
-            row.planType,
-            `${cgst}%`,
-            `${cgstAmount.toFixed(2)}`,
-            `${sgst}%`,
-            `${sgstAmount.toFixed(2)}`,
-            `${igst}%`,
-            `${igstAmount.toFixed(2)}`,
-            `${totalTax}`,
-            row.subscriptionAmount,
-            `${row.discountPercentage}%`,
-            row.totalAmount,
-            row.premiumTelegramChannel,
-        ];
+      const paidAmount = row.totalAmount;
+      const price = (100 / 118) * paidAmount;
+      const igstAmount = price * 0.18;
+      const cgstSgstAmount = price * 0.09;
+  
+      const isSameState = row.user.state && row.state && row.user.state.trim() === row.state.trim();
+  
+      const cgst = isSameState ? 9 : 0;
+      const sgst = isSameState ? 9 : 0;
+      const igst = isSameState ? 0 : 18;
+      const cgstAmount = isSameState ? cgstSgstAmount : 0;
+      const sgstAmount = isSameState ? cgstSgstAmount : 0;
+      const totalTax = (cgstAmount + sgstAmount + igstAmount).toFixed(2);
+  
+      return [
+        row.invoiceId,
+        row.transactionId,
+        row.user.mobileNumber,
+        row.user.name,
+        row.user.email,
+        row.user.pan,
+        row.user.state,
+        row.user.address,
+        formatDate(row.subscribeDate),
+        getExpertType(row.subscription),
+        row.planType,
+        `${cgst}%`,
+        `${cgstAmount.toFixed(2)}`,
+        `${sgst}%`,
+        `${sgstAmount.toFixed(2)}`,
+        `${igst}%`,
+        `${igstAmount.toFixed(2)}`,
+        `${totalTax}`,
+        price.toFixed(2),
+        row.subscriptionAmount,
+        `${row.discountPercentage}%`,
+        paidAmount.toFixed(2),
+        row.premiumTelegramChannel,
+      ];
     });
-
+  
     const data = [header, ...rows];
-
+  
     const worksheet = XLSX.utils.aoa_to_sheet(data);
     const workbook = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(workbook, worksheet, "Transactions");
-
+  
     const binaryString = XLSX.write(workbook, {
-        bookType: "xlsx",
-        type: "binary",
+      bookType: "xlsx",
+      type: "binary",
     });
-
+  
     const blob = new Blob([s2ab(binaryString)], {
-        type: "application/octet-stream",
+      type: "application/octet-stream",
     });
-
+  
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
-
-    const firstInvoiceId = filteredTransactions.length > 0 ? filteredTransactions[0].invoiceId : 'transactions';
+  
+    const firstInvoiceId =
+      filteredTransactions.length > 0
+        ? filteredTransactions[0].invoiceId
+        : "transactions";
     a.download = `${firstInvoiceId}.xlsx`;
-
+  
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
-};
-
-const s2ab = (s) => {
+  };
+  
+  const s2ab = (s) => {
     const buf = new ArrayBuffer(s.length);
     const view = new Uint8Array(buf);
     for (let i = 0; i < s.length; i++) {
-        view[i] = s.charCodeAt(i) & 0xff;
+      view[i] = s.charCodeAt(i) & 0xff;
     }
     return buf;
-};
+  };
+  
 
   const handleInvoiceClick = (row) => {
     const {
-        subscriptionAmount,
-        raName,
-        gst,
-        transactionId,
-        invoiceId,
-        subscribeDate,
-        totalAmount,
-        discountPercentage,
-        user,
+      subscriptionAmount,
+      raName,
+      gst,
+      transactionId,
+      invoiceId,
+      subscribeDate,
+      totalAmount,
+      discountPercentage,
+      user,
     } = row;
 
     const invoiceDate = new Date(subscribeDate).toLocaleDateString();
 
-    const paidAmount = discountPercentage === 0 ? totalAmount : row.amount;
-    const gstRate = 0.18;
-    const igstAmount = paidAmount * gstRate;
-    const price = paidAmount - igstAmount;
+    const paidAmount = totalAmount;
+    const price = (paidAmount * 100) / 118;
+    const igstAmount = price * 0.18;
+    const cgstSgstAmount = price * 0.09;
 
     const sanitizedImagePath = signatureImage
-        ? signatureImage.replace(/</g, "&lt;").replace(/>/g, "&gt;")
-        : "";
+      ? signatureImage.replace(/</g, "&lt;").replace(/>/g, "&gt;")
+      : "";
     const jurisdictionAction = jurisdiction;
 
     const isSameState = user.state === row.state;
 
-    const cgstSgstAmount = isSameState ? igstAmount / 2 : 0;
-
     const htmlContent = `
-      <html>
-        <head>
-          <title>Invoice</title>
-          <style>
-            body { font-family: Arial, sans-serif; margin: 20px; }
-            .receipt-container { width: 100%; max-width: 800px; margin: auto; padding: 20px; border: 1px solid #ddd; border-radius: 10px; }
-            .receipt-header { text-align: center; margin-bottom: 20px; }
-            .receipt-header h1 { margin: 0; }
-            .receipt-details { display: flex; justify-content: space-between; margin-bottom: 20px; }
-            .receipt-details div { width: 48%; }
-            .receipt-details p { margin: 5px 0; }
-            table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
-            table th, table td { border: 1px solid #ddd; padding: 8px; text-align: center; }
-            .terms { margin-top: 20px; }
-            .user-image { text-align: center; margin-bottom: 10px; }
-            .user-image img { width: 300px; height: 200px; border-radius: 50%; }
-            .print-button { display: block; width: 100%; text-align: center; margin-top: 20px; }
-            .print-button button { padding: 10px 20px; background-color: #4CAF50; color: #fff; border: none; border-radius: 5px; cursor: pointer; }
-          </style>
-        </head>
-        <body>
-          <div class="receipt-container">
-            <div class="receipt-header">
-              <h1>Tax Invoice/Bill of Service</h1>
-              <p>Invoice No: ${invoiceId}</p>
-              <p>Original for Recipient</p>
+    <html>
+      <head>
+        <title>Invoice</title>
+        <style>
+          body { font-family: Arial, sans-serif; margin: 20px; }
+          .receipt-container { width: 100%; max-width: 800px; margin: auto; padding: 20px; border: 1px solid #ddd; border-radius: 10px; }
+          .receipt-header { text-align: center; margin-bottom: 20px; }
+          .receipt-header h1 { margin: 0; }
+          .receipt-details { display: flex; justify-content: space-between; margin-bottom: 20px; }
+          .receipt-details div { width: 48%; }
+          .receipt-details p { margin: 5px 0; }
+          table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
+          table th, table td { border: 1px solid #ddd; padding: 8px; text-align: center; }
+          .terms { margin-top: 20px; }
+          .user-image { text-align: center; margin-bottom: 10px; }
+          .user-image img { width: 300px; height: 200px; border-radius: 50%; }
+          .print-button { display: block; width: 100%; text-align: center; margin-top: 20px; }
+          .print-button button { padding: 10px 20px; background-color: #4CAF50; color: #fff; border: none; border-radius: 5px; cursor: pointer; }
+        </style>
+      </head>
+      <body>
+        <div class="receipt-container">
+          <div class="receipt-header">
+            <h1>Tax Invoice/Bill of Service</h1>
+            <p>Invoice No: ${invoiceId}</p>
+            <p>Original for Recipient</p>
+          </div>
+          <div class="receipt-details">
+            <div>
+              <h2>Service offered by</h2>
+              <p><strong>Creator Name:</strong> ${raName}</p>
+              <p><strong>Creator ID:</strong> ${stackholderId}</p>
+              <p><strong>PAN No:</strong> ${row.pan || "N/A"}</p>
+              ${gst ? `<p><strong>Creator GSTIN:</strong> ${gst}</p>` : ""}
+              <p><strong>Transaction ID:</strong> ${transactionId}</p>
+              <p><strong>Bill Date:</strong> ${invoiceDate}</p>
+              <p><strong>State Code:</strong> ${gst ? gst.slice(0, 2) : "N/A"}</p>
             </div>
-            <div class="receipt-details">
-              <div>
-                <h2>Service offered by</h2>
-                <p><strong>Creator Name:</strong> ${raName}</p>
-                <p><strong>Creator ID:</strong> ${stackholderId}</p>
-                <p><strong>PAN No:</strong> ${row.pan || "N/A"}</p>
-                ${gst ? `<p><strong>Creator GSTIN:</strong> ${gst}</p>` : ""}
-                <p><strong>Transaction ID:</strong> ${transactionId}</p>
-                <p><strong>Bill Date:</strong> ${invoiceDate}</p>
-                <p><strong>State Code:</strong> ${gst ? gst.slice(0, 2) : "N/A"}</p>
-              </div>
-              <div>
-                <h2>Billed To</h2>
-                <p>${user.name}</p>
-                <p>${user.mobileNumber}</p>
-                <p>${user.email}</p>
-                <p><strong>Billing Address:</strong> ${user.address || "N/A"}</p>
-                <p><strong>State:</strong> ${user.state || "N/A"}</p>
-                <p><strong>Place Of Supply:</strong> ${user.state || "N/A"}</p>
-                <p><strong>HSN Code:</strong> 999299</p>
-                <p><strong>RCM Applicable:</strong> No</p>
-              </div>
-            </div>
-            <table>
-              <thead>
-                <tr>
-                  <th>Description</th>
-                  <th>Price</th>
-                  ${isSameState ? `
-                    <th>CGST%</th>
-                    <th>CGST Amt</th>
-                    <th>SGST%</th>
-                    <th>SGST Amt</th>
-                    <th>Total Tax</th>
-                  ` : `
-                    <th>IGST%</th>
-                    <th>IGST Amt</th>
-                    <th>Total Tax</th>
-                  `}
-                  <th>Amount</th>
-                  <th>Discount Percentage</th>
-                  <th>Paid Amount</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>${row.planType} Subscription</td>
-                  <td>₹ ${price.toFixed(2)}</td>
-                  ${isSameState ? `
-                    <td>9%</td>
-                    <td>₹ ${cgstSgstAmount.toFixed(2)}</td>
-                    <td>9%</td>
-                    <td>₹ ${cgstSgstAmount.toFixed(2)}</td>
-                    <td>₹ ${(cgstSgstAmount * 2).toFixed(2)}</td>
-                  ` : `
-                    <td>18%</td>
-                    <td>₹ ${igstAmount.toFixed(2)}</td>
-                    <td>₹ ${igstAmount.toFixed(2)}</td>
-                  `}
-                  <td>₹ ${subscriptionAmount.toFixed(2)}</td>
-                  <td>${discountPercentage} %</td>
-                  <td>₹ ${paidAmount.toFixed(2)}</td>
-                </tr>
-              </tbody>
-            </table>
-            <div class="user-image">
-              <img src="${sanitizedImagePath}" alt="User Image" />
-            </div>
-            <div class="terms">
-              <h2>TERMS & CONDITIONS</h2>
-              <p>No refund policy. Please read terms & conditions and disclaimer on our website.</p>
-              <p>All jurisdiction under ${jurisdictionAction}.</p>
-              <p>This is a computer-generated receipt and does not require a signature.</p>
-              <p>Contact support@copartner.in for technical support.</p>
-            </div>
-            <div class="print-button">
-              <button onclick="window.print()">Download Invoice</button>
+            <div>
+              <h2>Billed To</h2>
+              <p>${user.name}</p>
+              <p>${user.mobileNumber}</p>
+              <p>${user.email}</p>
+              <p><strong>Billing Address:</strong> ${user.address || "N/A"}</p>
+              <p><strong>State:</strong> ${user.state || "N/A"}</p>
+              <p><strong>Place Of Supply:</strong> ${user.state || "N/A"}</p>
+              <p><strong>HSN Code:</strong> 999299</p>
+              <p><strong>RCM Applicable:</strong> No</p>
             </div>
           </div>
-        </body>
-      </html>
-    `;
+          <table>
+            <thead>
+              <tr>
+                <th>Description</th>
+                <th>Price</th>
+                ${isSameState ? `
+                  <th>CGST%</th>
+                  <th>CGST Amt</th>
+                  <th>SGST%</th>
+                  <th>SGST Amt</th>
+                  <th>Total Tax</th>
+                ` : `
+                  <th>IGST%</th>
+                  <th>IGST Amt</th>
+                  <th>Total Tax</th>
+                `}
+                <th>Amount</th>
+                <th>Discount Percentage</th>
+                <th>Paid Amount</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>${row.planType} Subscription</td>
+                <td>₹ ${price.toFixed(2)}</td>
+                ${isSameState ? `
+                  <td>9%</td>
+                  <td>₹ ${cgstSgstAmount.toFixed(2)}</td>
+                  <td>9%</td>
+                  <td>₹ ${cgstSgstAmount.toFixed(2)}</td>
+                  <td>₹ ${(cgstSgstAmount * 2).toFixed(2)}</td>
+                ` : `
+                  <td>18%</td>
+                  <td>₹ ${igstAmount.toFixed(2)}</td>
+                  <td>₹ ${igstAmount.toFixed(2)}</td>
+                `}
+                <td>₹ ${subscriptionAmount.toFixed(2)}</td>
+                <td>${discountPercentage} %</td>
+                <td>₹ ${paidAmount.toFixed(2)}</td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="user-image">
+            <img src="${sanitizedImagePath}" alt="User Image" />
+          </div>
+          <div class="terms">
+            <h2>TERMS & CONDITIONS</h2>
+            <p>No refund policy. Please read terms & conditions and disclaimer on our website.</p>
+            <p>All jurisdiction under ${jurisdictionAction}.</p>
+            <p>This is a computer-generated receipt and does not require a signature.</p>
+            <p>Contact support@copartner.in for technical support.</p>
+          </div>
+          <div class="print-button">
+            <button onclick="window.print()">Download Invoice</button>
+          </div>
+        </div>
+      </body>
+    </html>
+  `;
 
     const newWindow = window.open("", "_blank");
     newWindow.document.write(htmlContent);
     newWindow.document.close();
-};  
+  };
 
   const handleMouseEnter = (rowIndex) => {
     setHoveredRow(rowIndex);
@@ -524,7 +526,7 @@ const s2ab = (s) => {
         </div>
       </div>
 
-      <EarningAnalysis stackholderId={stackholderId} />
+      <EarningAnalysis stackholderId={stackholderId} startDate={startDate} endDate={endDate} />
 
       <div className="flex flex-col md:gap-6 gap-3">
         <div className="flex flex-row items-center justify-between md:ml-0 ml-[-8px]">
@@ -630,7 +632,6 @@ const s2ab = (s) => {
                         </div>
                         <span className="flex items-center justify-between sm:w-[305px] h-[13px] font-[500] text-[14px] leading-[12px] text-lightWhite">
                           <span className="text-dimWhite">DATE:</span>{" "}
-                          {/* {formatDate(row.subscribeDate)} */}
                           {new Date(row.subscribeDate).toLocaleString()}
                         </span>
                         <span className="flex items-center justify-between sm:w-[305px] h-[13px] font-[500] text-[14px] leading-[12px] text-lightWhite">
@@ -723,7 +724,6 @@ const s2ab = (s) => {
                               {row.transactionId}
                             </td>
                             <td className="text-start font-[500] text-[16px] leading-[18px] px-4 py-2">
-                              {/* {formatDate(row.subscribeDate)} */}
                               {new Date(row.subscribeDate).toLocaleString()}
                             </td>
                             <td className="text-start font-[500] text-[16px] leading-[18px] px-4 py-2">

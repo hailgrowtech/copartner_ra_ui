@@ -3,15 +3,13 @@ import PieCharts from "../graphs/PieCharts";
 import Charts from "../graphs/Charts";
 import axios from "axios";
 
-const EarningAnalysis = () => {
+const EarningAnalysis = ({ stackholderId, startDate, endDate }) => {
   const [earningAnalysis, setEarningAnalysis] = useState(null);
   const [userEarning, setUserEarning] = useState({
     copartnerEarning: 0,
     personalEarning: 0,
   });
   const [isCoPartner, setIsCoPartner] = useState(false);
-  
-  const stackholderId = sessionStorage.getItem("stackholderId");
 
   const EARNING_URL = `https://copartners.in:5135/api/Wallet/GetWalletWithdrawalBalance/${stackholderId}?userType=RA`;
   const USER_EARNING = `https://copartners.in:5132/api/RADashboard/GetDashboardRAListingData/${stackholderId}?page=1&pageSize=100000`;
@@ -50,11 +48,20 @@ const EarningAnalysis = () => {
         const response = await axios.get(USER_EARNING);
         const data = response.data.data;
 
+        // Filter data based on the selected date range
+        const filteredData = data.filter((item) => {
+          const subscribeDate = new Date(item.subscribeDate);
+          return (
+            (!startDate || subscribeDate >= startDate) &&
+            (!endDate || subscribeDate <= endDate)
+          );
+        });
+
         // Calculate Copartner and Personal Earnings
         let copartnerEarning = 0;
         let personalEarning = 0;
 
-        data.forEach((item) => {
+        filteredData.forEach((item) => {
           if (item.amount !== null && item.subscription !== "No Subscription") {
             if (item.subscriptionAmount * 0.3 > item.amount) {
               copartnerEarning += item.amount;
@@ -75,7 +82,7 @@ const EarningAnalysis = () => {
     };
 
     fetchEarningBalance();
-  }, [stackholderId]);
+  }, [stackholderId, startDate, endDate]);
 
   return (
     <div className="flex flex-col py-8">
