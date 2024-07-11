@@ -18,8 +18,8 @@ const Subscription = () => {
   const [showSubscriptionType, setShowSubscriptionType] = useState("1"); // Default to Commodity
 
   const stackholderId = sessionStorage.getItem("stackholderId");
-  const SUB_TABLE = `https://copartners.in/SubscriptionService/api/Subscription/GetByExpertsId/${stackholderId}`;
-  const ACTIVE_USER = `https://copartners.in/ExpertServices/api/RADashboard/GetDashboardRAListingData/${stackholderId}?page=1&pageSize=100000`;
+  const SUB_TABLE = `https://copartners.in:5009/api/Subscription/GetByExpertsId/${stackholderId}`;
+  const ACTIVE_USER = `https://copartners.in:5132/api/RADashboard/GetDashboardRAListingData/${stackholderId}?page=1&pageSize=100000`;
 
   const handleSuccess = () => {
     toast.success("Successfully Deleted!", {
@@ -83,8 +83,7 @@ const Subscription = () => {
   };
 
   const handleDeleteTable = async (id) => {
-    const DELETE_TABLE = `https://copartners.in/SubscriptionService/api/Subscription/${id}`;
-    // https://copartners.in/SubscriptionService/api/Subscription/${id}
+    const DELETE_TABLE = `https://copartners.in:5009/api/Subscription/${id}`;
 
     try {
       handleSuccess();
@@ -215,7 +214,7 @@ const Subscription = () => {
                     {getSubscriptionTypeLabel(row.serviceType)}
                   </p>
                   <div className="flex gap-3">
-                    <button onClick={() => openEditDialog(row)}>
+                    {/* <button onClick={() => openEditDialog(row)}>
                       <img
                         src={edit}
                         alt=""
@@ -229,7 +228,7 @@ const Subscription = () => {
                         subTable={row}
                         axiosServiceData={axiosServiceData}
                       />
-                    )}
+                    )} */}
                     <button onClick={() => handleDeleteTable(row.id)}>
                       <img
                         src={deleteIcon}
@@ -308,7 +307,7 @@ const Subscription = () => {
                     {planTypeCounts[row.planType] || 0}/{activeUserCount}
                   </td>
                   <td className="flex flex-row items-center justify-center gap-2 py-[2rem]">
-                    <button onClick={() => openEditDialog(row)}>
+                    {/* <button onClick={() => openEditDialog(row)}>
                       <img
                         src={edit}
                         alt=""
@@ -322,7 +321,7 @@ const Subscription = () => {
                         subTable={row}
                         axiosServiceData={axiosServiceData}
                       />
-                    )}
+                    )} */}
                     <button onClick={() => handleDeleteTable(row.id)}>
                       <img
                         src={deleteIcon}

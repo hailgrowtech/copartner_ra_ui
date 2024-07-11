@@ -74,7 +74,7 @@ const Setting = () => {
   const fetchDetails = async () => {
     try {
       const { data: expertData } = await axios.get(
-        `https://copartners.in/ExpertServices/api/Experts/${stackholderId}`
+        `https://copartners.in:5132/api/Experts/${stackholderId}`
       );
       setMyCard(expertData.data);
 

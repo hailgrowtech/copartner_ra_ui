@@ -116,7 +116,7 @@ const ProfileEdit = ({ closeDialog, stackholderId, myCard, fetchDetails }) => {
   };
 
   const handleChange = async () => {
-    const EDIT_PROFILE = `https://copartners.in/ExpertServices/api/Experts?Id=${stackholderId}`;
+    const EDIT_PROFILE = `https://copartners.in:5132/api/Experts?Id=${stackholderId}`;
 
     let uploadedImagePath = imagePath;
 

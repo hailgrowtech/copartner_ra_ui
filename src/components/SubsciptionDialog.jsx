@@ -43,7 +43,7 @@ const SubscriptionDialog = ({ closeDialog, axiosServiceData, subTable }) => {
   };
 
   useEffect(() => {
-    axios.get(`https://copartners.in/ExpertServices/api/Experts/${stackholderId}`)
+    axios.get(`https://copartners.in:5132/api/Experts/${stackholderId}`)
       .then((res) => {
         setChanges(res.data.data);
         setSubscriptionType(res.data.data.expertTypeId);
@@ -112,7 +112,7 @@ const SubscriptionDialog = ({ closeDialog, axiosServiceData, subTable }) => {
     }
 
     try {
-      const response = await axios.post('https://copartners.in/SubscriptionService/api/Subscription', postData);
+      const response = await axios.post('https://copartners.in:5009/api/Subscription', postData);
       console.log("Response:", response);
       if (response.status !== 200) {
         handleError("Something went wrong! " + response.status);
