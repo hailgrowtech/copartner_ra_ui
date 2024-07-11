@@ -74,7 +74,7 @@ const Setting = () => {
   const fetchDetails = async () => {
     try {
       const { data: expertData } = await axios.get(
-        `https://copartners.in:5132/api/Experts/${stackholderId}`
+        `https://copartners.in/ExpertServices/api/Experts/${stackholderId}`
       );
       setMyCard(expertData.data);
 
@@ -264,15 +264,15 @@ const Setting = () => {
 
               <div className="flex md:flex-row flex-col md:ml-0 ">
                 <div className="absolute flex md:flex-row z-[9] flex-col md:gap-4 justify-center md:items-center md:ml-0 ml-[-6px]">
-                  <button className="md:w-[373px] w-[255px] md:h-[31px] h-[23px] flex items-center justify-center rounded-[21.5px] border-solid border-[1px] border-[#4e4e4ecc] mt-2 md:mt-0">
+                  <button className="md:w-[320px] md:h-[31px] h-[23px] flex items-center justify-center rounded-[21.5px] border-solid border-[1px] border-[#4e4e4ecc] mt-2 md:mt-0">
                     <button className="flex justify-center md:p-2 items-center gap-2">
                       <img
                         src={telegramIcon}
                         alt="Telegram"
                         className="md:w-[18.6px] w-[14px] h-[14px] md:h-[18.6px]"
                       />
-                      <span className="md:w-[300px] h-[13px] md:h-[23px] text-white font-[400] md:text-[12px] text-[8px] md:leading-[22px] leading-[12px]">
-                        {myCard && myCard.telegramChannel}
+                      <span className="md:w-[240px] h-[13px] md:h-[23px] text-white font-[400] md:text-[12px] text-[8px] md:leading-[22px] leading-[12px]">
+                        {myCard && myCard.premiumTelegramChannel1}
                       </span>
                       <img
                         src={arrow}
@@ -281,15 +281,32 @@ const Setting = () => {
                       />
                     </button>
                   </button>
-                  <button className="md:w-[373px] w-[255px] md:h-[31px] h-[23px] flex items-center justify-center rounded-[21.5px] border-solid border-[1px] border-[#4e4e4ecc] mt-2 md:mt-0">
+                  <button className="md:w-[320px] w-[255px] md:h-[31px] h-[23px] flex items-center justify-center rounded-[21.5px] border-solid border-[1px] border-[#4e4e4ecc] mt-2 md:mt-0">
                     <button className="flex justify-center items-center gap-2">
                       <img
                         src={telegramIcon}
                         alt="Telegram"
                         className="md:w-[18.6px] w-[14px] h-[14px] md:h-[18.6px]"
                       />
-                      <span className="md:w-[300px] h-[13px] md:h-[23px] text-white font-[400] md:text-[12px] text-[8px] md:leading-[22px] leading-[12px]">
-                        {myCard && myCard.premiumTelegramChannel}
+                      <span className="md:w-[240px] h-[13px] md:h-[23px] text-white font-[400] md:text-[12px] text-[8px] md:leading-[22px] leading-[12px]">
+                        {myCard && myCard.premiumTelegramChannel2}
+                      </span>
+                      <img
+                        src={arrow}
+                        alt="arrow"
+                        className="md:w-[13px] w-[10px] h-[10px] md:h-[13px]"
+                      />
+                    </button>
+                  </button>
+                  <button className="md:w-[320px] w-[255px] md:h-[31px] h-[23px] flex items-center justify-center rounded-[21.5px] border-solid border-[1px] border-[#4e4e4ecc] mt-2 md:mt-0">
+                    <button className="flex justify-center items-center gap-2">
+                      <img
+                        src={telegramIcon}
+                        alt="Telegram"
+                        className="md:w-[18.6px] w-[14px] h-[14px] md:h-[18.6px]"
+                      />
+                      <span className="md:w-[240px] h-[13px] md:h-[23px] text-white font-[400] md:text-[12px] text-[8px] md:leading-[22px] leading-[12px]">
+                        {myCard && myCard.premiumTelegramChannel3}
                       </span>
                       <img
                         src={arrow}
@@ -301,7 +318,7 @@ const Setting = () => {
                 </div>
               </div>
 
-              <span className="text-white opacity-[50%] font-[500] font-inter md:text-[20px] text-[14px] md:leading-[25px] md:mt-[3rem] mt-[5rem]">
+              <span className="text-white opacity-[50%] font-[500] font-inter md:text-[20px] text-[14px] md:leading-[25px] md:mt-[3rem] mt-[7rem]">
                 Your Relationship Manager
               </span>
 

@@ -31,10 +31,12 @@ const SubscriptionEditDiscount = ({ closeDialog, addCourse }) => {
     const fetchPlans = async () => {
       try {
         const response = await axios.get(
-          `https://copartners.in:5009/api/Subscription/GetByExpertsId/${stackholderId}`
+          `https://copartners.in/SubscriptionService/api/Subscription/GetByExpertsId/${stackholderId}`
         );
         if (response.data.isSuccess) {
-          setPlans(response.data.data);
+          // Filter out plans with running discount percentage
+          const availablePlans = response.data.data.filter(plan => !plan.discountPercentage);
+          setPlans(availablePlans);
         } else {
           handleError("Failed to fetch plans");
         }
@@ -101,7 +103,7 @@ const SubscriptionEditDiscount = ({ closeDialog, addCourse }) => {
 
     try {
       const response = await axios.patch(
-        `https://copartners.in:5009/api/Subscription?Id=${subID}`,
+        `https://copartners.in/SubscriptionService/api/Subscription?Id=${subID}`,
         patchData,
         {
           headers: {

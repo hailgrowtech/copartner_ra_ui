@@ -8,18 +8,20 @@ const SubscriptionDialog = ({ closeDialog, axiosServiceData, subTable }) => {
   const [planType, setPlanType] = useState("Select Plan Type");
   const [customPlanName, setCustomPlanName] = useState("");
   const [durationType, setDurationType] = useState("");
-  const [keyPointsType, setKeyPointsType] = useState("Plan Key Points");
   const [des, setDes] = useState('');
 
   const [isSubscriptionOpen, setIsSubscriptionOpen] = useState(false);
   const [isPlanOpen, setIsPlanOpen] = useState(false);
   const [isDuration, setIsDuration] = useState(false);
-  const [amount, setAmount] = useState(null);
   const [isKeyPointsOpen, setIsKeyPointsOpen] = useState(false);
+  const [amount, setAmount] = useState(null);
   const [premiumTelegram, setPremiumTelegram] = useState('');
   const [changes, setChanges] = useState({});
+  const [chatID, setChatID] = useState('');
 
   const [selectedItems, setSelectedItems] = useState([]);
+
+  const [isCustom, setIsCustom] = useState(false);
 
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
@@ -27,8 +29,6 @@ const SubscriptionDialog = ({ closeDialog, axiosServiceData, subTable }) => {
   const inputClassName = subscriptionType === null ? "text-[#9BA3AF]" : "text-white";
 
   const stackholderId = sessionStorage.getItem('stackholderId');
-
-  const [isCustom, setIsCustom] = useState(false);
 
   const handleSuccess = () => {
     toast.success("Subscription saved!", {
@@ -43,14 +43,41 @@ const SubscriptionDialog = ({ closeDialog, axiosServiceData, subTable }) => {
   };
 
   useEffect(() => {
-    axios.get(`https://copartners.in:5132/api/Experts/${stackholderId}`)
+    axios.get(`https://copartners.in/ExpertServices/api/Experts/${stackholderId}`)
       .then((res) => {
         setChanges(res.data.data);
-        setSubscriptionType(res.data.data.expertTypeId); // Set subscription type from fetched data
-        setPremiumTelegram(res.data.data.premiumTelegramChannel); // Set premium telegram link from fetched data
+        setSubscriptionType(res.data.data.expertTypeId);
+        updatePremiumTelegramLink(res.data.data.expertTypeId, res.data.data);
       })
-      .catch((err) => console.error(err));
+      .catch((err) => {
+        console.error(err);
+        handleError("Failed to fetch data: " + err.message);
+      });
   }, [stackholderId]);
+
+  const updatePremiumTelegramLink = (type, data) => {
+    let link = '';
+    let chatId = '';
+    switch (type) {
+      case 1:
+        link = data.premiumTelegramChannel1;
+        chatId = data.chatId1;
+        break;
+      case 2:
+        link = data.premiumTelegramChannel2;
+        chatId = data.chatId2;
+        break;
+      case 3:
+        link = data.premiumTelegramChannel3;
+        chatId = data.chatId3;
+        break;
+      default:
+        link = '';
+        chatId = '';
+    }
+    setPremiumTelegram(link);
+    setChatID(chatId);
+  };
 
   const handleConfirm = async (e) => {
     setError("");
@@ -61,62 +88,51 @@ const SubscriptionDialog = ({ closeDialog, axiosServiceData, subTable }) => {
       planType === "Quarterly" ? 3 :
       planType === "Half-Yearly" ? 6 :
       planType === "Yearly" ? 12 :
-      planType === "Custom" ? durationType : ""; // Set durationMonth from custom input
+      planType === "Custom" ? durationType : "";
 
     const postData = {
       expertsId: stackholderId,
       imagePath: "www.google.com/userjkdjfa",
       serviceType: subscriptionType,
-      // planType: planType,
       planType: planType === "Custom" ? customPlanName : planType,
       durationMonth: durationMonth,
       amount: amount,
       premiumTelegramLink: premiumTelegram,
       description: des || '',
-      isCustom: isCustom
+      isCustom: isCustom, 
+      chatId: chatID,
     };
 
-    if (!amount || !subscriptionType || !planType || !durationMonth || !premiumTelegram) {
+    console.log("Post Data:", postData);
+
+    if (!amount || !subscriptionType || !planType || !durationMonth || !premiumTelegram || !chatID) {
       setError('Please fill out all required fields.');
       setLoading(false);
       return;
     }
 
     try {
-      const response = await axios.post('https://copartners.in:5009/api/Subscription', postData);
+      const response = await axios.post('https://copartners.in/SubscriptionService/api/Subscription', postData);
+      console.log("Response:", response);
       if (response.status !== 200) {
-        handleError("Something went wrong!");
+        handleError("Something went wrong! " + response.status);
       } else {
         handleSuccess();
         closeDialog();
         axiosServiceData();
       }
     } catch (error) {
-      handleError('Failed to submit data. Please try again.');
+      console.error("Error in handleConfirm:", error);
+      handleError('Failed to submit data. Please try again. ' + error.message);
       setError('Failed to submit data. Please try again.');
     } finally {
       setLoading(false);
     }
   };
 
-  const toggleKeyPointsDropdown = () => {
-    setIsKeyPointsOpen(!isKeyPointsOpen);
-    setIsSubscriptionOpen(false);
-    setIsPlanOpen(false);
-    setIsDuration(false);
-  };
-
-  const handleKeyPlanClick = (item) => {
-    if (selectedItems.includes(item)) {
-      setSelectedItems(selectedItems.filter((selected) => selected !== item));
-    } else {
-      setSelectedItems([...selectedItems, item]);
-    }
-    setIsKeyPointsOpen(false);
-  };
-
   const handleSubClick = (option) => {
     setSubscriptionType(option);
+    updatePremiumTelegramLink(option, changes);
     setIsSubscriptionOpen(false);
   };
 
@@ -161,13 +177,6 @@ const SubscriptionDialog = ({ closeDialog, axiosServiceData, subTable }) => {
     setIsPlanOpen(!isPlanOpen);
     setIsSubscriptionOpen(false);
     setIsDuration(false);
-    setIsKeyPointsOpen(false);
-  };
-
-  const toggleDurationDropdown = () => {
-    setIsDuration(!isDuration);
-    setIsSubscriptionOpen(false);
-    setIsPlanOpen(false);
     setIsKeyPointsOpen(false);
   };
 
@@ -248,13 +257,6 @@ const SubscriptionDialog = ({ closeDialog, axiosServiceData, subTable }) => {
                 </label>
                 <div className="relative">
                   <div className="relative">
-                  {/* <input
-                      id="planType"
-                      value={planType}
-                      readOnly
-                      onClick={togglePlanDropdown}
-                      className={`md:w-[482px] w-[345px] md:px-4 px-2 py-2 rounded-md text-white border border-[#40495C] bg-[#282F3E] ${inputClassName}`}
-                    /> */}
                     {planType === "Custom" ? (
                       <input
                         id="customPlanName"
@@ -372,15 +374,12 @@ const SubscriptionDialog = ({ closeDialog, axiosServiceData, subTable }) => {
 
             <div className="relative md:ml-0 ml-[-16px]">
               <div className="mb-0">
-                <label
-                  className="flex items-center justify-center bg-[#282F3E] text-white opacity-[50%]
-                  md:w-[232px] w-[210px] md:h-[26px] h-[25px] rounded-[8px] font-[400] md:text-[14px] text-[13px] md:leading-[16px] leading-[15px] text-center"
-                >
+                <label className="flex items-center justify-center bg-[#282F3E] text-white opacity-[50%] md:w-[232px] w-[210px] md:h-[26px] h-[25px] rounded-[8px] font-[400] md:text-[14px] text-[13px] md:leading-[16px] leading-[15px] text-center">
                   Premium Telegram Channel Link
                 </label>
                 <input
-                  value={changes.premiumTelegramChannel}
-                  onChange={(e) => setPremiumTelegram(e.target.value)}
+                  value={premiumTelegram}
+                  readOnly
                   type="link"
                   id="default-input"
                   className="md:w-[1012px] w-[345px] py-2 px-4 rounded-md text-white border border-[#40495C] bg-[#282F3E]"
@@ -389,10 +388,7 @@ const SubscriptionDialog = ({ closeDialog, axiosServiceData, subTable }) => {
             </div>
 
             <div className="relative md:ml-0 ml-[-16px]">
-              <label
-                className="flex items-center justify-center bg-[#282F3E] text-white opacity-[50%]
-                  w-[90px] h-[26px] rounded-[8px] font-[400] md:text-[14px] text-[13px] md:leading-[16px] leading-[13px] text-center"
-              >
+              <label className="flex items-center justify-center bg-[#282F3E] text-white opacity-[50%] w-[90px] h-[26px] rounded-[8px] font-[400] md:text-[14px] text-[13px] md:leading-[16px] leading-[13px] text-center">
                 Description
               </label>
               <textarea

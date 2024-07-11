@@ -10,7 +10,7 @@ const SubsriptionDiscountOffer = () => {
   const [discount, setDiscount] = useState([]);
 
   const stackholderId = sessionStorage.getItem("stackholderId");
-  const SUB_TABLE = `https://copartners.in:5009/api/Subscription/GetByExpertsId/${stackholderId}`;
+  const SUB_TABLE = `https://copartners.in/SubscriptionService/api/Subscription/GetByExpertsId/${stackholderId}`;
 
   const axiosServiceData = async () => {
     try {
@@ -32,7 +32,7 @@ const SubsriptionDiscountOffer = () => {
   };
 
   const handleDeleteTable = async (id) => {
-    const PATCH_URL = `https://copartners.in:5009/api/Subscription?Id=${id}`;
+    const PATCH_URL = `https://copartners.in/SubscriptionService/api/Subscription/${id}`;
     const patchData = [
       {
         path: "discountValidFrom",

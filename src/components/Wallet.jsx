@@ -34,7 +34,7 @@ const Wallet = () => {
 
   const WALLET_BALANCE_URL = `https://copartners.in:5135/api/Wallet/GetWalletWithdrawalBalance/${stackholderId}?userType=RA`;
 
-  const TRANSACTION_API = `https://copartners.in:5132/api/RADashboard/GetDashboardRAListingData/${stackholderId}?page=1&pageSize=100000`;
+  const TRANSACTION_API = `https://copartners.in/ExpertServices/api/RADashboard/GetDashboardRAListingData/${stackholderId}?page=1&pageSize=100000`;
 
   const WITHDRAWAL_REQ_API = `https://copartners.in:5135/api/Withdrawal/GetWithdrawalByUserId/${stackholderId}?userType=RA&page=1&pageSize=100000`;
 

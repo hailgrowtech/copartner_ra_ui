@@ -18,8 +18,8 @@ const Subscription = () => {
   const [showSubscriptionType, setShowSubscriptionType] = useState("1"); // Default to Commodity
 
   const stackholderId = sessionStorage.getItem("stackholderId");
-  const SUB_TABLE = `https://copartners.in:5009/api/Subscription/GetByExpertsId/${stackholderId}`;
-  const ACTIVE_USER = `https://copartners.in:5132/api/RADashboard/GetDashboardRAListingData/${stackholderId}?page=1&pageSize=100000`;
+  const SUB_TABLE = `https://copartners.in/SubscriptionService/api/Subscription/GetByExpertsId/${stackholderId}`;
+  const ACTIVE_USER = `https://copartners.in/ExpertServices/api/RADashboard/GetDashboardRAListingData/${stackholderId}?page=1&pageSize=100000`;
 
   const handleSuccess = () => {
     toast.success("Successfully Deleted!", {
@@ -35,14 +35,14 @@ const Subscription = () => {
           (user) => user.subscription !== "No Subscrption"
         );
         setActiveUser(filteredUsers);
-        countPlanTypes(filteredUsers);
+        countPlanTypes(filteredUsers, showSubscriptionType);
       } catch (error) {
         console.error("Error fetching active user:", error);
       }
     };
 
     fetchActiveUser();
-  }, [ACTIVE_USER]);
+  }, [ACTIVE_USER, showSubscriptionType]);
 
   const axiosServiceData = async () => {
     try {
@@ -83,7 +83,8 @@ const Subscription = () => {
   };
 
   const handleDeleteTable = async (id) => {
-    const DELETE_TABLE = `https://copartners.in:5009/api/Subscription/${id}`;
+    const DELETE_TABLE = `https://copartners.in/SubscriptionService/api/Subscription/${id}`;
+    // https://copartners.in/SubscriptionService/api/Subscription/${id}
 
     try {
       handleSuccess();
@@ -123,9 +124,11 @@ const Subscription = () => {
     }
   };
 
-  const countPlanTypes = (data) => {
+  const countPlanTypes = (data, subscriptionType) => {
     const counts = data.reduce((acc, item) => {
-      acc[item.planType] = (acc[item.planType] || 0) + 1;
+      if (item.subscription === subscriptionType) {
+        acc[item.planType] = (acc[item.planType] || 0) + 1;
+      }
       return acc;
     }, {});
     setPlanTypeCounts(counts);
@@ -136,6 +139,11 @@ const Subscription = () => {
   );
 
   const sortedSubTable = filteredSubTable.sort((a, b) => a.amount - b.amount);
+
+  // Filter active users based on the selected subscription type
+  const activeUserCount = activeUser.filter(
+    (user) => user.subscription === showSubscriptionType
+  ).length;
 
   return (
     <div className="pb-[5rem] xl:pl-[12rem] md:pl-[10rem] pl-6 md:py-[6rem] pt-[8rem] bg-gradient min-h-screen">
@@ -216,11 +224,11 @@ const Subscription = () => {
                     </button>
                     {isEditDialogOpen && (
                       <SubscriptionEditService
-                      isEditDialogOpen={isEditDialogOpen}
-                      closeDialog={closeDialog}
-                      subTable={row}
-                      axiosServiceData={axiosServiceData}
-                    />
+                        isEditDialogOpen={isEditDialogOpen}
+                        closeDialog={closeDialog}
+                        subTable={row}
+                        axiosServiceData={axiosServiceData}
+                      />
                     )}
                     <button onClick={() => handleDeleteTable(row.id)}>
                       <img
@@ -252,7 +260,7 @@ const Subscription = () => {
                 </span>
                 <span className="flex items-center justify-between sm:w-[305px] h-[13px] font-[500] text-[14px] leading-[12px] text-lightWhite">
                   <span className="text-dimWhite">ACTIVE USER:</span>{" "}
-                  {planTypeCounts[row.planType] || 0}/{activeUser.length}
+                  {planTypeCounts[row.planType] || 0}/{activeUserCount}
                 </span>
               </div>
             ))}
@@ -297,7 +305,7 @@ const Subscription = () => {
                     {row.amount}
                   </td>
                   <td className="font-[500] text-center text-[16px] leading-[18px]">
-                    {planTypeCounts[row.planType] || 0}/{activeUser.length}
+                    {planTypeCounts[row.planType] || 0}/{activeUserCount}
                   </td>
                   <td className="flex flex-row items-center justify-center gap-2 py-[2rem]">
                     <button onClick={() => openEditDialog(row)}>
@@ -336,4 +344,3 @@ const Subscription = () => {
 };
 
 export default Subscription;
-
