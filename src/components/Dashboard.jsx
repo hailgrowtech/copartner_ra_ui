@@ -19,6 +19,8 @@ const Dashboard = () => {
   const [notInterested, setNotInterested] = useState(0);
   const [subTable, setSubTable] = useState([]);
   const [myCard, setMyCard] = useState(null);
+  const [startDate, setStartDate] = useState(null);
+  const [endDate, setEndDate] = useState(null);
 
   const stackholderId = sessionStorage.getItem("stackholderId");
 
@@ -339,7 +341,7 @@ const Dashboard = () => {
           </div>
 
           <ReferralLinkComponent />
-          <EarningAnalysis />
+          <EarningAnalysis stackholderId={stackholderId} startDate={startDate} endDate={endDate} />
 
           <div className="py-8 flex flex-col gap-4 md:mt-0 mt-[-2rem]">
             <span className="font-inter font-[600] text-[22px] leading-[27px] w-[246px] h-[27px] text-white">
