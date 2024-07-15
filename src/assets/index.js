@@ -56,7 +56,13 @@ import login from './Login.png';
 import Link from './LinK.png';
 import backImg from './backImg.png';
 import webinarWhite from './webnarWhite.png';
-import chatWhite from './chatWhite.png'
+import chatWhite from './chatWhite.png';
+import threeDots from './threeDots.png';
+import chatUser1 from './chatUser1.png';
+import chatUser2 from './chatUser2.png';
+import attachDoc from './attachDoc.png';
+import audio from './audio.png';
+import sendChat from './sendChat.png';
 
 export {
     availableIcon,
@@ -109,4 +115,7 @@ export {
     backImg,
     webinarWhite,
     chatWhite,
+    threeDots,
+    chatUser1, chatUser2,
+    attachDoc, sendChat, audio,
 }

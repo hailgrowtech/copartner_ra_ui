@@ -1,17 +1,39 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import {
+  userImg,
+  threeDots,
+  chatUser1,
+  chatUser2,
+  audio,
+  sendChat,
+  attachDoc,
+  backImg,
+} from "../assets";
 import axios from "axios";
 import { toast } from "react-toastify";
-import { subscriptionData } from "../constants";
-import DatePicker from "react-datepicker";
+import ChatBubble from "./ChatBubble";
+import { Link } from "react-router-dom";
 
 const ChatsHistory = () => {
   const [smallScreen, setSmallScreen] = useState(false);
   const [subTable, setSubTable] = useState([]);
-  const [activeUser, setActiveUser] = useState([]);
+  const [activeUser, setActiveUser] = useState(null);
   const [planTypeCounts, setPlanTypeCounts] = useState({});
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
+  const [activeTab, setActiveTab] = useState("Premium");
+  const [messageInput, setMessageInput] = useState("");
+  const [chatMessages, setChatMessages] = useState([
+    {
+      _id: 1,
+      isOwnSender: false,
+      sender: "",
+      dateCreated: new Date(),
+      type: "text",
+      payload: { text: "Hello Friend, See you tomorrow..." },
+    },
+    // ... (other initial messages)
+  ]);
 
   const stackholderId = sessionStorage.getItem("stackholderId");
 
@@ -32,164 +54,252 @@ const ChatsHistory = () => {
     return () => window.removeEventListener("resize", checkScreenSize);
   }, []);
 
-  const handleDeleteTable = () => {};
+  const handleSendMessage = () => {
+    if (messageInput.trim() !== "") {
+      const newMessage = {
+        _id: chatMessages.length + 1,
+        isOwnSender: true,
+        sender: "You",
+        dateCreated: new Date(),
+        type: "text",
+        payload: { text: messageInput },
+      };
 
-  const handleDateChange = () => {};
+      setChatMessages([...chatMessages, newMessage]);
+      setMessageInput(""); // Clear the input field
+    }
+  };
 
-  const handleDownloadSheet = () => {};
+  const handleFileUpload = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      const newMessage = {
+        _id: chatMessages.length + 1,
+        isOwnSender: true,
+        sender: "You",
+        dateCreated: new Date(),
+        type: "file",
+        payload: { file: URL.createObjectURL(file), fileName: file.name },
+      };
+
+      setChatMessages([...chatMessages, newMessage]);
+    }
+  };
+
+  const chatUserList = [
+    {
+      id: 1,
+      chatUserImg: chatUser1,
+      chatUserName: "Saksham Agarwal",
+    },
+    {
+      id: 2,
+      chatUserImg: chatUser2,
+      chatUserName: "Shubham Ready",
+    },
+    {
+      id: 3,
+      chatUserImg: userImg,
+      chatUserName: "Maniraj Iyer",
+    },
+    {
+      id: 4,
+      chatUserImg: chatUser1,
+      chatUserName: "Saksham Agarwal",
+    },
+    {
+      id: 5,
+      chatUserImg: chatUser2,
+      chatUserName: "Shubham Ready",
+    },
+    {
+      id: 6,
+      chatUserImg: userImg,
+      chatUserName: "Maniraj Iyer",
+    },
+    {
+      id: 7,
+      chatUserImg: chatUser1,
+      chatUserName: "Saksham Agarwal",
+    },
+    {
+      id: 8,
+      chatUserImg: chatUser2,
+      chatUserName: "Shubham Ready",
+    },
+    {
+      id: 9,
+      chatUserImg: userImg,
+      chatUserName: "Maniraj Iyer",
+    },
+  ];
 
   return (
     <div className="pb-[5rem] xl:pl-[12rem] md:pl-[10rem] pl-[1rem] md:py-[6rem] pt-[8rem] bg-gradient min-h-screen">
-      <div className="xl:w-[1520px] md:w-[1130px] w-[370px] flex items-center justify-between">
-        <span className="w-[176px] h-[27px] font-inter text-[22px] font-[600] leading-[27px] text-white md:ml-0 ml-2">
-          Chats History 
-        </span>
-        <label class="inline-flex items-center me-5 cursor-pointer">
-          <input type="checkbox" value="" class="sr-only peer" checked />
-          <div class="relative w-11 h-6 bg-gray-200 rounded-full peer dark:bg-gray-700 peer-focus:ring-4 peer-focus:ring-green-300 dark:peer-focus:ring-green-800 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-green-600"></div>
-        </label>
-      </div>
-
-      <div className="flex py-[4rem]">
-        <Link to="/chats/chats_history">
-        <div className="flex xl:w-[1520px] md:w-[1120px] md:gap-6 gap-2">
-        <div className="md:h-[230px] h-[160px] border border-white border-opacity-50 rounded-lg w-full p-4 flex flex-col gap-4">
-            <span className="font-[700] md:text-[26px] text-[14px] md:leading-[35px] leading-[20px] text-gradient-2 md:w-auto w-[140px] md:h-auto h-[28px]">
-              Paid Active Queries:
-            </span>
-            <span className="font-[700] md:text-[52px] text-[22px] md:leading-[50px] leading-[12px] text-white">
-              10
-            </span>
-            <span className="text-white opacity-[50%] font-[500] md:text-[16px] text-[12px] md:leading-[18px] leading-[12px]">
-              5 Minutes Access
-            </span>
-            <button className="px-4 w-[100%] py-2 bg-blue-500 text-white md:text-[14px] text-[14px] rounded-lg hover:bg-blue-600">
-              Response
-            </button>
-          </div>
-          <div className="md:h-[230px] h-[160px] border border-white border-opacity-50 rounded-lg w-full p-4 flex flex-col gap-4">
-            <span className="font-[700] md:text-[26px] text-[14px] md:leading-[35px] leading-[20px] text-gradient-2 md:w-auto w-[140px] md:h-auto h-[28px]">
-              Free Active Queries:
-            </span>
-            <span className="font-[700] md:text-[52px] text-[22px] md:leading-[50px] leading-[12px] text-white">
-              10
-            </span>
-            <span className="text-white opacity-[50%] font-[500] md:text-[16px] text-[12px] md:leading-[18px] leading-[12px]">
-              5 Minutes Access
-            </span>
-            <button className="px-4 w-[100%] py-2 bg-blue-500 text-white md:text-[14px] text-[14px] rounded-lg hover:bg-blue-600">
-              Response
-            </button>
-          </div>
-        </div>
-        </Link>
-      </div>
-
-      <div className="flex flex-row items-center">
-        <div className="xl:w-[1420px] md:w-[1030px] flex flex-col gap-8 mt-4">
-          <div className="flex justify-between md:flex-row flex-col md:gap-0 gap-2">
-            <span className="text-white md:w-[210px] h-[27px] font-inter font-[600] text-[22px] md:leading-[27px] md:items-center items-start">
-              Customer Listing
-            </span>
-
-            <div className="flex items-center flex-row md:gap-10 gap-2 md:mr-[-6rem] mr-0">
-              <div className="ml-0">
-                <DatePicker
-                  selected={startDate}
-                  onChange={handleDateChange}
-                  startDate={startDate}
-                  endDate={endDate}
-                  selectsRange
-                  isClearable
-                  placeholderText="Select Date range"
-                  className="bg-[#2E323C] h-[55px] text-white rounded-[10px] px-4"
-                />
+      <div
+        className={`flex ${
+          smallScreen ? "flex-col" : "flex-row"
+        } bg-[#272F3D] p-4 rounded-[18px] xl:w-[1520px] md:w-[1100px] w-[360px] gap-12`}
+      >
+        {(!smallScreen || !activeUser) && (
+          <div className="w-[300px] h-auto bg-[#272F3D]">
+            <div className="flex flex-col gap-4 justify-between">
+              <div className="flex justify-between">
+                <Link to='/chats' className="flex flex-row items-center gap-2">
+                  <img src={backImg} alt="" className="w-[26px] h-[26px] md:hidden flex" />
+                <span className="font-inter font-[500] text-[18px] leading-[23px] text-white">
+                  CHATS
+                </span>
+                </Link>
               </div>
-              <button
-                onClick={handleDownloadSheet}
-                className={`w-[140px] h-[40px] rounded-[10px] border-solid border-[1px] border-white text-white`}
-              >
-                Download Sheet
-              </button>
+              <div className="flex flex-row justify-between">
+                <ul className="flex flex-row md:gap-10 gap-4">
+                  <li
+                    className={`w-[120px] cursor-pointer h-[40px] text-center flex items-center justify-center rounded-[10px] border-solid border-[1px] border-white text-black ${
+                      activeTab === "Premium"
+                        ? "bg-[#ffffff] font-[600] font-inter text-[12px]"
+                        : "bg-transparent text-white font-[600] font-inter text-[12px]"
+                    }`}
+                    onClick={() => setActiveTab("Premium")}
+                  >
+                    Premium
+                  </li>
+                  <li
+                    className={`w-[120px] cursor-pointer h-[40px] text-center flex items-center justify-center rounded-[10px] border-solid border-[1px] border-white text-black ${
+                      activeTab === "Free"
+                        ? "bg-[#ffffff] font-[600] font-inter text-[12px]"
+                        : "bg-transparent text-white font-[600] font-inter text-[12px]"
+                    }`}
+                    onClick={() => setActiveTab("Free")}
+                  >
+                    Free
+                  </li>
+                </ul>
+              </div>
+            </div>
+            <div className="w-[362px] max-h-[500px] flex gap-4 flex-col mt-4 overflow-y-auto">
+              {chatUserList.map((users) => {
+                const isActive = activeUser && activeUser.id === users.id;
+                return (
+                  <div
+                    key={users.id}
+                    className={`flex max-h-[490px] flex-row gap-4 cursor-pointer ${
+                      isActive ? "bg-[#2E374B]" : "bg-transparent"
+                    } p-2 rounded`}
+                    onClick={() => setActiveUser(users)}
+                  >
+                    <img
+                      src={users.chatUserImg}
+                      alt="User Name"
+                      className="w-[58px] h-[58px] rounded-full"
+                    />
+                    <div className="flex flex-col w-[267px] h-[57px]">
+                      <span
+                        className={`font-inter font-[600] text-[17.5px] ${
+                          isActive ? "text-white" : "text-white opacity-[50%]"
+                        }`}
+                      >
+                        {users.chatUserName}
+                      </span>
+                      <span className="text-white font-[500] font-inter text-[15px] leading-[23px]">
+                        Hello Friend, See you tomorrow...
+                      </span>
+                    </div>
+                  </div>
+                );
+              })}
             </div>
           </div>
-        </div>
-      </div>
-
-      <div className="flex md:mt-[2rem] mt-1">
-        {smallScreen ? (
-          <div className="flex flex-wrap justify-center items-center ml-[-22px]">
-            {subscriptionData.map((row, index) => (
-              <div
-                key={index}
-                className="flex flex-col justify-around h-[248px] bg-[#18181B] bg-opacity-[50%] rounded-[30px] md:m-4 m-[10px] p-4 w-[90%] max-w-sm"
-              >
-                <span className="flex items-center justify-between sm:w-[305px] h-[13px] font-[500] text-[14px] leading-[12px] text-lightWhite">
-                {row.transactioId}
-                </span>
-                <span className="flex items-center justify-between sm:w-[305px] h-[13px] font-[500] text-[14px] leading-[12px] text-lightWhite">
-                  <span className="text-dimWhite">DATE:</span> {row.date}
-                </span>
-                <span className="flex items-center justify-between sm:w-[305px] h-[34px] font-[500] text-[14px] leading-[12px] text-lightWhite">
-                  <span className="text-dimWhite">USER NUMBER:</span>{" "}
-                  {row.phNum}
-                </span>
-                <span className="flex items-center justify-between sm:w-[305px] h-[13px] font-[500] text-[14px] leading-[12px] text-lightWhite">
-                  <span className="text-dimWhite">TIME:</span> {row.duration}
-                </span>
-                <span className="flex items-center justify-between sm:w-[305px] h-[13px] font-[500] text-[14px] leading-[12px] text-lightWhite">
-                  <span className="text-dimWhite">AMOUNT:</span> {row.amount}
-                </span>
-                <span className="flex items-center justify-between sm:w-[305px] h-[13px] font-[500] text-[14px] leading-[12px] text-lightWhite">
-                  <span className="text-dimWhite">ADD ON:</span> {row.subType}
-                </span>
-              </div>
-            ))}
-            <button className="mt-6 md:w-[147px] md:h-[40px] md:flex items-center justify-center flex w-[110px] h-[30px] rounded-[6px] bg-lightWhite md:text-[14px] text-[10px] font-[500] md:leading-[16px] leading-[12px]">
-              Show More
-            </button>
-          </div>
-        ) : (
-          <table className="xl:w-[1520px] md:w-[1130px] h-[230px] bg-[#29303F] rounded-[30px]">
-            <thead className="text-[#BABABA] font-inter font-[600] text-[14px] leading-[20px] h-[51px]">
-              <tr>
-                <th className="text-center">TRANSACTION ID</th>
-                <th className="text-center">DATE</th>
-                <th className="text-center">USER NUMBER</th>
-                <th className="text-center">TIME</th>
-                <th className="text-center">AMOUNT</th>
-                <th className="text-center">ADD ON</th>
-              </tr>
-            </thead>
-            <tbody className="text-lightWhite h-[81px]">
-              {subscriptionData.map((row, index) => (
-                <tr
-                  key={index}
-                  className={index % 2 === 0 ? "bg-[#1E1E22]" : ""}
-                >
-                  <td className="font-[500] text-center text-[16px] leading-[18px]">
-                    {row.transactioId}
-                  </td>
-                  <td className="font-[500] text-center text-[16px] leading-[18px]">
-                    {row.date}
-                  </td>
-                  <td className="font-[500] text-center text-[16px] leading-[18px]">
-                    {row.phNum}
-                  </td>
-                  <td className="font-[500] text-center text-[16px] leading-[18px]">
-                    {row.duration}
-                  </td>
-                  <td className="py-2 text-center font-[500] text-[16px] leading-[18px]">
-                    {row.amount}
-                  </td>
-                  <td className="font-[500] text-center text-[16px] leading-[18px]">
-                    {row.subType}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
         )}
+
+        <div className="w-full md:h-[600px] h-auto flex flex-col">
+          {activeUser ? (
+            <>
+              <div className="w-[702px] h-[83px] flex justify-between flex-row items-center">
+                <div className="w-[301px] h-[65px] flex flex-row gap-4">
+                  {smallScreen && (
+                    <button
+                      onClick={() => setActiveUser(null)}
+                      className="text-white mb-4"
+                    >
+                      <img src={backImg} className="w-[30px] h-[30px]" />
+                    </button>
+                  )}
+                  <img
+                    src={activeUser.chatUserImg}
+                    alt="CHAT_USER"
+                    className="w-[58px] h-[58px] rounded-full"
+                  />
+                  <div className="flex flex-col">
+                    <span className="text-white font-[500] text-[20px] leading-[32px]">
+                      {activeUser.chatUserName}
+                    </span>
+                    <span className="font-[500] text-[17px] leading-[28px] text-white opacity-[50%]">
+                      online
+                    </span>
+                  </div>
+                </div>
+                <button>
+                  <img src={threeDots} alt="" className="w-[27px] h-[27px]" />
+                </button>
+              </div>
+
+              <div
+                className="bg-[#222A38] w-full h-[500px] rounded-[18px] flex-grow overflow-y-auto"
+                style={{ maxHeight: "100%" }}
+              >
+                {chatMessages.map((message) => (
+                  <ChatBubble
+                    key={message._id}
+                    isOwnSender={message.isOwnSender}
+                    _id={message._id}
+                    sender={message.sender}
+                    dateCreated={message.dateCreated}
+                    type={message.type}
+                    payload={message.payload}
+                  />
+                ))}
+              </div>
+
+              <div className="w-full h-[58px] bg-[#272F3D] rounded-[6px] flex items-center px-2 py-2">
+                <button className="mr-2" onClick={() => document.getElementById("fileInput").click()}>
+                  <img
+                    src={attachDoc}
+                    alt="Attach Doc"
+                    className="md:w-[35px] md:h-[35px]"
+                  />
+                </button>
+                <input
+                  type="file"
+                  id="fileInput"
+                  style={{ display: "none" }}
+                  onChange={handleFileUpload}
+                />
+                <input
+                  type="text"
+                  placeholder="Type your message"
+                  className="flex-grow h-[43px] bg-[#1F2735] text-white placeholder-gray-400 px-4 rounded-[6px] focus:outline-none border-none"
+                  value={messageInput}
+                  onChange={(e) => setMessageInput(e.target.value)}
+                />
+                <button className="ml-2">
+                  <img
+                    src={audio}
+                    alt="Audio Message"
+                    className="md:w-[35px] md:h-[35px]"
+                  />
+                </button>
+                <button className="ml-2" onClick={handleSendMessage}>
+                  <img src={sendChat} alt="Send" className="md:w-[35px] md:h-[35px]" />
+                </button>
+              </div>
+            </>
+          ) : (
+            <div className="bg-[#222A38] w-full h-full rounded-[18px] items-center justify-center md:flex hidden">
+              <span className="text-white text-[20px] font-[500]">Select a user to start chatting</span>
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );
