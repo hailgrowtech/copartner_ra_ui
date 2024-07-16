@@ -136,7 +136,7 @@ const SubsciptionMiniOffer = () => {
   };
 
   const handleCopyLink = (id, rowIndex) => {
-    const link = `https://copartner.in:443/ra-detail2/${id}`;
+    const link = `https://copartner.in:443/ra-detail2/${id}&raid=${stackholderId}`;
     navigator.clipboard
       .writeText(link)
       .then(() => {
