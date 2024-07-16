@@ -11,8 +11,6 @@ import ConfirmPassword from "./components/ConfirmPassword";
 import AnalysisBoard from "./components/AnalysisBoard";
 import Webinar from "./components/Webinar";
 import Chats from "./components/Chats";
-import ChatsPaid from "./components/ChatsPaid";
-import ChatsFree from "./components/ChatsHistory";
 import ChatsHistory from "./components/ChatsHistory";
 
 function App() {

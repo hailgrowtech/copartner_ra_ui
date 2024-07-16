@@ -21,7 +21,8 @@ const ChatsHistory = () => {
   const [planTypeCounts, setPlanTypeCounts] = useState({});
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
-  const [activeTab, setActiveTab] = useState("Premium");
+  const [activeTab, setActiveTab] = useState("Active");
+  const [activeSubTab, setActiveSubTab] = useState("Premium");
   const [messageInput, setMessageInput] = useState("");
   const [chatMessages, setChatMessages] = useState([
     {
@@ -34,6 +35,7 @@ const ChatsHistory = () => {
     },
     // ... (other initial messages)
   ]);
+  const [showHistoryButtons, setShowHistoryButtons] = useState(false);
 
   const stackholderId = sessionStorage.getItem("stackholderId");
 
@@ -134,6 +136,18 @@ const ChatsHistory = () => {
     },
   ];
 
+  const handleActiveClick = () => {
+    setActiveTab("Active");
+    setActiveSubTab("Premium");
+    setShowHistoryButtons(false);
+  };
+
+  const handleHistoryClick = () => {
+    setActiveTab("History");
+    setActiveSubTab("PremiumHistory");
+    setShowHistoryButtons(true);
+  };
+
   return (
     <div className="pb-[5rem] xl:pl-[12rem] md:pl-[10rem] pl-[1rem] md:py-[6rem] pt-[8rem] bg-gradient min-h-screen">
       <div
@@ -144,36 +158,85 @@ const ChatsHistory = () => {
         {(!smallScreen || !activeUser) && (
           <div className="w-[300px] h-auto bg-[#272F3D]">
             <div className="flex flex-col gap-4 justify-between">
-              <div className="flex justify-between">
-                <Link to='/chats' className="flex flex-row items-center gap-2">
-                  <img src={backImg} alt="" className="w-[26px] h-[26px] md:hidden flex" />
-                <span className="font-inter font-[500] text-[18px] leading-[23px] text-white">
-                  CHATS
-                </span>
+              <div className="flex gap-4 md:ml-[-1rem] ml-0">
+                <Link to="/chats" className="flex flex-row items-center gap-2">
+                  <img
+                    src={backImg}
+                    alt=""
+                    className="w-[26px] h-[26px] md:hidden flex"
+                  />
                 </Link>
+                <div
+                  className={`w-[70px] cursor-pointer h-[40px] text-center flex items-center justify-center rounded-[10px] border-solid border-[1px] border-white text-black ${
+                    activeTab === "Active"
+                      ? "bg-[#ffffff] font-[600] font-inter text-[12px]"
+                      : "bg-transparent text-white font-[600] font-inter text-[12px]"
+                  }`}
+                  onClick={handleActiveClick}
+                >
+                  Active
+                </div>
+                <div
+                  className={`w-[70px] cursor-pointer h-[40px] text-center flex items-center justify-center rounded-[10px] border-solid border-[1px] border-white text-black ${
+                    activeTab === "History"
+                      ? "bg-[#ffffff] font-[600] font-inter text-[12px]"
+                      : "bg-transparent text-white font-[600] font-inter text-[12px]"
+                  }`}
+                  onClick={handleHistoryClick}
+                >
+                  History
+                </div>
               </div>
               <div className="flex flex-row justify-between">
                 <ul className="flex flex-row md:gap-10 gap-4">
-                  <li
-                    className={`w-[120px] cursor-pointer h-[40px] text-center flex items-center justify-center rounded-[10px] border-solid border-[1px] border-white text-black ${
-                      activeTab === "Premium"
-                        ? "bg-[#ffffff] font-[600] font-inter text-[12px]"
-                        : "bg-transparent text-white font-[600] font-inter text-[12px]"
-                    }`}
-                    onClick={() => setActiveTab("Premium")}
-                  >
-                    Premium
-                  </li>
-                  <li
-                    className={`w-[120px] cursor-pointer h-[40px] text-center flex items-center justify-center rounded-[10px] border-solid border-[1px] border-white text-black ${
-                      activeTab === "Free"
-                        ? "bg-[#ffffff] font-[600] font-inter text-[12px]"
-                        : "bg-transparent text-white font-[600] font-inter text-[12px]"
-                    }`}
-                    onClick={() => setActiveTab("Free")}
-                  >
-                    Free
-                  </li>
+                  {activeTab === "Active" && (
+                    <>
+                      <li
+                        className={`w-[70px] cursor-pointer h-[40px] text-center flex items-center justify-center rounded-[10px] border-solid border-[1px] border-white text-black ${
+                          activeSubTab === "Premium"
+                            ? "bg-[#ffffff] font-[600] font-inter text-[12px]"
+                            : "bg-transparent text-white font-[600] font-inter text-[12px]"
+                        }`}
+                        onClick={() => setActiveSubTab("Premium")}
+                      >
+                        Premium
+                      </li>
+                      <li
+                        className={`w-[70px] cursor-pointer h-[40px] text-center flex items-center justify-center rounded-[10px] border-solid border-[1px] border-white text-black ${
+                          activeSubTab === "Free"
+                            ? "bg-[#ffffff] font-[600] font-inter text-[12px]"
+                            : "bg-transparent text-white font-[600] font-inter text-[12px]"
+                        }`}
+                        onClick={() => setActiveSubTab("Free")}
+                      >
+                        Free
+                      </li>
+                    </>
+                  )}
+                  {activeTab === "History" && (
+                    <>
+                      <li
+                        className={`w-[120px] cursor-pointer h-[40px] text-center flex items-center justify-center rounded-[10px] border-solid border-[1px] border-white text-black ${
+                          activeSubTab === "PremiumHistory"
+                            ? "bg-[#ffffff] font-[600] font-inter text-[12px]"
+                            : "bg-transparent text-white font-[600] font-inter text-[12px]"
+                        }`}
+                        onClick={() => setActiveSubTab("PremiumHistory")}
+                      >
+                        Premium History
+                      </li>
+                      <li
+                        className={`w-[120px] cursor-pointer h-[40px] text-center flex items-center justify-center rounded-[10px] border-solid border-[1px] border-white text-black ${
+                          activeSubTab === "FreeHistory"
+                            ? "bg-[#ffffff] font-[600] font-inter text-[12px]"
+                            : "bg-transparent text-white font-[600] font-inter text-[12px]"
+                        }`}
+                        onClick={() => setActiveSubTab("FreeHistory")}
+                      >
+                        Free History
+                      </li>
+                    </>
+                  )}
                 </ul>
               </div>
             </div>
@@ -262,7 +325,10 @@ const ChatsHistory = () => {
               </div>
 
               <div className="w-full h-[58px] bg-[#272F3D] rounded-[6px] flex items-center px-2 py-2">
-                <button className="mr-2" onClick={() => document.getElementById("fileInput").click()}>
+                <button
+                  className="mr-2"
+                  onClick={() => document.getElementById("fileInput").click()}
+                >
                   <img
                     src={attachDoc}
                     alt="Attach Doc"
@@ -290,13 +356,19 @@ const ChatsHistory = () => {
                   />
                 </button>
                 <button className="ml-2" onClick={handleSendMessage}>
-                  <img src={sendChat} alt="Send" className="md:w-[35px] md:h-[35px]" />
+                  <img
+                    src={sendChat}
+                    alt="Send"
+                    className="md:w-[35px] md:h-[35px]"
+                  />
                 </button>
               </div>
             </>
           ) : (
             <div className="bg-[#222A38] w-full h-full rounded-[18px] items-center justify-center md:flex hidden">
-              <span className="text-white text-[20px] font-[500]">Select a user to start chatting</span>
+              <span className="text-white text-[20px] font-[500]">
+                Select a user to start chatting
+              </span>
             </div>
           )}
         </div>
