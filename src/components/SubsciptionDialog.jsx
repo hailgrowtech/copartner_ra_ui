@@ -101,6 +101,7 @@ const SubscriptionDialog = ({ closeDialog, axiosServiceData, subTable }) => {
       description: des || '',
       isCustom: isCustom, 
       chatId: chatID,
+      isSpecialSubscription: false
     };
 
     console.log("Post Data:", postData);
