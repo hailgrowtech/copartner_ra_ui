@@ -7,6 +7,10 @@ const SubscriptionChatDialog = ({ closeDialog, addCourse }) => {
   const [amount, setAmount] = useState("");
   const [duration, setDuration] = useState("");
   const [des, setDes] = useState("");
+  const [subscriptionType, setSubscriptionType] = useState(null);
+  const [isSubscriptionOpen, setIsSubscriptionOpen] = useState(false);
+
+  const inputClassName = subscriptionType === null ? "text-[#9BA3AF]" : "text-white";
 
   useEffect(() => {
     if (sessionStorage.getItem("dialogOpen") === "true") {
@@ -74,6 +78,28 @@ const SubscriptionChatDialog = ({ closeDialog, addCourse }) => {
     sessionStorage.setItem("dialogOpen", "false");
   };
 
+  const getSubscriptionTypeLabel = (type) => {
+    switch (type) {
+      case 1:
+        return "Commodity";
+      case 2:
+        return "Equity";
+      case 3:
+        return "Futures & Options";
+      default:
+        return "Select Subscription Type";
+    }
+  };
+
+  const toggleSubscriptionDropdown = () => {
+    setIsSubscriptionOpen(!isSubscriptionOpen);
+  };
+
+  const handleSubClick = (option) => {
+    setSubscriptionType(option);
+    setIsSubscriptionOpen(false);
+  };
+
   return (
     <div className="fixed inset-0 z-[999] flex items-center justify-center">
       <div className="fixed inset-0 z-[999] flex items-center justify-center bg-black bg-opacity-[40%]">
@@ -93,6 +119,54 @@ const SubscriptionChatDialog = ({ closeDialog, addCourse }) => {
 
           <div className="flex flex-col gap-4 md:w-[1006px]">
             <div className="flex md:flex-row flex-col md:gap-12 gap-4 md:ml-0 ml-[-16px]">
+            <div className="relative">
+                <label
+                  htmlFor="subscriptionType"
+                  className="flex items-center justify-center bg-[#282F3E] text-white opacity-[50%]
+                    md:w-[140px] w-[134px] md:h-[26px] h-[25px] rounded-[8px] font-[400] md:text-[14px] text-[13px] md:leading-[16px] leading-[15px] text-center"
+                >
+                  Subscription Type
+                </label>
+                <div className="relative">
+                  <div className="relative">
+                    <input
+                      id="subscriptionType"
+                      value={getSubscriptionTypeLabel(subscriptionType)}
+                      onClick={toggleSubscriptionDropdown}
+                      className={`md:w-[482px] w-[345px] md:px-4 px-2 py-2 cursor-pointer rounded-md border border-[#40495C] bg-[#282F3E] ${inputClassName}`}
+                    />
+                    <img
+                      src={dropdown}
+                      alt="DropDown"
+                      className="absolute inset-y-0 md:right-3 right-[-6px] w-[14px] h-[14px] top-[50%] transform -translate-y-1/2"
+                    />
+                  </div>
+                  {isSubscriptionOpen && (
+                    <div className="absolute z-10 mt-2 md:w-[482px] w-[345px] rounded-md bg-white shadow-lg">
+                      <ul className="py-1">
+                        <li
+                          onClick={() => handleSubClick(1)}
+                          className="cursor-pointer px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                        >
+                          Commodity
+                        </li>
+                        <li
+                          onClick={() => handleSubClick(2)}
+                          className="cursor-pointer px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                        >
+                          Equity
+                        </li>
+                        <li
+                          onClick={() => handleSubClick(3)}
+                          className="cursor-pointer px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                        >
+                          Futures & Options
+                        </li>
+                      </ul>
+                    </div>
+                  )}
+                </div>
+              </div>
               <div className="relative">
                 <div className="mb-0">
                   <label
@@ -110,7 +184,10 @@ const SubscriptionChatDialog = ({ closeDialog, addCourse }) => {
                   />
                 </div>
               </div>
-              <div className="relative">
+            </div>
+
+            <div className="flex md:flex-row flex-col md:gap-12 gap-4 md:ml-0 ml-[-16px]">
+            <div className="relative">
                 <div className="mb-0">
                   <label
                     className="flex items-center justify-center bg-[#282F3E] text-white opacity-[50%]
@@ -127,9 +204,6 @@ const SubscriptionChatDialog = ({ closeDialog, addCourse }) => {
                   />
                 </div>
               </div>
-            </div>
-
-            <div className="flex md:flex-row flex-col md:gap-12 gap-4 md:ml-0 ml-[-16px]">
               <div className="relative">
                 <div className="mb-0">
                   <label
