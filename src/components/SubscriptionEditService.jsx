@@ -1,76 +1,110 @@
 import React, { useState } from "react";
+import axios from "axios";
 import { dropdown, closeIcon } from "../assets";
 
-const SubscriptionEditService = ({ closeDialog, subscription }) => {
-  const [subscriptionType, setSubscriptionType] = useState("Futures & Options");
-  const [planType, setPlanType] = useState("Basic");
-  const [durationType, setDurationType] = useState("1 Month");
-  const [keyPointsType, setKeyPointsType] = useState("Plan Key Points");
+const SubscriptionEditService = ({ closeDialog, subscription, subTable, axiosServiceData }) => {
+  const getSubscriptionTypeLabel = (type) => {
+    switch (type) {
+      case "3":
+        return "Futures & Options";
+      case "1":
+        return "Commodity";
+      case "2":
+        return "Equity";
+      default:
+        return "Select Subscription Type";
+    }
+  };
 
+  const [subscriptionType, setSubscriptionType] = useState(getSubscriptionTypeLabel(subTable?.serviceType));
+  const [planType, setPlanType] = useState(subTable?.planType);
+  const [durationType, setDurationType] = useState(subTable?.durationMonth);
+  const [amount, setAmount] = useState(subTable?.amount);
+  const [premiumTelegram, setPremiumTelegram] = useState(subTable?.premiumTelegramLink);
   const [isSubscriptionOpen, setIsSubscriptionOpen] = useState(false);
   const [isPlanOpen, setIsPlanOpen] = useState(false);
+  const [customPlanName, setCustomPlanName] = useState(subTable?.planType === "Custom" ? subTable?.planType : "");
+  const [isCustom, setIsCustom] = useState(subTable?.planType === "Custom");
   const [isDuration, setIsDuration] = useState(false);
-  const [isKeyPointsOpen, setIsKeyPointsOpen] = useState(false);
 
-  const [selectedItems, setSelectedItems] = useState([]);
-
-  const toggleKeyPointsDropdown = () => {
-    setIsKeyPointsOpen(!isKeyPointsOpen);
-    setIsSubscriptionOpen(false);
-    setIsPlanOpen(false);
-    setIsDuration(false);
-  };
-
-  const handleKeyPlanClick = (item) => {
-    if (selectedItems.includes(item)) {
-      setSelectedItems(selectedItems.filter((selected) => selected !== item));
-    } else {
-      setSelectedItems([...selectedItems, item]);
-    }
-    setIsKeyPointsOpen(false);
-  };
+  const inputClassName = subscriptionType === null ? "text-[#9BA3AF]" : "text-white";
 
   const handleSubClick = (option) => {
     setSubscriptionType(option);
     setIsSubscriptionOpen(false);
   };
 
-  const handlePlanClick = (monthly) => {
-    setPlanType(monthly);
+  const handlePlanClick = (plan) => {
+    setPlanType(plan);
+    if (plan !== "Custom") {
+      setDurationType(plan === "Monthly" ? 1 : plan === "Quarterly" ? 3 : plan === "Half-Yearly" ? 6 : plan === "Yearly" ? 12 : "");
+    }
     setIsPlanOpen(false);
+    setIsCustom(plan === "Custom");
+    if (plan !== "Custom") {
+      setCustomPlanName("");
+    }
   };
 
-  const handleDurationClick = (month) => {
-    setDurationType(month);
-    setIsDuration(false);
+  const handleDurationInputChange = (e) => {
+    setDurationType(e.target.value);
+  };
+
+  const handleAmountChange = (e) => {
+    setAmount(e.target.value);
   };
 
   const toggleSubscriptionDropdown = () => {
     setIsSubscriptionOpen(!isSubscriptionOpen);
     setIsPlanOpen(false);
     setIsDuration(false);
-    setIsKeyPointsOpen(false);
   };
 
   const togglePlanDropdown = () => {
     setIsPlanOpen(!isPlanOpen);
     setIsSubscriptionOpen(false);
     setIsDuration(false);
-    setIsKeyPointsOpen(false);
   };
 
-  const toggleDurationDropdown = () => {
-    setIsDuration(!isDuration);
-    setIsSubscriptionOpen(false);
-    setIsPlanOpen(false);
-    setIsKeyPointsOpen(false);
+  const handleCustom = (e) => {
+    setCustomPlanName(e.target.value);
   };
 
-  const togglePlanKeyDropdown = () => {
-    setIsKeyPointsOpen(!isKeyPointsOpen);
-    setIsSubscriptionOpen(false);
-    setIsPlanOpen(false);
-    setIsDuration(false);
+  const handleSaveChanges = async () => {
+    const patchData = [
+      {
+        path: "amount",
+        op: "replace",
+        value: amount
+      },
+      {
+        path: "planType",
+        op: "replace",
+        value: planType === "Custom" ? customPlanName : planType
+      },
+      {
+        path: "durationMonth",
+        op: "replace",
+        value: durationType
+      }
+    ];
+
+    try {
+      const response = await axios.patch(`https://copartners.in:5009/api/Subscription?Id=${subTable.id}`, patchData, {
+        headers: {
+          'Content-Type': 'application/json-patch+json'
+        }
+      });
+
+      if (response.status === 200) {
+        axiosServiceData();
+        closeDialog();
+      } else {
+        console.error("Failed to update subscription, status:", response.status);
+      }
+    } catch (error) {
+      console.error("Error updating subscription:", error);
+    }
   };
 
   return (
@@ -95,8 +129,8 @@ const SubscriptionEditService = ({ closeDialog, subscription }) => {
                 <span className="mr-3 text-sm font-medium text-white">
                   Active:
                 </span>
-                <input type="checkbox" value="" class="sr-only peer" checked />
-                <div class="relative w-11 h-6 bg-gray-200 rounded-full peer dark:bg-gray-700 peer-focus:ring-4 peer-focus:ring-green-300 dark:peer-focus:ring-green-800 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-green-600"></div>
+                <input type="checkbox" value="" className="sr-only peer" checked />
+                <div className="relative w-11 h-6 bg-gray-200 rounded-full peer dark:bg-gray-700 peer-focus:ring-4 peer-focus:ring-green-300 dark:peer-focus:ring-green-800 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-green-600"></div>
               </label>
             </div>
           </div>
@@ -116,7 +150,7 @@ const SubscriptionEditService = ({ closeDialog, subscription }) => {
                     <input
                       id="subscriptionType"
                       value={subscriptionType}
-                      readOnly
+                      disabled
                       onClick={toggleSubscriptionDropdown}
                       className="md:w-[482px] w-[345px] px-4 py-2 cursor-pointer rounded-md text-white border border-[#40495C] bg-[#282F3E]"
                     />
@@ -156,19 +190,28 @@ const SubscriptionEditService = ({ closeDialog, subscription }) => {
                 <label
                   htmlFor="planType"
                   className="flex items-center justify-center bg-[#282F3E] text-white opacity-[50%]
-                  md:w-[90px] w-[88px] md:h-[26px] h-[25px] rounded-[8px] font-[400] md:text-[14px] text-[13px] md:leading-[16px] leading-[15px] text-center"
+                    md:w-[90px] w-[88px] md:h-[26px] h-[25px] rounded-[8px] font-[400] md:text-[14px] text-[13px] md:leading-[16px] leading-[15px] text-center"
                 >
                   Plan Name
                 </label>
                 <div className="relative">
                   <div className="relative">
-                    <input
-                      id="planType"
-                      value={planType}
-                      readOnly
-                      onClick={togglePlanDropdown}
-                      className="md:w-[482px] w-[345px] px-4 cursor-pointer py-2 rounded-md text-white border border-[#40495C] bg-[#282F3E]"
-                    />
+                    {planType === "Custom" ? (
+                      <input
+                        id="customPlanName"
+                        value={customPlanName}
+                        onChange={handleCustom}
+                        className="md:w-[482px] w-[345px] px-4 py-2 cursor-pointer rounded-md text-white border border-[#40495C] bg-[#282F3E]"
+                      />
+                    ) : (
+                      <input
+                        id="planType"
+                        value={planType}
+                        readOnly
+                        onClick={togglePlanDropdown}
+                        className={`md:w-[482px] w-[345px] md:px-4 px-2 py-2 rounded-md text-white border border-[#40495C] bg-[#282F3E] ${inputClassName}`}
+                      />
+                    )}
                     <img
                       src={dropdown}
                       alt="DropDown"
@@ -182,7 +225,7 @@ const SubscriptionEditService = ({ closeDialog, subscription }) => {
                           onClick={() => handlePlanClick("Monthly")}
                           className="cursor-pointer px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                         >
-                          Montly
+                          Monthly
                         </li>
                         <li
                           onClick={() => handlePlanClick("Quarterly")}
@@ -202,6 +245,12 @@ const SubscriptionEditService = ({ closeDialog, subscription }) => {
                         >
                           Yearly
                         </li>
+                        <li
+                          onClick={() => handlePlanClick("Custom")}
+                          className="cursor-pointer px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                        >
+                          Custom
+                        </li>
                       </ul>
                     </div>
                   )}
@@ -220,53 +269,26 @@ const SubscriptionEditService = ({ closeDialog, subscription }) => {
                 </label>
                 <div className="relative">
                   <div className="relative">
-                    <input
-                      id="durationType"
-                      value={durationType}
-                      readOnly
-                      onClick={toggleDurationDropdown}
-                      className="md:w-[482px] w-[345px] px-4 py-2 cursor-pointer rounded-md text-white border border-[#40495C] bg-[#282F3E]"
-                    />
-                    <img
-                      src={dropdown}
-                      alt="DropDown"
-                      className="absolute inset-y-0 md:right-3 right-[-6px] w-[14px] h-[14px] top-[50%] transform -translate-y-1/2"
-                    />
+                    {planType === "Custom" ? (
+                      <input
+                        id="durationType"
+                        value={durationType}
+                        onChange={handleDurationInputChange}
+                        className="md:w-[482px] w-[345px] px-4 py-2 cursor-pointer rounded-md text-white border border-[#40495C] bg-[#282F3E]"
+                      />
+                    ) : (
+                      <input
+                        id="durationType"
+                        value={durationType}
+                        onChange={handleDurationInputChange}
+                        className="md:w-[482px] w-[345px] px-4 py-2 cursor-pointer rounded-md text-white border border-[#40495C] bg-[#282F3E]"
+                      />
+                    )}
                   </div>
-                  {isDuration && (
-                    <div className="absolute z-10 mt-2 md:w-[482px] w-[345px] rounded-md bg-white shadow-lg">
-                      <ul className="py-1">
-                        <li
-                          onClick={() => handleDurationClick("1 Month")}
-                          className="cursor-pointer px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                        >
-                          1 Month
-                        </li>
-                        <li
-                          onClick={() => handleDurationClick("3 Months")}
-                          className="cursor-pointer px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                        >
-                          3 Months
-                        </li>
-                        <li
-                          onClick={() => handleDurationClick("6 Months")}
-                          className="cursor-pointer px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                        >
-                          6 Months
-                        </li>
-                        <li
-                          onClick={() => handleDurationClick("12 Months")}
-                          className="cursor-pointer px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                        >
-                          12 Months
-                        </li>
-                      </ul>
-                    </div>
-                  )}
                 </div>
               </div>
               <div className="relative">
-                <div class="mb-0">
+                <div className="mb-0">
                   <label
                     className="flex items-center justify-center bg-[#282F3E] text-white opacity-[50%]
                     md:w-[70px] w-[68px] md:h-[26px] h-[25px] rounded-[8px] font-[400] md:text-[14px] text-[13px] md:leading-[16px] leading-[15px] text-center"
@@ -275,8 +297,9 @@ const SubscriptionEditService = ({ closeDialog, subscription }) => {
                   </label>
                   <input
                     type="number"
+                    value={amount}
+                    onChange={handleAmountChange}
                     id="default-input"
-                    placeholder="₹1,999"
                     className="md:w-[482px] w-[345px] px-4 py-2 rounded-md text-white border border-[#40495C] bg-[#282F3E]"
                   />
                 </div>
@@ -284,86 +307,7 @@ const SubscriptionEditService = ({ closeDialog, subscription }) => {
             </div>
 
             <div className="relative md:ml-0 ml-[-16px]">
-              <label
-                htmlFor="keyPointsType"
-                className="flex items-center justify-center bg-[#282F3E] text-white opacity-[50%]
-                md:w-[140px] w-[116px] md:h-[26px] h-[25px] rounded-[8px] font-[400] md:text-[14px] text-[13px] md:leading-[16px] leading-[15px] text-center"
-              >
-                Plan Key Points
-              </label>
-              <div className="relative">
-                <div className="relative">
-                  <input
-                    id="default-input"
-                    type="text"
-                    placeholder="Expert Insights"
-                    value={selectedItems.join(", ")}
-                    readOnly
-                    onClick={toggleKeyPointsDropdown}
-                    className="md:w-[1012px] w-[345px] md:px-4 px-2 py-2 cursor-pointer rounded-md text-white border border-[#40495C] bg-[#282F3E]"
-                  />
-                  {isKeyPointsOpen && (
-                    <div className="absolute z-10 mt-2 md:w-[482px] w-[345px] rounded-md bg-white shadow-lg">
-                      <ul className="py-1">
-                        <li className="px-4 py-2 flex gap-4 text-sm text-gray-700 hover:bg-gray-100">
-                          <input
-                            type="checkbox"
-                            id="expertInsights"
-                            checked={selectedItems.includes("Expert Insights")}
-                            onChange={() =>
-                              handleKeyPlanClick("Expert Insights")
-                            }
-                          />
-                          <label htmlFor="expertInsights">
-                            Expert Insights
-                          </label>
-                        </li>
-                        <li className="px-4 py-2 flex gap-4 text-sm text-gray-700 hover:bg-gray-100">
-                          <input
-                            type="checkbox"
-                            id="performanceTracking"
-                            checked={selectedItems.includes(
-                              "Performance Tracking"
-                            )}
-                            onChange={() =>
-                              handleKeyPlanClick("Performance Tracking")
-                            }
-                          />
-                          <label htmlFor="performanceTracking">
-                            Performance Tracking
-                          </label>
-                        </li>
-                        <li className="px-4 py-2 flex gap-4 text-sm text-gray-700 hover:bg-gray-100">
-                          <input
-                            type="checkbox"
-                            id="riskManagement"
-                            checked={selectedItems.includes("Risk Management")}
-                            onChange={() =>
-                              handleKeyPlanClick("Risk Management")
-                            }
-                          />
-                          <label htmlFor="riskManagement">
-                            Risk Management
-                          </label>
-                        </li>
-                        <li className="px-4 py-2 flex gap-4 text-sm text-gray-700 hover:bg-gray-100">
-                          <input
-                            type="checkbox"
-                            id="marketsAlert"
-                            checked={selectedItems.includes("Markets Alert")}
-                            onChange={() => handleKeyPlanClick("Markets Alert")}
-                          />
-                          <label htmlFor="marketsAlert">Markets Alert</label>
-                        </li>
-                      </ul>
-                    </div>
-                  )}
-                </div>
-              </div>
-            </div>
-
-            <div className="relative md:ml-0 ml-[-16px]">
-              <div class="mb-0">
+              <div className="mb-0">
                 <label
                   className="flex items-center justify-center bg-[#282F3E] text-white opacity-[50%]
                   md:w-[232px] w-[210px] md:h-[26px] h-[25px] rounded-[8px] font-[400] md:text-[14px] text-[13px] md:leading-[16px] leading-[15px] text-center"
@@ -373,7 +317,8 @@ const SubscriptionEditService = ({ closeDialog, subscription }) => {
                 <input
                   type="link"
                   id="default-input"
-                  placeholder="Paste Link"
+                  value={premiumTelegram}
+                  onChange={(e) => setPremiumTelegram(e.target.value)}
                   className="md:w-[1012px] w-[345px] py-2 md:px-6 px-2 rounded-md text-white border border-[#40495C] bg-[#282F3E]"
                 />
               </div>
@@ -397,10 +342,10 @@ const SubscriptionEditService = ({ closeDialog, subscription }) => {
 
           <div className="flex md:flex-row flex-col gap-2 justify-end md:mt-0 mt-4">
             <button
-              onClick={closeDialog}
+              onClick={handleSaveChanges}
               className="px-4 w-[100%] py-2 bg-blue-500 text-white md:text-[14px] text-[14px] rounded-lg hover:bg-blue-600"
             >
-              Change
+              Save Changes
             </button>
             <button
               onClick={closeDialog}

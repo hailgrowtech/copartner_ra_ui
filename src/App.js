@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import axios from "axios";
 import styles from "./style";
 import Navbar from "./Navbar";
 import Sidebar from "./Sidebar";
@@ -10,13 +11,18 @@ import NewPassword from "./components/NewPassword";
 import ConfirmPassword from "./components/ConfirmPassword";
 import AnalysisBoard from "./components/AnalysisBoard";
 import Webinar from "./components/Webinar";
+<<<<<<< HEAD
 import Chats from "./components/Chats";
 import ChatsHistory from "./components/ChatsHistory";
+=======
+import TelegramChannel from "./components/TelegramChannel";
+>>>>>>> main
 
 function App() {
   const [isSmallScreen, setIsSmallScreen] = useState(window.innerWidth < 768);
   const [activeTab, setActiveTab] = useState("dashboard");
   const [showSidebar, setShowSidebar] = useState(!isSmallScreen);
+  const [telegramData, setTelegramData] = useState([]);
   const location = useLocation();
   const signUp = sessionStorage.getItem('visitedSignUp');
   const isSignUpPage = location.pathname === "/signup";
@@ -43,6 +49,19 @@ function App() {
     };
   }, []);
 
+  useEffect(() => {
+    const stackholderId = sessionStorage.getItem("stackholderId");
+    const TELEGRAM_CHAT_API = `https://copartners.in:5134/api/TelegramMessage/${stackholderId}?userType=RA&page=1&pageSize=100000`;
+
+    axios.get(TELEGRAM_CHAT_API)
+      .then(response => {
+        setTelegramData(response.data.data);
+      })
+      .catch(error => {
+        console.error("Error fetching the data", error);
+      });
+  }, []);
+
   return (
     <div className={`bg-gradient overflow-hidden ${styles.boxWidth} ${styles.paddingX} overflow-hidden`}>
       <div className="flex">
@@ -56,6 +75,7 @@ function App() {
                 activeTab={activeTab}
                 setActiveTab={setActiveTab}
                 setShowSidebar={setShowSidebar}
+                telegramData={telegramData}
               />
             )}
             <Routes>
@@ -66,11 +86,17 @@ function App() {
                 }
               />
               <Route path="/analysis_board" element={<AnalysisBoard />} />
+<<<<<<< HEAD
               <Route path="/webinar" element={<Webinar />} />
               <Route path="/subscription" element={<Subscription />} />
               <Route path="/wallet" element={<Wallet />} />
               <Route path="/chats" element={<Chats />} />
               <Route path="/chats/chats_history" element={<ChatsHistory />} />
+=======
+              <Route path="/subscription" element={<Subscription />} />
+              <Route path="/wallet" element={<Wallet />} />
+              {telegramData.length > 0 && <Route path="/telegram_channel" element={<TelegramChannel />} />}
+>>>>>>> main
               <Route path="/setting" element={<Setting />} />
             </Routes>
             <Routes>

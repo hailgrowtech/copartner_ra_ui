@@ -3,21 +3,26 @@ import { closeIcon, dropdown } from "../assets";
 import axios from "axios";
 import { toast } from "react-toastify";
 
-const SubscriptionDialog = ({ closeDialog, axiosServiceData, subTable }) => {
+const SubsciptionMiniOfferDialog = ({
+  closeDialog,
+  axiosServiceData,
+  subTable,
+}) => {
   const [subscriptionType, setSubscriptionType] = useState(null);
   const [planType, setPlanType] = useState("Select Plan Type");
   const [customPlanName, setCustomPlanName] = useState("");
   const [durationType, setDurationType] = useState("");
-  const [des, setDes] = useState('');
+  const [des, setDes] = useState("");
 
   const [isSubscriptionOpen, setIsSubscriptionOpen] = useState(false);
   const [isPlanOpen, setIsPlanOpen] = useState(false);
   const [isDuration, setIsDuration] = useState(false);
   const [isKeyPointsOpen, setIsKeyPointsOpen] = useState(false);
   const [amount, setAmount] = useState(null);
-  const [premiumTelegram, setPremiumTelegram] = useState('');
+  const [premiumTelegram, setPremiumTelegram] = useState("");
   const [changes, setChanges] = useState({});
-  const [chatID, setChatID] = useState('');
+  const [chatID, setChatID] = useState("");
+  const [miniSub, setMiniSub] = useState(false);
 
   const [selectedItems, setSelectedItems] = useState([]);
 
@@ -26,9 +31,10 @@ const SubscriptionDialog = ({ closeDialog, axiosServiceData, subTable }) => {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const inputClassName = subscriptionType === null ? "text-[#9BA3AF]" : "text-white";
+  const inputClassName =
+    subscriptionType === null ? "text-[#9BA3AF]" : "text-white";
 
-  const stackholderId = sessionStorage.getItem('stackholderId');
+  const stackholderId = sessionStorage.getItem("stackholderId");
 
   const handleSuccess = () => {
     toast.success("Subscription saved!", {
@@ -43,7 +49,8 @@ const SubscriptionDialog = ({ closeDialog, axiosServiceData, subTable }) => {
   };
 
   useEffect(() => {
-    axios.get(`https://copartners.in:5132/api/Experts/${stackholderId}`)
+    axios
+      .get(`https://copartners.in:5132/api/Experts/${stackholderId}`)
       .then((res) => {
         setChanges(res.data.data);
         setSubscriptionType(res.data.data.expertTypeId);
@@ -56,8 +63,8 @@ const SubscriptionDialog = ({ closeDialog, axiosServiceData, subTable }) => {
   }, [stackholderId]);
 
   const updatePremiumTelegramLink = (type, data) => {
-    let link = '';
-    let chatId = '';
+    let link = "";
+    let chatId = "";
     switch (type) {
       case 1:
         link = data.premiumTelegramChannel1;
@@ -72,8 +79,8 @@ const SubscriptionDialog = ({ closeDialog, axiosServiceData, subTable }) => {
         chatId = data.chatId3;
         break;
       default:
-        link = '';
-        chatId = '';
+        link = "";
+        chatId = "";
     }
     setPremiumTelegram(link);
     setChatID(chatId);
@@ -83,37 +90,44 @@ const SubscriptionDialog = ({ closeDialog, axiosServiceData, subTable }) => {
     setError("");
     setLoading(true);
 
-    const durationMonth =
-      planType === "Monthly" ? 1 :
-      planType === "Quarterly" ? 3 :
-      planType === "Half-Yearly" ? 6 :
-      planType === "Yearly" ? 12 :
-      planType === "Custom" ? durationType : "";
-
     const postData = {
       expertsId: stackholderId,
       imagePath: "www.google.com/userjkdjfa",
       serviceType: subscriptionType,
-      planType: planType === "Custom" ? customPlanName : planType,
-      durationMonth: durationMonth,
-      amount: amount,
+      planType: isCustom ? customPlanName : planType,
+      durationMonth: durationType,
+      amount: parseInt(amount, 10),
       premiumTelegramLink: premiumTelegram,
-      description: des || '',
-      isCustom: isCustom, 
+      description: des || "",
+      discountPercentage: 0, // Add your discount percentage here
+      discountValidFrom: new Date().toISOString(),
+      discountValidTo: new Date().toISOString(),
+      isSpecialSubscription: true, // Set to true
+      isCustom: isCustom,
+      isActive: true,
       chatId: chatID,
-      isSpecialSubscription: false
     };
 
     console.log("Post Data:", postData);
 
-    if (!amount || !subscriptionType || !planType || !durationMonth || !premiumTelegram || !chatID) {
-      setError('Please fill out all required fields.');
+    if (
+      !amount ||
+      !subscriptionType ||
+      !planType ||
+      !durationType ||
+      !premiumTelegram ||
+      !chatID
+    ) {
+      setError("Please fill out all required fields.");
       setLoading(false);
       return;
     }
 
     try {
-      const response = await axios.post('https://copartners.in:5009/api/Subscription', postData);
+      const response = await axios.post(
+        "https://copartners.in:5009/api/Subscription",
+        postData
+      );
       console.log("Response:", response);
       if (response.status !== 200) {
         handleError("Something went wrong! " + response.status);
@@ -124,8 +138,8 @@ const SubscriptionDialog = ({ closeDialog, axiosServiceData, subTable }) => {
       }
     } catch (error) {
       console.error("Error in handleConfirm:", error);
-      handleError('Failed to submit data. Please try again. ' + error.message);
-      setError('Failed to submit data. Please try again.');
+      handleError("Failed to submit data. Please try again. " + error.message);
+      setError("Failed to submit data. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -139,8 +153,19 @@ const SubscriptionDialog = ({ closeDialog, axiosServiceData, subTable }) => {
 
   const handlePlanClick = (plan) => {
     setPlanType(plan);
+    setIsCustom(plan === "Custom");
     if (plan !== "Custom") {
-      setDurationType(plan === "Monthly" ? 1 : plan === "Quarterly" ? 3 : plan === "Half-Yearly" ? 6 : plan === "Yearly" ? 12 : "");
+      setDurationType(
+        plan === "Monthly"
+          ? 1
+          : plan === "Quarterly"
+          ? 3
+          : plan === "Half-Yearly"
+          ? 6
+          : plan === "Yearly"
+          ? 12
+          : ""
+      );
     }
     setIsPlanOpen(false);
   };
@@ -165,18 +190,11 @@ const SubscriptionDialog = ({ closeDialog, axiosServiceData, subTable }) => {
   const handleCustom = (e) => {
     setCustomPlanName(e.target.value);
     setIsCustom(true);
-  }
+  };
 
   const toggleSubscriptionDropdown = () => {
     setIsSubscriptionOpen(!isSubscriptionOpen);
     setIsPlanOpen(false);
-    setIsDuration(false);
-    setIsKeyPointsOpen(false);
-  };
-
-  const togglePlanDropdown = () => {
-    setIsPlanOpen(!isPlanOpen);
-    setIsSubscriptionOpen(false);
     setIsDuration(false);
     setIsKeyPointsOpen(false);
   };
@@ -187,7 +205,7 @@ const SubscriptionDialog = ({ closeDialog, axiosServiceData, subTable }) => {
         <div className="bg-[#2E374B] rounded-lg md:w-[1084px] w-[378px] md:h-[620px] h-[600px] overflow-auto p-8">
           <div className="flex items-center justify-between">
             <h2 className="md:h-[52px] font-inter font-[700] md:text-[30px] text-[18px] md:leading-[51px] text-new md:ml-0 ml-[-0.8rem]">
-              Add New Subscription
+              Mini Subscription
             </h2>
             <button onClick={closeDialog} className="md:mr-0 mr-[-1.4rem]">
               <img
@@ -258,64 +276,18 @@ const SubscriptionDialog = ({ closeDialog, axiosServiceData, subTable }) => {
                 </label>
                 <div className="relative">
                   <div className="relative">
-                    {planType === "Custom" ? (
-                      <input
-                        id="customPlanName"
-                        value={customPlanName}
-                        onChange={handleCustom}
-                        className="md:w-[482px] w-[345px] px-4 py-2 cursor-pointer rounded-md text-white border border-[#40495C] bg-[#282F3E]"
-                      />
-                    ) : (
-                      <input
-                        id="planType"
-                        value={planType}
-                        readOnly
-                        onClick={togglePlanDropdown}
-                        className={`md:w-[482px] w-[345px] md:px-4 px-2 py-2 rounded-md text-white border border-[#40495C] bg-[#282F3E] ${inputClassName}`}
-                      />
-                    )}
+                    <input
+                      id="customPlanName"
+                      value={customPlanName}
+                      onChange={handleCustom}
+                      className="md:w-[482px] w-[345px] px-4 py-2 cursor-pointer rounded-md text-white border border-[#40495C] bg-[#282F3E]"
+                    />
                     <img
                       src={dropdown}
                       alt="DropDown"
                       className="absolute inset-y-0 md:right-3 right-[-6px] w-[14px] h-[14px] top-[50%] transform -translate-y-1/2"
                     />
                   </div>
-                  {isPlanOpen && (
-                    <div className="absolute z-10 mt-2 md:w-[482px] w-[345px] rounded-md bg-white shadow-lg">
-                      <ul className="py-1">
-                        <li
-                          onClick={() => handlePlanClick("Monthly")}
-                          className="cursor-pointer px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                        >
-                          Monthly
-                        </li>
-                        <li
-                          onClick={() => handlePlanClick("Quarterly")}
-                          className="cursor-pointer px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                        >
-                          Quarterly
-                        </li>
-                        <li
-                          onClick={() => handlePlanClick("Half-Yearly")}
-                          className="cursor-pointer px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                        >
-                          Half-Yearly
-                        </li>
-                        <li
-                          onClick={() => handlePlanClick("Yearly")}
-                          className="cursor-pointer px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                        >
-                          Yearly
-                        </li>
-                        <li
-                          onClick={() => handlePlanClick("Custom")}
-                          className="cursor-pointer px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                        >
-                          Custom
-                        </li>
-                      </ul>
-                    </div>
-                  )}
                 </div>
               </div>
             </div>
@@ -331,21 +303,13 @@ const SubscriptionDialog = ({ closeDialog, axiosServiceData, subTable }) => {
                 </label>
                 <div className="relative">
                   <div className="relative">
-                    {planType === "Custom" ? (
-                      <input
-                        id="durationType"
-                        value={durationType}
-                        onChange={handleDurationInputChange}
-                        className="md:w-[482px] w-[345px] px-4 py-2 cursor-pointer rounded-md text-white border border-[#40495C] bg-[#282F3E]"
-                      />
-                    ) : (
-                      <input
-                        id="durationType"
-                        value={durationType}
-                        readOnly
-                        className="md:w-[482px] w-[345px] px-4 py-2 cursor-pointer rounded-md text-white border border-[#40495C] bg-[#282F3E]"
-                      />
-                    )}
+                    <input
+                      id="durationType"
+                      value={durationType}
+                      onChange={handleDurationInputChange}
+                      className="md:w-[482px] w-[345px] px-4 py-2 cursor-pointer rounded-md text-white border border-[#40495C] bg-[#282F3E]"
+                    />
+
                     <img
                       src={dropdown}
                       alt="DropDown"
@@ -427,4 +391,4 @@ const SubscriptionDialog = ({ closeDialog, axiosServiceData, subTable }) => {
   );
 };
 
-export default SubscriptionDialog;
+export default SubsciptionMiniOfferDialog;

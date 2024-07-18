@@ -63,6 +63,8 @@ import chatUser2 from './chatUser2.png';
 import attachDoc from './attachDoc.png';
 import audio from './audio.png';
 import sendChat from './sendChat.png';
+import telegramChannelActive from './telegramChannelActive.png';
+import telegramChannelInactive from './telegramChannelInactive.png';
 
 export {
     availableIcon,
@@ -118,4 +120,5 @@ export {
     threeDots,
     chatUser1, chatUser2,
     attachDoc, sendChat, audio,
+    telegramChannelActive, telegramChannelInactive
 }

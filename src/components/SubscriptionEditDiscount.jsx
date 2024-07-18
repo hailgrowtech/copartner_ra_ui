@@ -9,15 +9,21 @@ const SubscriptionEditDiscount = ({ closeDialog, addCourse }) => {
   const [planName, setPlanName] = useState("");
   const [discountPer, setDiscountPer] = useState("");
   const [planAmt, setPlanAmt] = useState("");
-  const [discountedAmount, setdiscountedAmount] = useState("");
-  const [isdiscountedAmountOpen, setIsdiscountedAmountOpen] = useState(false);
+  const [discountedAmount, setDiscountedAmount] = useState("");
+  const [isDiscountedAmountOpen, setIsDiscountedAmountOpen] = useState(false);
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
   const [offersDuration, setOffersDuration] = useState("");
   const [plans, setPlans] = useState([]);
-  const [uniquePlanTypes, setUniquePlanTypes] = useState([]);
+  const [filteredPlans, setFilteredPlans] = useState([]);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
+  const [selectedPlan, setSelectedPlan] = useState(null);
+
+  const [subscriptionType, setSubscriptionType] = useState(null);
+  const [isSubscriptionOpen, setIsSubscriptionOpen] = useState(false);
+
+  const inputClassName = subscriptionType === null ? "text-[#9BA3AF]" : "text-white";
 
   const stackholderId = sessionStorage.getItem("stackholderId");
 
@@ -28,14 +34,8 @@ const SubscriptionEditDiscount = ({ closeDialog, addCourse }) => {
           `https://copartners.in:5009/api/Subscription/GetByExpertsId/${stackholderId}`
         );
         if (response.data.isSuccess) {
-          const filteredPlans = response.data.data.filter(
-            (plan) => plan.discountPercentage === null || plan.discountPercentage === 0
-          );
-          setPlans(filteredPlans);
-          const uniquePlans = [
-            ...new Set(filteredPlans.map((plan) => plan.planType)),
-          ];
-          setUniquePlanTypes(uniquePlans);
+          const availablePlans = response.data.data.filter(plan => !plan.discountPercentage);
+          setPlans(availablePlans);
         } else {
           handleError("Failed to fetch plans");
         }
@@ -49,8 +49,8 @@ const SubscriptionEditDiscount = ({ closeDialog, addCourse }) => {
 
   useEffect(() => {
     if (planAmt && discountPer) {
-      const calculateddiscountedAmount = planAmt - planAmt * (discountPer / 100);
-      setdiscountedAmount(calculateddiscountedAmount.toFixed(2));
+      const calculatedDiscountedAmount = planAmt - planAmt * (discountPer / 100);
+      setDiscountedAmount(calculatedDiscountedAmount.toFixed(2));
     }
   }, [planAmt, discountPer]);
 
@@ -73,14 +73,14 @@ const SubscriptionEditDiscount = ({ closeDialog, addCourse }) => {
       !planAmt ||
       !discountedAmount ||
       !startDate ||
-      !endDate
+      !endDate ||
+      !subscriptionType
     ) {
       handleError("Please fill all fields");
       return;
     }
 
-    const selectedPlan = plans.find((plan) => plan.planType === planName);
-    const subID = selectedPlan.id; // Assuming 'id' is the subscription ID
+    const subID = selectedPlan.id;
 
     const patchData = [
       {
@@ -124,7 +124,8 @@ const SubscriptionEditDiscount = ({ closeDialog, addCourse }) => {
           discountedAmount: discountedAmount,
           discountValidFrom: new Date(startDate).toISOString(),
           discountValidTo: new Date(endDate).toISOString(),
-          createdOn: new Date().toISOString(), 
+          createdOn: new Date().toISOString(),
+          serviceType: subscriptionType, // Include subscription type
         };
 
         addCourse(newCourse);
@@ -135,10 +136,10 @@ const SubscriptionEditDiscount = ({ closeDialog, addCourse }) => {
     }
   };
 
-  const handleSelectChange = (planType) => {
-    const selectedPlan = plans.find((plan) => plan.planType === planType);
-    setPlanName(planType);
-    setPlanAmt(selectedPlan.amount);
+  const handleSelectChange = (plan) => {
+    setSelectedPlan(plan);
+    setPlanName(plan.planType);
+    setPlanAmt(plan.amount);
     setIsDropdownOpen(false);
   };
 
@@ -157,6 +158,34 @@ const SubscriptionEditDiscount = ({ closeDialog, addCourse }) => {
     } else {
       setErrorMessage("");
       setDiscountPer(value);
+    }
+  };
+
+  const handleSubClick = (option) => {
+    setSubscriptionType(option);
+    setIsSubscriptionOpen(false);
+    const filtered = plans.filter(
+      (plan) => plan.serviceType === option.toString()
+    );
+    setFilteredPlans(filtered);
+    setPlanName(""); // Reset plan name when subscription type changes
+    setPlanAmt(""); // Reset plan amount when subscription type changes
+  };
+
+  const toggleSubscriptionDropdown = () => {
+    setIsSubscriptionOpen(!isSubscriptionOpen);
+  };
+
+  const getSubscriptionTypeLabel = (type) => {
+    switch (type) {
+      case 1:
+        return "Commodity";
+      case 2:
+        return "Equity";
+      case 3:
+        return "Futures & Options";
+      default:
+        return "Select Subscription Type";
     }
   };
 
@@ -181,6 +210,55 @@ const SubscriptionEditDiscount = ({ closeDialog, addCourse }) => {
             <div className="flex md:flex-row flex-col md:gap-12 gap-4 md:ml-0 ml-[-16px]">
               <div className="relative">
                 <label
+                  htmlFor="subscriptionType"
+                  className="flex items-center justify-center bg-[#282F3E] text-white opacity-[50%]
+                    md:w-[140px] w-[134px] md:h-[26px] h-[25px] rounded-[8px] font-[400] md:text-[14px] text-[13px] md:leading-[16px] leading-[15px] text-center"
+                >
+                  Subscription Type
+                </label>
+                <div className="relative">
+                  <div className="relative">
+                    <input
+                      id="subscriptionType"
+                      value={getSubscriptionTypeLabel(subscriptionType)}
+                      onClick={toggleSubscriptionDropdown}
+                      className={`md:w-[482px] w-[345px] md:px-4 px-2 py-2 cursor-pointer rounded-md border border-[#40495C] bg-[#282F3E] ${inputClassName}`}
+                      readOnly
+                    />
+                    <img
+                      src={dropdown}
+                      alt="DropDown"
+                      className="absolute inset-y-0 md:right-3 right-[-6px] w-[14px] h-[14px] top-[50%] transform -translate-y-1/2"
+                    />
+                  </div>
+                  {isSubscriptionOpen && (
+                    <div className="absolute z-10 mt-2 md:w-[482px] w-[345px] rounded-md bg-white shadow-lg">
+                      <ul className="py-1">
+                        <li
+                          onClick={() => handleSubClick(1)}
+                          className="cursor-pointer px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                        >
+                          Commodity
+                        </li>
+                        <li
+                          onClick={() => handleSubClick(2)}
+                          className="cursor-pointer px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                        >
+                          Equity
+                        </li>
+                        <li
+                          onClick={() => handleSubClick(3)}
+                          className="cursor-pointer px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                        >
+                          Futures & Options
+                        </li>
+                      </ul>
+                    </div>
+                  )}
+                </div>
+              </div>
+              <div className="relative">
+                <label
                   htmlFor="planType"
                   className="flex items-center justify-center bg-[#282F3E] text-white opacity-[50%]
                   md:w-[90px] w-[88px] md:h-[26px] h-[25px] rounded-[8px] font-[400] md:text-[14px] text-[13px] md:leading-[16px] leading-[15px] text-center"
@@ -202,38 +280,19 @@ const SubscriptionEditDiscount = ({ closeDialog, addCourse }) => {
                   {isDropdownOpen && (
                     <div className="absolute z-10 mt-2 md:w-[482px] w-[345px] rounded-md bg-white shadow-lg">
                       <ul className="py-1">
-                        {uniquePlanTypes.map((planType) => (
+                        {filteredPlans.map((plan) => (
                           <li
-                            key={planType}
-                            onClick={() => handleSelectChange(planType)}
+                            key={plan.id}
+                            onClick={() => handleSelectChange(plan)}
                             className="cursor-pointer px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                           >
-                            {planType}
+                            {plan.planType}
                           </li>
                         ))}
                       </ul>
                     </div>
                   )}
                 </div>
-              </div>
-
-              <div className="relative">
-                <label
-                  className="flex items-center justify-center bg-[#282F3E] text-white opacity-[50%]
-                  md:w-[160px] w-[140px] md:h-[26px] h-[25px] rounded-[8px] font-[400] md:text-[14px] text-[13px] md:leading-[16px] leading-[15px] text-center"
-                >
-                  Discount Percentage
-                </label>
-                <input
-                  type="number"
-                  value={discountPer}
-                  onChange={handleDiscountChange}
-                  id="default-input"
-                  className="md:w-[482px] w-[345px] px-4 py-2 rounded-md text-white border border-[#40495C] bg-[#282F3E]"
-                />
-                {errorMessage && (
-                  <p className="text-red-500 text-sm mt-1">{errorMessage}</p>
-                )}
               </div>
             </div>
 
@@ -256,19 +315,20 @@ const SubscriptionEditDiscount = ({ closeDialog, addCourse }) => {
               <div className="relative">
                 <label
                   className="flex items-center justify-center bg-[#282F3E] text-white opacity-[50%]
-                  md:w-[150px] w-[140px] md:h-[26px] h-[25px] rounded-[8px] font-[400] md:text-[14px] text-[13px] md:leading-[16px] leading-[15px] text-center"
+                  md:w-[160px] w-[140px] md:h-[26px] h-[25px] rounded-[8px] font-[400] md:text-[14px] text-[13px] md:leading-[16px] leading-[15px] text-center"
                 >
-                  Discounted Amount
+                  Discount Percentage
                 </label>
-                <div className="relative">
-                  <input
-                    type="text"
-                    value={discountedAmount}
-                    readOnly
-                    onClick={() => setIsdiscountedAmountOpen(!isdiscountedAmountOpen)}
-                    className="md:w-[482px] w-[345px] px-4 py-2 rounded-md text-white border border-[#40495C] bg-[#282F3E] cursor-pointer"
-                  />
-                </div>
+                <input
+                  type="number"
+                  value={discountPer}
+                  onChange={handleDiscountChange}
+                  id="default-input"
+                  className="md:w-[482px] w-[345px] px-4 py-2 rounded-md text-white border border-[#40495C] bg-[#282F3E]"
+                />
+                {errorMessage && (
+                  <p className="text-red-500 text-sm mt-1">{errorMessage}</p>
+                )}
               </div>
             </div>
 
@@ -305,21 +365,42 @@ const SubscriptionEditDiscount = ({ closeDialog, addCourse }) => {
               </div>
             </div>
 
-            <div className="relative">
-              <div className="mb-0 md:ml-0 ml-[-16px]">
+            <div className="flex md:flex-row flex-col md:gap-12 gap-4 md:ml-0 ml-[-16px]">
+              <div className="relative">
+                <div className="mb-0 md:ml-0 ml-[-16px]">
+                  <label
+                    className="flex items-center justify-center bg-[#282F3E] text-white opacity-[50%]
+                  w-[110px] md:h-[26px] h-[25px] rounded-[8px] font-[400] md:text-[14px] text-[13px] md:leading-[16px] leading-[15px] text-center"
+                  >
+                    Offers Duration
+                  </label>
+                  <input
+                    type="text"
+                    value={offersDuration}
+                    onChange={(e) => setOffersDuration(e.target.value)}
+                    id="default-input"
+                    className="md:w-[482px] w-[345px] px-4 py-2 rounded-md text-white border border-[#40495C] bg-[#282F3E]"
+                  />
+                </div>
+              </div>
+              <div className="relative">
                 <label
                   className="flex items-center justify-center bg-[#282F3E] text-white opacity-[50%]
-                  w-[110px] md:h-[26px] h-[25px] rounded-[8px] font-[400] md:text-[14px] text-[13px] md:leading-[16px] leading-[15px] text-center"
+                  md:w-[150px] w-[140px] md:h-[26px] h-[25px] rounded-[8px] font-[400] md:text-[14px] text-[13px] md:leading-[16px] leading-[15px] text-center"
                 >
-                  Offers Duration
+                  Discounted Amount
                 </label>
-                <input
-                  type="text"
-                  value={offersDuration}
-                  onChange={(e) => setOffersDuration(e.target.value)}
-                  id="default-input"
-                  className="md:w-[482px] w-[345px] px-4 py-2 rounded-md text-white border border-[#40495C] bg-[#282F3E]"
-                />
+                <div className="relative">
+                  <input
+                    type="text"
+                    value={discountedAmount}
+                    readOnly
+                    onClick={() =>
+                      setIsDiscountedAmountOpen(!isDiscountedAmountOpen)
+                    }
+                    className="md:w-[482px] w-[345px] px-4 py-2 rounded-md text-white border border-[#40495C] bg-[#282F3E] cursor-pointer"
+                  />
+                </div>
               </div>
             </div>
           </div>

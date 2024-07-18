@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from "react";
-import SubscriptionDialog from "./SubsciptionDialog";
-import { deleteIcon, edit } from "../assets";
+import SubsciptionMiniOfferDialog from "./SubsciptionMiniOfferDialog";
+import { deleteIcon, Link } from "../assets";
 import axios from "axios";
 import { toast } from "react-toastify";
-import SubsciptionMiniOffer from "./SubsciptionMiniOffer";
+import SubsriptionDiscountOffer from "./SubsriptionDiscountOffer";
+import SubscriptionCourse from "./SubscriptionCourse";
 
-const Subscription = () => {
+const SubsciptionMiniOffer = () => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const [smallScreen, setSmallScreen] = useState(false);
@@ -14,6 +15,9 @@ const Subscription = () => {
   const [currentSubscription, setCurrentSubscription] = useState(null);
   const [planTypeCounts, setPlanTypeCounts] = useState({});
   const [showSubscriptionType, setShowSubscriptionType] = useState("1"); // Default to Commodity
+  const [copiedMessage, setCopiedMessage] = useState("");
+  const [hoveredRow, setHoveredRow] = useState(null);
+  const [copiedRow, setCopiedRow] = useState(null);
 
   const stackholderId = sessionStorage.getItem("stackholderId");
   const SUB_TABLE = `https://copartners.in:5009/api/Subscription/GetByExpertsId/${stackholderId}`;
@@ -131,9 +135,25 @@ const Subscription = () => {
     setPlanTypeCounts(counts);
   };
 
+  const handleCopyLink = (id, rowIndex) => {
+    const link = `https://copartner.in:443/ra-detail2/${id}?raid=${stackholderId}`;
+    navigator.clipboard
+      .writeText(link)
+      .then(() => {
+        toast.success("Successfully Copied!", {
+          position: "top-right",
+        });
+        setCopiedRow(rowIndex);
+        setTimeout(() => setCopiedRow(null), 3000);
+      })
+      .catch((err) => {
+        console.error("Failed to copy the text to clipboard: ", err);
+      });
+  };
+
   const filteredSubTable = (subTable || [])
     .filter((row) => row.serviceType === showSubscriptionType)
-    .filter((row) => !row.isSpecialSubscription); // Only include non-special subscriptions
+    .filter((row) => row.isSpecialSubscription); // Only include special subscriptions
 
   const sortedSubTable = filteredSubTable.sort((a, b) => a.amount - b.amount);
 
@@ -142,11 +162,20 @@ const Subscription = () => {
     (user) => user.subscription === showSubscriptionType
   ).length;
 
+  const handleMouseEnter = (rowIndex) => {
+    setHoveredRow(rowIndex);
+  };
+
+  const handleMouseLeave = () => {
+    setHoveredRow(null);
+    setCopiedRow(null);
+  };
+
   return (
-    <div className="pb-[5rem] xl:pl-[12rem] md:pl-[10rem] pl-6 md:py-[6rem] pt-[8rem] bg-gradient min-h-screen">
+    <div className="md:py-[5rem] py-[4rem] bg-gradient">
       <div className="xl:w-[1520px] md:w-[1130px] w-[350px] flex items-center justify-between">
         <span className="w-[176px] h-[27px] font-inter text-[22px] font-[600] leading-[27px] text-white md:ml-0 ml-2">
-          Service
+          Mini Services
         </span>
         <button
           onClick={openDialog}
@@ -155,7 +184,7 @@ const Subscription = () => {
           +Add
         </button>
         {isDialogOpen && (
-          <SubscriptionDialog
+          <SubsciptionMiniOfferDialog
             axiosServiceData={axiosServiceData}
             isDialogOpen={isDialogOpen}
             closeDialog={closeDialog}
@@ -206,6 +235,8 @@ const Subscription = () => {
               <div
                 key={index}
                 className="flex flex-col justify-around w-[361px] h-[248px] bg-[#18181B] bg-opacity-[50%] rounded-[30px] md:m-4 m-[10px] p-4 w-[90%] max-w-sm"
+                onMouseEnter={() => handleMouseEnter(index)}
+                onMouseLeave={handleMouseLeave}
               >
                 <div className="flex flex-row justify-between">
                   <p className="w-[173px] h-[26px] font-[600] text-[16px] leading-[25px] text-lightWhite">
@@ -255,9 +286,16 @@ const Subscription = () => {
                 <span className="flex items-center justify-between sm:w-[305px] h-[13px] font-[500] text-[14px] leading-[12px] text-lightWhite">
                   <span className="text-dimWhite">AMOUNT:</span> {row.amount}
                 </span>
-                <span className="flex items-center justify-between sm:w-[305px] h-[13px] font-[500] text-[14px] leading-[12px] text-lightWhite">
-                  <span className="text-dimWhite">ACTIVE USER:</span>{" "}
-                  {planTypeCounts[row.planType] || 0}/{activeUserCount}
+                <span className="relative flex items-center justify-between sm:w-[305px] h-[13px] font-[500] text-[14px] leading-[12px] text-lightWhite">
+                  <span className="text-dimWhite">LINK:</span>{" "}
+                  <button onClick={() => handleCopyLink(row.id, index)}>
+                    <img src={Link} alt="COPY_SUB" className="w-[18px] h-[18px]" />
+                  </button>
+                  {hoveredRow === index && (
+                    <span className="absolute -top-6 left-1/2 transform -translate-x-1/2 bg-gray-700 text-white text-xs rounded py-1 px-2">
+                      {copiedRow === index ? "Copied" : "Copy"}
+                    </span>
+                  )}
                 </span>
               </div>
             ))}
@@ -276,7 +314,7 @@ const Subscription = () => {
                 <th className="text-center">PLAN NAME</th>
                 <th className="text-center">DURATION</th>
                 <th className="text-center">AMOUNT</th>
-                <th className="text-center">ACTIVE USER</th>
+                <th className="text-center">LINK</th>
                 <th className="text-center">ACTION</th>
               </tr>
             </thead>
@@ -285,6 +323,8 @@ const Subscription = () => {
                 <tr
                   key={index}
                   className={index % 2 === 0 ? "bg-[#1E1E22]" : ""}
+                  onMouseEnter={() => handleMouseEnter(index)}
+                  onMouseLeave={handleMouseLeave}
                 >
                   <td className="font-[500] text-center text-[16px] leading-[18px]">
                     {formatDate(row.createdOn)}
@@ -301,25 +341,17 @@ const Subscription = () => {
                   <td className="font-[500] text-center text-[16px] leading-[18px]">
                     {row.amount}
                   </td>
-                  <td className="font-[500] text-center text-[16px] leading-[18px]">
-                    {planTypeCounts[row.planType] || 0}/{activeUserCount}
+                  <td className="relative mr-[-2rem]">
+                    <button onClick={() => handleCopyLink(row.id, index)}>
+                      <img src={Link} alt="COPY_SUB" className="w-[20px] h-[20px] ml-[1.5rem]" />
+                    </button>
+                    {hoveredRow === index && (
+                      <span className="absolute -top-6 left-1/2 transform -translate-x-1/2 bg-gray-700 text-white text-xs rounded py-1 px-2">
+                        {copiedRow === index ? "Copied" : "Copy"}
+                      </span>
+                    )}
                   </td>
                   <td className="flex flex-row items-center justify-center gap-2 py-[2rem]">
-                    {/* <button onClick={() => openEditDialog(row)}>
-                      <img
-                        src={edit}
-                        alt=""
-                        className="w-[21px] h-[21px] mx-auto"
-                      />
-                    </button>
-                    {isEditDialogOpen && (
-                      <SubscriptionEditService
-                        isEditDialogOpen={isEditDialogOpen}
-                        closeDialog={closeDialog}
-                        subTable={row}
-                        axiosServiceData={axiosServiceData}
-                      />
-                    )} */}
                     <button onClick={() => handleDeleteTable(row.id)}>
                       <img
                         src={deleteIcon}
@@ -334,10 +366,10 @@ const Subscription = () => {
           </table>
         )}
       </div>
-      <SubsciptionMiniOffer />
-      {/* <SubscriptionCourse /> */}
+      {copiedMessage && <p className="text-center text-green-500 mt-2">{copiedMessage}</p>}
+      <SubsriptionDiscountOffer />
     </div>
   );
 };
 
-export default Subscription;
+export default SubsciptionMiniOffer;

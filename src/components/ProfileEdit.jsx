@@ -14,8 +14,12 @@ const ProfileEdit = ({ closeDialog, stackholderId, myCard, fetchDetails }) => {
   const [email, setEmail] = useState("");
   const [freeTelegramLink, setFreeTelegramLink] = useState("");
   const [membersInTelegram, setMembersInTelegram] = useState("");
-  const [chatId, setChatId] = useState("");
-  const [premiumTelegramLink, setPremiumTelegramLink] = useState("");
+  const [chatIdC, setChatIdC] = useState("");
+  const [chatIdE, setChatIdE] = useState("");
+  const [chatIdFO, setChatIdFO] = useState("");
+  const [premiumTelegramLinkC, setPremiumTelegramLinkC] = useState("");
+  const [premiumTelegramLinkE, setPremiumTelegramLinkE] = useState("");
+  const [premiumTelegramLinkFO, setPremiumTelegramLinkFO] = useState("");
   const [imagePath, setImagePath] = useState("");
   const [sebiRegNo, setSebiRegNo] = useState("");
   const [error, setError] = useState(null);
@@ -45,8 +49,12 @@ const ProfileEdit = ({ closeDialog, stackholderId, myCard, fetchDetails }) => {
       setEmail(myCard.email);
       setFreeTelegramLink(myCard.telegramChannel);
       setMembersInTelegram(myCard.telegramFollower);
-      setChatId(myCard.chatId);
-      setPremiumTelegramLink(myCard.premiumTelegramChannel);
+      setChatIdC(myCard.chatId1);
+      setChatIdE(myCard.chatId2);
+      setChatIdFO(myCard.chatId3);
+      setPremiumTelegramLinkC(myCard.premiumTelegramChannel1);
+      setPremiumTelegramLinkE(myCard.premiumTelegramChannel2);
+      setPremiumTelegramLinkFO(myCard.premiumTelegramChannel3);
       setImagePath(myCard.expertImagePath);
       setSebiRegNo(myCard.sebiRegNo);
       setExpertTypeId(expertTypeOptions[myCard.expertTypeId - 1] || "");
@@ -58,8 +66,12 @@ const ProfileEdit = ({ closeDialog, stackholderId, myCard, fetchDetails }) => {
         email: myCard.email,
         freeTelegramLink: myCard.telegramChannel,
         membersInTelegram: myCard.telegramFollower,
-        chatId: myCard.chatId,
-        premiumTelegramLink: myCard.premiumTelegramChannel,
+        chatIdC: myCard.chatId1,
+        chatIdE: myCard.chatId2,
+        chatIdFO: myCard.chatId3,
+        premiumTelegramLinkC: myCard.premiumTelegramChannel1,
+        premiumTelegramLinkE: myCard.premiumTelegramChannel2,
+        premiumTelegramLinkFO: myCard.premiumTelegramChannel3,
         imagePath: myCard.expertImagePath,
         sebiRegNo: myCard.sebiRegNo,
         expertTypeId: myCard.expertTypeId,
@@ -74,7 +86,7 @@ const ProfileEdit = ({ closeDialog, stackholderId, myCard, fetchDetails }) => {
       if (original[key] !== updated[key]) {
         operations.push({
           op: "replace",
-          path: `/${key}`,
+          path: `${key}`,
           value: updated[key],
         });
       }
@@ -96,9 +108,9 @@ const ProfileEdit = ({ closeDialog, stackholderId, myCard, fetchDetails }) => {
           },
         }
       );
-      return response.data.fileUrl; // Assuming the response contains the URL of the uploaded image
+      return response.data.presignedUrl; // Assuming the response contains the URL of the uploaded image
     } catch (error) {
-      console.error("Image upload failed:", error);
+      console.error("Image upload failed:", error.response ? error.response.data : error.message);
       throw new Error("Image upload failed");
     }
   };
@@ -123,8 +135,12 @@ const ProfileEdit = ({ closeDialog, stackholderId, myCard, fetchDetails }) => {
       email: email,
       telegramChannel: freeTelegramLink,
       telegramFollower: parseInt(membersInTelegram),
-      chatId: chatId,
-      premiumTelegramChannel: premiumTelegramLink,
+      chatId1: chatIdC,
+      chatId2: chatIdE,
+      chatId3: chatIdFO,
+      premiumTelegramChannel1: premiumTelegramLinkC,
+      premiumTelegramChannel2: premiumTelegramLinkE,
+      premiumTelegramChannel3: premiumTelegramLinkFO,
       expertImagePath: uploadedImagePath,
       sebiRegNo: sebiRegNo,
       expertTypeId: expertTypeOptions.indexOf(expertTypeId) + 1,
@@ -146,6 +162,7 @@ const ProfileEdit = ({ closeDialog, stackholderId, myCard, fetchDetails }) => {
       closeDialog();
       handleSuccess();
     } catch (error) {
+      console.error("Profile update failed:", error.response ? error.response.data : error.message);
       setError("An error occurred while updating the profile.");
       setSuccess(null);
     }
@@ -191,18 +208,18 @@ const ProfileEdit = ({ closeDialog, stackholderId, myCard, fetchDetails }) => {
       <div className="fixed inset-0 z-[999] flex items-center py-[8rem] justify-center bg-black bg-opacity-[40%]">
         <div className="bg-[#2E374B] rounded-lg md:w-[1084px] w-[378px] md:h-full h-[600px] overflow-auto p-8">
           <div className="flex items-center justify-between">
-            <h2 className="md:h-[52px] font-inter font-[700] md:text-[30px] md:text-[24px] text-[18px] md:leading-[51px] text-new md:ml-0 ml-[-0.8rem]">
+            <h2 className="md:h-[52px] font-inter font-[700] md:text-[30px] text-[24px] leading-[51px] text-new ml-[-0.8rem]">
               Profile Edit
             </h2>
-            <button onClick={closeDialog} className="md:mr-0 mr-[-1.4rem]">
+            <button onClick={closeDialog} className="mr-[-1.4rem]">
               <img
                 src={closeIcon}
                 alt="Close_Icon"
-                className="md:w-[35px] w-[40px] md:h-[35px] h-[40px]"
+                className="md:w-[35px] w-[40px] h-[35px]"
               />
             </button>
           </div>
-          <div className="flex flex-col mt-8 gap-2 md:ml-0 ml-[-1rem]">
+          <div className="flex flex-col mt-8 gap-2 ml-[-1rem]">
             <span className="h-[23px] text-white md:text-[20px] text-[18px] font-inter font-[500] leading-[16px]">
               Upload Profile Image
             </span>
@@ -232,12 +249,12 @@ const ProfileEdit = ({ closeDialog, stackholderId, myCard, fetchDetails }) => {
             )}
           </div>
 
-          <div className="flex md:flex-row flex-col md:justify-between md:mt-8 mt-4 md:ml-0 ml-[-16px] md:gap-0 gap-4">
+          <div className="flex md:flex-row flex-col md:justify-between md:mt-8 mt-4 ml-[-16px] md:gap-0 gap-4">
             <div className="relative">
               <div className="mb-0">
                 <label
                   className="flex items-center justify-center bg-[#282F3E] text-white opacity-[50%]
-                  md:w-[80px] w-[60px] md:h-[26px] h-[25px] rounded-[8px] font-[400] md:text-[14px] text-[13px] md:leading-[16px] leading-[15px] text-center"
+                  md:w-[80px] w-[60px] md:h-[26px] h-[25px] rounded-[8px] font-[400] md:text-[14px] text-[13px] leading-[16px] text-center"
                 >
                   Name
                 </label>
@@ -256,7 +273,7 @@ const ProfileEdit = ({ closeDialog, stackholderId, myCard, fetchDetails }) => {
               <div className="mb-0">
                 <label
                   className="flex items-center justify-center bg-[#282F3E] text-white opacity-[50%]
-                  md:w-[130px] w-[110px] md:h-[26px] h-[25px] rounded-[8px] font-[400] md:text-[14px] text-[13px] md:leading-[16px] leading-[15px] text-center"
+                  md:w-[130px] w-[110px] md:h-[26px] h-[25px] rounded-[8px] font-[400] md:text-[14px] text-[13px] leading-[16px] text-center"
                 >
                   Mobile Number
                 </label>
@@ -273,12 +290,12 @@ const ProfileEdit = ({ closeDialog, stackholderId, myCard, fetchDetails }) => {
             </div>
           </div>
 
-          <div className="flex md:flex-row flex-col justify-between md:mt-8 mt-4 md:ml-0 ml-[-16px] md:gap-0 gap-4">
+          <div className="flex md:flex-row flex-col justify-between md:mt-8 mt-4 ml-[-16px] md:gap-0 gap-4">
             <div className="relative">
               <div className="mb-0">
                 <label
                   className="flex items-center justify-center bg-[#282F3E] text-white opacity-[50%]
-                  md:w-[80px] w-[70px] md:h-[26px] h-[25px] rounded-[8px] font-[400] md:text-[14px] text-[13px] md:leading-[16px] leading-[15px] text-center"
+                  md:w-[80px] w-[70px] md:h-[26px] h-[25px] rounded-[8px] font-[400] md:text-[14px] text-[13px] leading-[16px] text-center"
                 >
                   MAIL ID
                 </label>
@@ -297,7 +314,7 @@ const ProfileEdit = ({ closeDialog, stackholderId, myCard, fetchDetails }) => {
               <label
                 htmlFor="expertTypeId"
                 className="flex items-center justify-center bg-[#282F3E] text-white opacity-[50%]
-                    md:w-[110px] w-[90px] md:h-[26px] h-[25px] rounded-[8px] font-[400] md:text-[14px] text-[13px] md:leading-[16px] leading-[15px] text-center"
+                    md:w-[110px] w-[90px] md:h-[26px] h-[25px] rounded-[8px] font-[400] text-[14px] md:text-[14px] text-[13px] leading-[16px] text-center"
               >
                 Expertise In
               </label>
@@ -335,12 +352,12 @@ const ProfileEdit = ({ closeDialog, stackholderId, myCard, fetchDetails }) => {
             </div>
           </div>
 
-          <div className="flex md:flex-row flex-col md:justify-between md:mt-8 mt-4 md:ml-0 ml-[-16px] md:gap-0 gap-4">
+          <div className="flex md:flex-row flex-col justify-between md:mt-8 mt-4 ml-[-16px] md:gap-0 gap-4">
             <div className="relative">
               <label
                 htmlFor="experienceType"
                 className="flex items-center justify-center bg-[#282F3E] text-white opacity-[50%]
-                    md:w-[100px] w-[80px] h-[26px] rounded-[8px] font-[400] md:text-[14px] text-[13px] md:leading-[16px] leading-[15px] text-center"
+                    md:w-[100px] w-[80px] h-[26px] rounded-[8px] font-[400] md:text-[14px] text-[13px] leading-[16px] text-center"
               >
                 Experience
               </label>
@@ -380,7 +397,7 @@ const ProfileEdit = ({ closeDialog, stackholderId, myCard, fetchDetails }) => {
               <div className="mb-0">
                 <label
                   className="flex items-center justify-center bg-[#282F3E] text-white opacity-[50%]
-                  md:w-[220px] w-[190px] md:h-[26px] h-[25px] rounded-[8px] font-[400] md:text-[14px] text-[13px] md:leading-[16px] leading-[15px] text-center"
+                  md:w-[220px] w-[190px] md:h-[26px] h-[25px] rounded-[8px] font-[400] text-[14px] md:text-[14px] text-[13px] leading-[16px] text-center"
                 >
                   Free Telegram Channel Link
                 </label>
@@ -397,12 +414,12 @@ const ProfileEdit = ({ closeDialog, stackholderId, myCard, fetchDetails }) => {
             </div>
           </div>
 
-          <div className="flex md:flex-row flex-col justify-between md:mt-8 mt-4 md:ml-0 ml-[-16px] md:gap-0 gap-4">
+          <div className="flex md:flex-row flex-col justify-between md:mt-8 mt-4 ml-[-16px] md:gap-0 gap-4">
             <div className="relative">
               <div className="mb-0">
                 <label
                   className="flex items-center justify-center bg-[#282F3E] text-white opacity-[50%]
-                  md:w-[235px] w-[210px] md:h-[26px] h-[25px] rounded-[8px] font-[400] md:text-[14px] text-[13px] md:leading-[16px] leading-[15px] text-center"
+                  md:w-[235px] w-[210px] md:h-[26px] h-[25px] rounded-[8px] font-[400] text-[14px] md:text-[14px] text-[13px] leading-[16px] text-center"
                 >
                   Members In Telegram Channel
                 </label>
@@ -421,7 +438,7 @@ const ProfileEdit = ({ closeDialog, stackholderId, myCard, fetchDetails }) => {
               <div className="mb-0">
                 <label
                   className="flex items-center justify-center bg-[#282F3E] text-white opacity-[50%]
-                  md:w-[200px] w-[180px] h-[26px] rounded-[8px] font-[400] text-[14px] md:text-[14px] text-[13px] md:leading-[16px] leading-[15px] text-center"
+                  md:w-[200px] w-[180px] h-[26px] rounded-[8px] font-[400] text-[14px] md:text-[14px] text-[13px] leading-[16px] text-center"
                 >
                   SEBI Registration Number
                 </label>
@@ -438,18 +455,18 @@ const ProfileEdit = ({ closeDialog, stackholderId, myCard, fetchDetails }) => {
             </div>
           </div>
 
-          <div className="flex md:flex-row flex-col justify-between md:mt-8 mt-4 md:ml-0 ml-[-16px] md:gap-0 gap-4">
+          <div className="flex md:flex-row flex-col justify-between md:mt-8 mt-4 ml-[-16px] md:gap-0 gap-4">
             <div className="relative">
               <div className="mb-0">
                 <label
                   className="flex items-center justify-center bg-[#282F3E] text-white opacity-[50%]
-                  md:w-[235px] w-[210px] md:h-[26px] h-[25px] rounded-[8px] font-[400] md:text-[14px] text-[13px] md:leading-[16px] leading-[15px] text-center"
+                  md:w-[275px] w-[210px] md:h-[26px] h-[25px] rounded-[8px] font-[400] text-[14px] md:text-[14px] text-[13px] leading-[16px] text-center"
                 >
-                  Premium Telegram Channel Link
+                  Commodity Premium Telegram Channel
                 </label>
                 <input
-                  value={premiumTelegramLink}
-                  onChange={(e) => setPremiumTelegramLink(e.target.value)}
+                  value={premiumTelegramLinkC}
+                  onChange={(e) => setPremiumTelegramLinkC(e.target.value)}
                   type="link"
                   disabled
                   id="default-input"
@@ -462,15 +479,16 @@ const ProfileEdit = ({ closeDialog, stackholderId, myCard, fetchDetails }) => {
               <div className="mb-0">
                 <label
                   className="flex items-center justify-center bg-[#282F3E] text-white opacity-[50%]
-                  md:w-[80px] w-[80px] h-[26px] rounded-[8px] font-[400] text-[14px] md:text-[14px] text-[13px] md:leading-[16px] leading-[15px] text-center"
+                  md:w-[140px] w-[80px] h-[26px] rounded-[8px] font-[400] text-[14px] md:text-[14px] text-[13px] leading-[16px] text-center"
                 >
-                  Chat ID
+                  Commodity Chat ID
                 </label>
                 <input
-                  value={chatId}
-                  onChange={(e) => setChatId(e.target.value)}
+                  value={chatIdC}
+                  onChange={(e) => setChatIdC(e.target.value)}
                   onClick={closeSubscriptionDropdown}
                   type="number"
+                  disabled
                   id="default-input"
                   placeholder="Enter ChatID"
                   className="md:w-[482px] w-[345px] px-4 py-2 rounded-md text-white border border-[#40495C] bg-[#282F3E]"
@@ -479,7 +497,91 @@ const ProfileEdit = ({ closeDialog, stackholderId, myCard, fetchDetails }) => {
             </div>
           </div>
 
-          <div className="flex md:flex-row flex-col justify-between md:mt-8 mt-4 md:ml-0 ml-[-16px] md:gap-0 gap-4">
+          <div className="flex md:flex-row flex-col justify-between md:mt-8 mt-4 ml-[-16px] md:gap-0 gap-4">
+            <div className="relative">
+              <div className="mb-0">
+                <label
+                  className="flex items-center justify-center bg-[#282F3E] text-white opacity-[50%]
+                  md:w-[245px] w-[210px] md:h-[26px] h-[25px] rounded-[8px] font-[400] text-[14px] md:text-[14px] text-[13px] leading-[16px] text-center"
+                >
+                  Equity Premium Telegram Channel
+                </label>
+                <input
+                  value={premiumTelegramLinkE}
+                  onChange={(e) => setPremiumTelegramLinkE(e.target.value)}
+                  type="link"
+                  disabled
+                  id="default-input"
+                  placeholder="Paste Link"
+                  className="md:w-[482px] w-[345px] py-2 px-4 rounded-md text-white border border-[#40495C] bg-[#282F3E]"
+                />
+              </div>
+            </div>
+            <div className="relative">
+              <div className="mb-0">
+                <label
+                  className="flex items-center justify-center bg-[#282F3E] text-white opacity-[50%]
+                  md:w-[110px] w-[80px] h-[26px] rounded-[8px] font-[400] text-[14px] md:text-[14px] text-[13px] leading-[16px] text-center"
+                >
+                  Equity Chat ID
+                </label>
+                <input
+                  value={chatIdE}
+                  onChange={(e) => setChatIdE(e.target.value)}
+                  onClick={closeSubscriptionDropdown}
+                  type="number"
+                  disabled
+                  id="default-input"
+                  placeholder="Enter ChatID"
+                  className="md:w-[482px] w-[345px] px-4 py-2 rounded-md text-white border border-[#40495C] bg-[#282F3E]"
+                />
+              </div>
+            </div>
+          </div>
+
+          <div className="flex md:flex-row flex-col justify-between md:mt-8 mt-4 ml-[-16px] md:gap-0 gap-4">
+            <div className="relative">
+              <div className="mb-0">
+                <label
+                  className="flex items-center justify-center bg-[#282F3E] text-white opacity-[50%]
+                  md:w-[235px] w-[210px] md:h-[26px] h-[25px] rounded-[8px] font-[400] text-[14px] md:text-[14px] text-[13px] leading-[16px] text-center"
+                >
+                  F & O Premium Telegram Channel
+                </label>
+                <input
+                  value={premiumTelegramLinkFO}
+                  onChange={(e) => setPremiumTelegramLinkFO(e.target.value)}
+                  type="link"
+                  disabled
+                  id="default-input"
+                  placeholder="Paste Link"
+                  className="md:w-[482px] w-[345px] py-2 px-4 rounded-md text-white border border-[#40495C] bg-[#282F3E]"
+                />
+              </div>
+            </div>
+            <div className="relative">
+              <div className="mb-0">
+                <label
+                  className="flex items-center justify-center bg-[#282F3E] text-white opacity-[50%]
+                  md:w-[110px] w-[80px] h-[26px] rounded-[8px] font-[400] text-[14px] md:text-[14px] text-[13px] leading-[16px] text-center"
+                >
+                  F & O Chat ID
+                </label>
+                <input
+                  value={chatIdFO}
+                  onChange={(e) => setChatIdFO(e.target.value)}
+                  onClick={closeSubscriptionDropdown}
+                  type="number"
+                  disabled
+                  id="default-input"
+                  placeholder="Enter ChatID"
+                  className="md:w-[482px] w-[345px] px-4 py-2 rounded-md text-white border border-[#40495C] bg-[#282F3E]"
+                />
+              </div>
+            </div>
+          </div>
+
+          <div className="flex md:flex-row flex-col justify-between md:mt-8 mt-4 ml-[-16px] md:gap-0 gap-4">
             <button
               onClick={handleChange}
               className="w-full md:w-auto bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
