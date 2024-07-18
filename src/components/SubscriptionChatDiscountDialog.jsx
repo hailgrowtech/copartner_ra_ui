@@ -178,6 +178,24 @@ const SubscriptionChatDiscountDialog = ({ closeDialog, addCourse }) => {
                 <div className="relative">
                   <label
                     className="flex items-center justify-center bg-[#282F3E] text-white opacity-[50%]
+                    md:w-[100px] w-[140px] md:h-[26px] h-[25px] rounded-[8px] font-[400] md:text-[14px] text-[13px] md:leading-[16px] leading-[15px] text-center"
+                  >
+                    Plan Amount
+                  </label>
+                  <input
+                    type="number"
+                    value={planAmt}
+                    onChange={(e) => setPlanAmt(e.target.value)}
+                    id="default-input"
+                    className="md:w-[482px] w-[345px] px-4 py-2 rounded-md text-white border border-[#40495C] bg-[#282F3E]"
+                  />
+                  {errorMessage && (
+                    <p className="text-red-500 text-sm mt-1">{errorMessage}</p>
+                  )}
+                </div>
+                <div className="relative">
+                  <label
+                    className="flex items-center justify-center bg-[#282F3E] text-white opacity-[50%]
                     md:w-[160px] w-[140px] md:h-[26px] h-[25px] rounded-[8px] font-[400] md:text-[14px] text-[13px] md:leading-[16px] leading-[15px] text-center"
                   >
                     Discount Percentage
@@ -192,23 +210,6 @@ const SubscriptionChatDiscountDialog = ({ closeDialog, addCourse }) => {
                   {errorMessage && (
                     <p className="text-red-500 text-sm mt-1">{errorMessage}</p>
                   )}
-                </div>
-                <div className="relative">
-                  <div className="mb-0">
-                    <label
-                      className="flex items-center justify-center bg-[#282F3E] text-white opacity-[50%]
-                      md:w-[140px] w-[100px] md:h-[26px] h-[25px] rounded-[8px] font-[400] md:text-[14px] text-[13px] md:leading-[16px] leading-[15px] text-center"
-                    >
-                      Discount Amount
-                    </label>
-                    <input
-                      type="text"
-                      value={discountedAmount}
-                      onChange={(e) => setdiscountedAmount(e.target.value)}
-                      id="default-input"
-                      className="md:w-[482px] w-[345px] px-4 py-2 rounded-md text-white border border-[#40495C] bg-[#282F3E]"
-                    />
-                  </div>
                 </div>
               </div>
             )}
@@ -262,6 +263,25 @@ const SubscriptionChatDiscountDialog = ({ closeDialog, addCourse }) => {
                   className="md:w-[482px] w-[345px] px-4 py-2 rounded-md text-white border border-[#40495C] bg-[#282F3E]"
                 />
               </div>
+              {selectedButton === "Discount" && (
+                <div className="relative">
+                  <div className="mb-0">
+                    <label
+                      className="flex items-center justify-center bg-[#282F3E] text-white opacity-[50%]
+                      md:w-[140px] w-[100px] md:h-[26px] h-[25px] rounded-[8px] font-[400] md:text-[14px] text-[13px] md:leading-[16px] leading-[15px] text-center"
+                    >
+                      Discount Amount
+                    </label>
+                    <input
+                      type="text"
+                      value={discountedAmount}
+                      onChange={(e) => setdiscountedAmount(e.target.value)}
+                      id="default-input"
+                      className="md:w-[482px] w-[345px] px-4 py-2 rounded-md text-white border border-[#40495C] bg-[#282F3E]"
+                    />
+                  </div>
+                </div>
+              )}
             </div>
           </div>
 
