@@ -20,11 +20,15 @@ import {
   isSameMonth,
   getMonth,
   compareAsc,
+  isToday,
+  startOfWeek,
+  endOfWeek
 } from "date-fns";
 import PropTypes from "prop-types";
 
 const Charts = ({ filter, customStartDate, customEndDate }) => {
   const [data, setData] = useState({ daily: [], weekly: [], monthly: [], custom: [] });
+  const [totalEarnings, setTotalEarnings] = useState(0);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(true);
 
@@ -83,7 +87,7 @@ const Charts = ({ filter, customStartDate, customEndDate }) => {
                   }
                 }
 
-                if (isSameWeek(date, new Date())) {
+                if (isToday(date)) {
                   dailyData.push({
                     name: format(date, "HH:mm"),
                     earnings,
@@ -105,7 +109,24 @@ const Charts = ({ filter, customStartDate, customEndDate }) => {
               compareAsc(parseISO(a.name), parseISO(b.name))
             );
 
+            // Calculate total earnings for the custom date range
+            const totalCustomEarnings = customData.reduce((acc, item) => acc + item.earnings, 0);
+            const totalTodayEarnings = dailyData.reduce((acc, item) => acc + item.earnings, 0);
+            const totalWeeklyEarnings = weeklyData.reduce((acc, item) => acc + item.earnings, 0);
+            const totalMonthlyEarnings = monthlyData.reduce((acc, item) => acc + item.earnings, 0);
+
             setData({ daily: dailyData, weekly: weeklyData, monthly: monthlyData, custom: customData });
+
+            // Set total earnings based on the selected filter
+            if (filter === "today") {
+              setTotalEarnings(totalTodayEarnings);
+            } else if (filter === "weekly") {
+              setTotalEarnings(totalWeeklyEarnings);
+            } else if (filter === "monthly") {
+              setTotalEarnings(totalMonthlyEarnings);
+            } else if (filter === "custom") {
+              setTotalEarnings(totalCustomEarnings);
+            }
           } else {
             setError(response.data.displayMessage);
             setLoading(false);
@@ -123,7 +144,7 @@ const Charts = ({ filter, customStartDate, customEndDate }) => {
     };
 
     fetchData();
-  }, [stackholderId, customStartDate, customEndDate]);
+  }, [stackholderId, customStartDate, customEndDate, filter]);
 
   const CustomTooltip = ({ active, payload }) => {
     if (active && payload && payload.length) {
@@ -185,6 +206,9 @@ const Charts = ({ filter, customStartDate, customEndDate }) => {
           />
         </LineChart>
       </ResponsiveContainer>
+      <div className="text-white text-lg font-semibold mt-4">
+        Total Earnings: ₹{totalEarnings.toFixed(2)}
+      </div>
     </div>
   );
 };
