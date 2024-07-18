@@ -93,46 +93,55 @@ const ChatsHistory = () => {
       id: 1,
       chatUserImg: chatUser1,
       chatUserName: "Saksham Agarwal",
+      subType: "Commodity",
     },
     {
       id: 2,
       chatUserImg: chatUser2,
       chatUserName: "Shubham Ready",
+      subType: "Equity",
     },
     {
       id: 3,
       chatUserImg: userImg,
       chatUserName: "Maniraj Iyer",
+      subType: "F & O",
     },
     {
       id: 4,
       chatUserImg: chatUser1,
       chatUserName: "Saksham Agarwal",
+      subType: "Equity",
     },
     {
       id: 5,
       chatUserImg: chatUser2,
       chatUserName: "Shubham Ready",
+      subType: "Commodity",
     },
     {
       id: 6,
       chatUserImg: userImg,
       chatUserName: "Maniraj Iyer",
+      subType: "Commodity",
     },
     {
       id: 7,
       chatUserImg: chatUser1,
       chatUserName: "Saksham Agarwal",
+      subType: "Equity",
     },
     {
       id: 8,
       chatUserImg: chatUser2,
       chatUserName: "Shubham Ready",
+      subType: "F & O",
     },
     {
       id: 9,
       chatUserImg: userImg,
       chatUserName: "Maniraj Iyer",
+      subType: "Commodity",
     },
   ];
 
@@ -258,15 +267,23 @@ const ChatsHistory = () => {
                     />
                     <div className="flex flex-col w-[267px] h-[57px]">
                       <span
-                        className={`font-inter font-[600] text-[17.5px] ${
-                          isActive ? "text-white" : "text-white opacity-[50%]"
-                        }`}
+                        className={`font-inter font-[400] text-[17.5px] text-white`}
                       >
                         {users.chatUserName}
                       </span>
-                      <span className="text-white font-[500] font-inter text-[15px] leading-[23px]">
-                        Hello Friend, See you tomorrow...
-                      </span>
+                      <div className="flex gap-4">
+                        <span className="text-white opacity-[50%] font-[500] font-inter text-[15px] leading-[23px]">
+                          {users.subType}
+                        </span>
+                        <span className="font-[500] font-inter text-[15px] leading-[23px]">
+                          <span className="text-white opacity-[50%]">
+                            Duration :{" "}
+                          </span>
+                          <span className="text-[#28A7E7] font-[800]">
+                            4:55 sec
+                          </span>
+                        </span>
+                      </div>
                     </div>
                   </div>
                 );
@@ -297,9 +314,19 @@ const ChatsHistory = () => {
                     <span className="text-white font-[500] text-[20px] leading-[32px]">
                       {activeUser.chatUserName}
                     </span>
-                    <span className="font-[500] text-[17px] leading-[28px] text-white opacity-[50%]">
-                      online
-                    </span>
+                    <div className="flex flex-row gap-2 items-center">
+                      <span className="font-[500] text-[17px] leading-[28px] text-white opacity-[50%]">
+                        online
+                      </span>
+                      <div className="md:hidden flex gap-2 mt-[1px]">
+                        <span className="font-[500] text-[17px] text-white opacity-[50%]">
+                          COM.
+                        </span>
+                        <span className="font-[500] text-[17px] text-[#28A7E7]">
+                        4:55 sec
+                        </span>
+                      </div>
+                    </div>
                   </div>
                 </div>
                 <button>

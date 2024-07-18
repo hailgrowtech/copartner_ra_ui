@@ -92,7 +92,7 @@ const Chats = () => {
               Customer Listing
             </span>
 
-            <div className="flex items-center flex-row md:gap-10 gap-2 md:mr-[-6rem] mr-0">
+            <div className="flex items-center flex-row md:gap-10 gap-8 md:mr-[-6rem] mr-0">
               <div className="ml-0">
                 <DatePicker
                   selected={startDate}
@@ -102,12 +102,12 @@ const Chats = () => {
                   selectsRange
                   isClearable
                   placeholderText="Select Date range"
-                  className="bg-[#2E323C] h-[55px] text-white rounded-[10px] px-4"
+                  className="bg-[#2E323C] h-[55px] text-white rounded-[10px] px-4 md:w-[200px] w-[180px]"
                 />
               </div>
               <button
                 onClick={handleDownloadSheet}
-                className={`w-[140px] h-[40px] rounded-[10px] border-solid border-[1px] border-white text-white`}
+                className={`w-[140px] h-[40px] text-[14px] rounded-[10px] border-solid border-[1px] border-white text-white`}
               >
                 Download Sheet
               </button>
