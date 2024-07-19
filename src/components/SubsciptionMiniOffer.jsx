@@ -84,25 +84,25 @@ const SubsciptionMiniOffer = () => {
     setIsEditDialogOpen(false);
   };
 
-  const handleDeleteTable = async (id) => {
-    const DELETE_TABLE = `https://copartners.in:5009/api/Subscription/${id}`;
+//   const handleDeleteTable = async (id) => {
+//     const DELETE_TABLE = `https://copartners.in:5009/api/Subscription/${id}`;
 
-    try {
-      handleSuccess();
-      const response = await axios.delete(DELETE_TABLE);
-      if (response.status === 200) {
-        console.log("Subscription deleted successfully");
-        setSubTable(subTable.filter((subscription) => subscription.id !== id));
-      } else {
-        console.error(
-          "Failed to delete subscription, status:",
-          response.status
-        );
-      }
-    } catch (error) {
-      console.error("Error deleting subscription:", error);
-    }
-  };
+//     try {
+//       handleSuccess();
+//       const response = await axios.delete(DELETE_TABLE);
+//       if (response.status === 200) {
+//         console.log("Subscription deleted successfully");
+//         setSubTable(subTable.filter((subscription) => subscription.id !== id));
+//       } else {
+//         console.error(
+//           "Failed to delete subscription, status:",
+//           response.status
+//         );
+//       }
+//     } catch (error) {
+//       console.error("Error deleting subscription:", error);
+//     }
+//   };
 
   const formatDate = (dateString) => {
     const date = new Date(dateString);
@@ -258,13 +258,13 @@ const SubsciptionMiniOffer = () => {
                         axiosServiceData={axiosServiceData}
                       />
                     )} */}
-                    <button onClick={() => handleDeleteTable(row.id)}>
+                    {/* <button onClick={() => handleDeleteTable(row.id)}>
                       <img
                         src={deleteIcon}
                         alt=""
                         className="w-[24px] h-[24px] text-white"
                       />
-                    </button>
+                    </button> */}
                   </div>
                 </div>
                 <span className="flex items-center justify-between sm:w-[305px] h-[13px] font-[500] text-[14px] leading-[12px] text-lightWhite">
@@ -315,7 +315,7 @@ const SubsciptionMiniOffer = () => {
                 <th className="text-center">DURATION</th>
                 <th className="text-center">AMOUNT</th>
                 <th className="text-center">LINK</th>
-                <th className="text-center">ACTION</th>
+                {/* <th className="text-center">ACTION</th> */}
               </tr>
             </thead>
             <tbody className="text-lightWhite h-[81px]">
@@ -351,7 +351,7 @@ const SubsciptionMiniOffer = () => {
                       </span>
                     )}
                   </td>
-                  <td className="flex flex-row items-center justify-center gap-2 py-[2rem]">
+                  {/* <td className="flex flex-row items-center justify-center gap-2 py-[2rem]">
                     <button onClick={() => handleDeleteTable(row.id)}>
                       <img
                         src={deleteIcon}
@@ -359,7 +359,7 @@ const SubsciptionMiniOffer = () => {
                         className="w-[21px] h-[21px] mx-auto flex items-center justify-center"
                       />
                     </button>
-                  </td>
+                  </td> */}
                 </tr>
               ))}
             </tbody>
