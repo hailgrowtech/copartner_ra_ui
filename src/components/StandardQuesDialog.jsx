@@ -1,17 +1,26 @@
 import React, { useState } from "react";
-import { closeIcon, dropdown } from "../assets";
+import { closeIcon } from "../assets";
 import { toast } from "react-toastify";
 
-const StandardQuesDialog = ({ closeDialog, axiosServiceData, subTable }) => {
+const StandardQuesDialog = ({ closeDialog, handleAddQuestion }) => {
   const [addQues, setAddQues] = useState('');
   const [addAns, setAddAns] = useState('');
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
   const handleSuccess = () => {
-    toast.success("Subscription saved!", {
+    toast.success("Question added successfully!", {
       position: "top-right",
     });
+  };
+
+  const handleSubmit = () => {
+    if (addQues && addAns) {
+      handleAddQuestion(addQues, addAns);
+      handleSuccess();
+    } else {
+      setError("Both fields are required");
+    }
   };
 
   return (
@@ -38,9 +47,8 @@ const StandardQuesDialog = ({ closeDialog, axiosServiceData, subTable }) => {
               </label>
               <textarea
                 typeof="text"
-                // onChange={(e) => setDes(e.target.value)}
-                id="des-input"
-                // value={des}
+                onChange={(e) => setAddQues(e.target.value)}
+                value={addQues}
                 rows="4"
                 className="block p-2 rounded-md text-white border border-[#40495C] bg-[#282F3E] md:w-full w-[105%]"
                 placeholder="Write something here"
@@ -53,9 +61,8 @@ const StandardQuesDialog = ({ closeDialog, axiosServiceData, subTable }) => {
               </label>
               <textarea
                 typeof="text"
-                // onChange={(e) => setDes(e.target.value)}
-                id="des-input"
-                // value={des}
+                onChange={(e) => setAddAns(e.target.value)}
+                value={addAns}
                 rows="4"
                 className="block p-2 rounded-md text-white border border-[#40495C] bg-[#282F3E] md:w-full w-[105%]"
                 placeholder="Write something here"
@@ -65,7 +72,7 @@ const StandardQuesDialog = ({ closeDialog, axiosServiceData, subTable }) => {
 
           <div className="flex md:flex-row flex-col gap-2 justify-end mt-4">
             <button
-            //   onClick={handleConfirm}
+              onClick={handleSubmit}
               disabled={loading}
               className="px-4 w-[100%] py-2 bg-blue-500 text-white md:text-[14px] text-[14px] rounded-lg hover:bg-blue-600"
             >
@@ -86,5 +93,4 @@ const StandardQuesDialog = ({ closeDialog, axiosServiceData, subTable }) => {
   );
 };
 
-
-export default StandardQuesDialog
+export default StandardQuesDialog;

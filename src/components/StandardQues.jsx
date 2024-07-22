@@ -1,6 +1,4 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
-import { toast } from "react-toastify";
 import StandardQuesDialog from "./StandardQuesDialog";
 
 const StandardQues = () => {
@@ -8,18 +6,6 @@ const StandardQues = () => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   const stackholderId = sessionStorage.getItem("stackholderId");
-  const TELEGRAM_CHAT_API = `https://copartners.in:5134/api/TelegramMessage/${stackholderId}?userType=RA&page=1&pageSize=100000`;
-
-  useEffect(() => {
-    axios
-      .get(TELEGRAM_CHAT_API)
-      .then((response) => {
-        setStandardQuesData(response.data.data);
-      })
-      .catch((error) => {
-        console.error("Error fetching the data", error);
-      });
-  }, []);
 
   const openDialog = () => {
     setIsDialogOpen(true);
@@ -27,7 +13,11 @@ const StandardQues = () => {
 
   const closeDialog = () => {
     setIsDialogOpen(false);
-    // setIsEditDialogOpen(false);
+  };
+
+  const handleAddQuestion = (question, answer) => {
+    setStandardQuesData([...standardQuesData, { question, answer }]);
+    setIsDialogOpen(false);
   };
 
   return (
@@ -46,73 +36,69 @@ const StandardQues = () => {
           <StandardQuesDialog
             isDialogOpen={isDialogOpen}
             closeDialog={closeDialog}
+            handleAddQuestion={handleAddQuestion}
           />
         )}
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:mt-[4rem] mt-[3rem] items-center justify-center md:ml-0 ml-[-0.6rem]">
-        <div
-          className="border-2 border-[#202F49] rounded-[30px] md:w-[1120px] w-[360px] md:h-auto flex flex-col gap-4 p-6"
-        >
-          {/* <span className="text-white font-inter font-[600] text-[22px] leading-[26px]">
-            {channel.channelName}
-          </span>
-          */}
-
-          <div className="flex flex-col gap-4">
-            <div className="relative">
-              <label
-                className="flex items-center justify-center bg-[#282F3E] text-white opacity-[50%]
-            w-[80px] h-[26px] rounded-[8px] font-[400] md:text-[14px] text-[13px] md:leading-[16px] leading-[13px] text-center"
-              >
-                Question
-              </label>
-              <textarea
-                typeof="text"
-                // onChange={(e) =>
-                //   handleInputChange(index, "joinMessage", e.target.value)
-                // }
-                // value={channel.joinMessage}
-                rows="4"
-                className="block p-2 rounded-md text-white opacity-[50%] border border-[#40495C] bg-transparent md:w-full h-[90px] w-[105%]"
-              ></textarea>
-            </div>
-
-            <div className="relative">
-              <label
-                className="flex items-center justify-center bg-[#282F3E] text-white opacity-[50%]
-            w-[60px] h-[26px] rounded-[8px] font-[400] md:text-[14px] text-[13px] md:leading-[16px] leading-[13px] text-center"
-              >
-                Answer
-              </label>
-              <textarea
-                typeof="text"
-                // onChange={(e) =>
-                //   handleInputChange(index, "leaveMessage", e.target.value)
-                // }
-                // value={channel.leaveMessage}
-                rows="4"
-                className="block p-2 rounded-md text-white opacity-[50%] border border-[#40495C] bg-transparent md:w-full w-[105%]"
-              ></textarea>
-            </div>
-
-            <div className="flex flex-row gap-4 items-right">
-              <div className="flex items-center justify-center bg-white border border-white rounded-[8px] w-[100px] h-[40px]">
-                <button
-                  className="text-[14px]"
-                //   onClick={() => handleSave(channel)}
-                >
-                  Edit
-                </button>
-              </div>
-
-              <div className="flex items-center justify-center bg-transparent border border-[#D0667A] text-[#D0667A] rounded-[8px] w-[100px] h-[40px]">
-                <button className="text-[14px]">Delete</button>
-              </div>
-            </div>
-          </div>
+      {standardQuesData.length === 0 ? (
+        <div className="text-white opacity-[50%] font-[600] text-[28px] text-center mt-6">
+          No Data Found, Please Add Your Queries
         </div>
-      </div>
+      ) : (
+        <div className="grid grid-cols-1 md:flex flex-col gap-4 md:mt-[4rem] mt-[3rem] items-center justify-center md:ml-0 ml-[-0.6rem]">
+          {standardQuesData.map((data, index) => (
+            <div
+              key={index}
+              className="border-2 border-[#202F49] rounded-[30px] md:w-[1120px] w-[360px] md:h-auto flex flex-col gap-4 p-6"
+            >
+              <div className="flex flex-col gap-4">
+                <div className="relative">
+                  <label
+                    className="flex items-center justify-center bg-[#282F3E] text-white opacity-[50%]
+                      w-[80px] h-[26px] rounded-[8px] font-[400] md:text-[14px] text-[13px] md:leading-[16px] leading-[13px] text-center"
+                  >
+                    Question
+                  </label>
+                  <textarea
+                    typeof="text"
+                    value={data.question}
+                    readOnly
+                    rows="4"
+                    className="block p-2 rounded-md text-white opacity-[50%] border border-[#40495C] bg-transparent md:w-full h-[90px] w-[105%]"
+                  ></textarea>
+                </div>
+
+                <div className="relative">
+                  <label
+                    className="flex items-center justify-center bg-[#282F3E] text-white opacity-[50%]
+                      w-[60px] h-[26px] rounded-[8px] font-[400] md:text-[14px] text-[13px] md:leading-[16px] leading-[13px] text-center"
+                  >
+                    Answer
+                  </label>
+                  <textarea
+                    typeof="text"
+                    value={data.answer}
+                    readOnly
+                    rows="4"
+                    className="block p-2 rounded-md text-white opacity-[50%] border border-[#40495C] bg-transparent md:w-full w-[105%]"
+                  ></textarea>
+                </div>
+
+                <div className="flex flex-row gap-4 items-right">
+                  <div className="flex items-center justify-center bg-white border border-white rounded-[8px] w-[100px] h-[40px]">
+                    <button className="text-[14px]">Edit</button>
+                  </div>
+
+                  <div className="flex items-center justify-center bg-transparent border border-[#D0667A] text-[#D0667A] rounded-[8px] w-[100px] h-[40px]">
+                    <button className="text-[14px]">Delete</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 };
