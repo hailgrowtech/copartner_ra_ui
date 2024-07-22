@@ -12,6 +12,7 @@ import ConfirmPassword from "./components/ConfirmPassword";
 import AnalysisBoard from "./components/AnalysisBoard";
 import Webinar from "./components/Webinar";
 import TelegramChannel from "./components/TelegramChannel";
+import StandardQues from "./components/StandardQues";
 
 function App() {
   const [isSmallScreen, setIsSmallScreen] = useState(window.innerWidth < 768);
@@ -84,6 +85,7 @@ function App() {
               <Route path="/subscription" element={<Subscription />} />
               <Route path="/wallet" element={<Wallet />} />
               {telegramData.length > 0 && <Route path="/telegram_channel" element={<TelegramChannel />} />}
+              <Route path="/standard_questions" element={<StandardQues />} />
               <Route path="/setting" element={<Setting />} />
             </Routes>
             <Routes>
