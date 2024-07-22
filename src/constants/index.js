@@ -17,6 +17,7 @@ import {
   invoiceImg,
   hdfc, kotak, icici,
   googlepay, paytm, phonepe, telegramChannelActive, telegramChannelInactive,
+  standardQues, standardQuesInactive,
 } from "../assets";
 
 export const sideBar = [
@@ -75,8 +76,8 @@ export const sideBar = [
   },
   {
     id: 'standard_questions',
-    activeIcon: settingIconactive,
-    inactiveIcon: settingIconInactive,
+    activeIcon: standardQues,
+    inactiveIcon: standardQuesInactive,
     title: "Standard Question",
     path: '/standard_questions'
   },

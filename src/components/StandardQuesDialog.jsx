@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import axios from "axios";
 import { closeIcon } from "../assets";
 import { toast } from "react-toastify";
 
@@ -8,16 +9,37 @@ const StandardQuesDialog = ({ closeDialog, handleAddQuestion }) => {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
+  const stackholderId = sessionStorage.getItem("stackholderId");
+
   const handleSuccess = () => {
     toast.success("Question added successfully!", {
       position: "top-right",
     });
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (addQues && addAns) {
-      handleAddQuestion(addQues, addAns);
-      handleSuccess();
+      setLoading(true);
+      try {
+        const response = await axios.post('https://copartners.in:5132/api/StandardQuestions', {
+          expertId: stackholderId,
+          chatId: 'string', 
+          question: addQues,
+          answer: addAns
+        });
+
+        if (response.status === 200) {
+          handleAddQuestion(addQues, addAns);
+          handleSuccess();
+          closeDialog();
+        } else {
+          setError("Failed to add question");
+        }
+      } catch (error) {
+        setError("An error occurred while adding the question");
+      } finally {
+        setLoading(false);
+      }
     } else {
       setError("Both fields are required");
     }
