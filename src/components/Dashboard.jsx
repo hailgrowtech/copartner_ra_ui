@@ -341,7 +341,11 @@ const Dashboard = () => {
           </div>
 
           <ReferralLinkComponent />
-          <EarningAnalysis stackholderId={stackholderId} startDate={startDate} endDate={endDate} />
+          <EarningAnalysis
+            stackholderId={stackholderId}
+            startDate={startDate}
+            endDate={endDate}
+          />
 
           <div className="py-8 flex flex-col gap-4 md:mt-0 mt-[-2rem]">
             <span className="font-inter font-[600] text-[22px] leading-[27px] w-[246px] h-[27px] text-white">
@@ -449,7 +453,12 @@ const Dashboard = () => {
                 <div className="md:flex md:flex-row grid grid-cols-2 md:gap-[12rem] gap-2 md:px-[1rem] md:mt-[2rem] mt-14 md:py-0 py-8 items-center justify-center">
                   {sortedSubTable &&
                     sortedSubTable
-                      .filter((subUnit) => !subUnit.isCustom)
+                      .filter(
+                        (subUnit) =>
+                          !subUnit.isCustom &&
+                          myCard &&
+                          subUnit.serviceType == myCard.expertTypeId
+                      )
                       .map((subUnit) => (
                         <div
                           key={subUnit.id}
