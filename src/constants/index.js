@@ -74,13 +74,13 @@ export const sideBar = [
     title: "Telegram Channel",
     path: '/telegram_channel'
   },
-  {
-    id: 'standard_questions',
-    activeIcon: standardQues,
-    inactiveIcon: standardQuesInactive,
-    title: "Standard Question",
-    path: '/standard_questions'
-  },
+  // {
+  //   id: 'standard_questions',
+  //   activeIcon: standardQues,
+  //   inactiveIcon: standardQuesInactive,
+  //   title: "Standard Question",
+  //   path: '/standard_questions'
+  // },
   {
     id: 'setting',
     activeIcon: settingIconactive,
