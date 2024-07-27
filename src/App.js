@@ -21,12 +21,6 @@ function App() {
   const [showSidebar, setShowSidebar] = useState(!isSmallScreen);
   const [telegramData, setTelegramData] = useState([]);
   const location = useLocation();
-  const signUp = sessionStorage.getItem('visitedSignUp');
-  const isSignUpPage = location.pathname === "/signup";
-  const isResetPage = location.pathname === "/reset";
-  const isNewPasswordPage = location.pathname === "/forget";
-  const isConfirmPasswordPage = location.pathname === "/set-new-password";
-
   const { authData } = useAuth();
 
   const toggleSidebar = () => {
@@ -68,16 +62,18 @@ function App() {
     <div className={`bg-gradient overflow-hidden ${styles.boxWidth} ${styles.paddingX} overflow-hidden`}>
       <div className="flex">
         <div className="flex-grow">
-          {!isSignUpPage && !isResetPage && !isNewPasswordPage && !isConfirmPasswordPage && (
-            <Navbar activeTab={activeTab} toggleSidebar={toggleSidebar} />
-          )}
-          {!isSignUpPage && !isResetPage && !isNewPasswordPage && !isConfirmPasswordPage && showSidebar && (
-            <Sidebar
-              activeTab={activeTab}
-              setActiveTab={setActiveTab}
-              setShowSidebar={setShowSidebar}
-              telegramData={telegramData}
-            />
+          {!["/signup", "/reset", "/forget", "/set-new-password"].includes(location.pathname) && (
+            <>
+              <Navbar activeTab={activeTab} toggleSidebar={toggleSidebar} />
+              {showSidebar && (
+                <Sidebar
+                  activeTab={activeTab}
+                  setActiveTab={setActiveTab}
+                  setShowSidebar={setShowSidebar}
+                  telegramData={telegramData}
+                />
+              )}
+            </>
           )}
           <Routes>
             <Route
@@ -94,10 +90,7 @@ function App() {
             <Route path="/setting" element={<Setting />} />
           </Routes>
           <Routes>
-            <Route
-              path="/signup"
-              element={<SignUp />}
-            />
+            <Route path="/signup" element={<SignUp />} />
             <Route path="/reset" element={<ForgetPassword />} />
             <Route path="/forget" element={<NewPassword />} />
             <Route path="/set-new-password" element={<ConfirmPassword />} />
