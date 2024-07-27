@@ -3,7 +3,7 @@ import { closeIcon, dropdown } from "../assets";
 import axios from "axios";
 import { toast } from "react-toastify";
 
-const SubscriptionDialog = ({ closeDialog, axiosServiceData, subTable }) => {
+const SubscriptionDialog = ({ closeDialog, axiosServiceData, stackholderId }) => {
   const [subscriptionType, setSubscriptionType] = useState(null);
   const [planType, setPlanType] = useState("Select Plan Type");
   const [customPlanName, setCustomPlanName] = useState("");
@@ -27,8 +27,6 @@ const SubscriptionDialog = ({ closeDialog, axiosServiceData, subTable }) => {
   const [loading, setLoading] = useState(false);
 
   const inputClassName = subscriptionType === null ? "text-[#9BA3AF]" : "text-white";
-
-  const stackholderId = sessionStorage.getItem('stackholderId');
 
   const handleSuccess = () => {
     toast.success("Subscription saved!", {

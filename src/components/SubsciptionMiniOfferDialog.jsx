@@ -6,6 +6,7 @@ import { toast } from "react-toastify";
 const SubsciptionMiniOfferDialog = ({
   closeDialog,
   axiosServiceData,
+  stackholderId,
   subTable,
 }) => {
   const [subscriptionType, setSubscriptionType] = useState(null);
@@ -33,8 +34,6 @@ const SubsciptionMiniOfferDialog = ({
 
   const inputClassName =
     subscriptionType === null ? "text-[#9BA3AF]" : "text-white";
-
-  const stackholderId = sessionStorage.getItem("stackholderId");
 
   const handleSuccess = () => {
     toast.success("Subscription saved!", {

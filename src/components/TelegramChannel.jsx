@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
+import { useAuth } from "../constants/AuthContext";
 
 const TelegramChannel = () => {
+  const { authData } = useAuth();
   const [channelData, setChannelData] = useState([]);
-  const stackholderId = sessionStorage.getItem("stackholderId");
+  const stackholderId = authData.stackholderId;
   const TELEGRAM_CHAT_API = `https://copartners.in:5134/api/TelegramMessage/${stackholderId}?userType=RA&page=1&pageSize=100000`;
 
   useEffect(() => {

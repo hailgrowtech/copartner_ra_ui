@@ -8,9 +8,11 @@ import "react-datepicker/dist/react-datepicker.css";
 import axios from "axios";
 import Pagination from "./Pagination";
 import { toast } from "react-toastify";
+import { useAuth } from "../constants/AuthContext";
 import * as XLSX from "xlsx";
 
 const Wallet = () => {
+  const { authData } = useAuth();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [showTransactions, setShowTransactions] = useState("transaction");
   const [isEditUpiOpen, setIsEditUpiOpen] = useState(false);
@@ -30,7 +32,7 @@ const Wallet = () => {
   const [copiedRow, setCopiedRow] = useState(null);
   const pageSize = 15;
 
-  const stackholderId = sessionStorage.getItem("stackholderId");
+  const stackholderId = authData.stackholderId;
 
   const WALLET_BALANCE_URL = `https://copartners.in:5135/api/Wallet/GetWalletWithdrawalBalance/${stackholderId}?userType=RA`;
 
@@ -521,6 +523,7 @@ const Wallet = () => {
               isDialogOpen={isDialogOpen}
               closeDialog={closeDialog}
               walletBalance={walletBalance}
+              stackholderId={stackholderId}
             />
           )}
         </div>

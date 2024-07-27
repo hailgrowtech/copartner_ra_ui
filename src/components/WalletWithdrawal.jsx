@@ -4,7 +4,7 @@ import { closeIcon, tick } from "../assets";
 import AddBankDialog from "./AddBankDialog";
 import AddUpiDialog from "./AddUpiDialog";
 
-const WalletWithdrawal = ({ closeDialog, walletBalance }) => {
+const WalletWithdrawal = ({ closeDialog, walletBalance, stackholderId }) => {
   const [isAddBankOpen, setIsAddBankOpen] = useState(false);
   const [isUpiOpen, setIsUpiOpen] = useState(false);
   const [selectedBank, setSelectedBank] = useState(null);
@@ -13,8 +13,7 @@ const WalletWithdrawal = ({ closeDialog, walletBalance }) => {
   const [inputValue, setInputValue] = useState("");
   const [inputError, setInputError] = useState("");
   const [loading, setLoading] = useState(false);
-  const [isKycVerified, setIsKycVerified] = useState(true); // Assuming KYC is verified for now
-  const stackholderId = sessionStorage.getItem("stackholderId");
+  const [isKycVerified, setIsKycVerified] = useState(true); 
 
   const withdrawal_api = `https://copartners.in:5135/api/Withdrawal/BankUPIByUserId/${stackholderId}?userType=RA&page=1&pageSize=100000`;
 

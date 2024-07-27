@@ -5,7 +5,7 @@ import { toast } from "react-toastify";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
-const SubscriptionEditDiscount = ({ closeDialog, addCourse }) => {
+const SubscriptionEditDiscount = ({ closeDialog, addCourse, stackholderId }) => {
   const [planName, setPlanName] = useState("");
   const [discountPer, setDiscountPer] = useState("");
   const [planAmt, setPlanAmt] = useState("");
@@ -24,8 +24,6 @@ const SubscriptionEditDiscount = ({ closeDialog, addCourse }) => {
   const [isSubscriptionOpen, setIsSubscriptionOpen] = useState(false);
 
   const inputClassName = subscriptionType === null ? "text-[#9BA3AF]" : "text-white";
-
-  const stackholderId = sessionStorage.getItem("stackholderId");
 
   useEffect(() => {
     const fetchPlans = async () => {

@@ -4,12 +4,11 @@ import SubscriptionEditDiscount from "./SubscriptionEditDiscount";
 import axios from "axios";
 import { toast } from "react-toastify";
 
-const SubsriptionDiscountOffer = () => {
+const SubsriptionDiscountOffer = ({ stackholderId }) => {
   const [smallScreen, setSmallScreen] = useState(false);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [discount, setDiscount] = useState([]);
 
-  const stackholderId = sessionStorage.getItem("stackholderId");
   const SUB_TABLE = `https://copartners.in:5009/api/Subscription/GetByExpertsId/${stackholderId}`;
 
   const axiosServiceData = async () => {
@@ -131,6 +130,7 @@ const SubsriptionDiscountOffer = () => {
           <SubscriptionEditDiscount
             addCourse={addCourse}
             closeDialog={closeDialog}
+            stackholderId={stackholderId}
           />
         )}
       </div>

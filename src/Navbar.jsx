@@ -9,8 +9,10 @@ import {
 } from "./assets";
 import { Link } from "react-router-dom";
 import axios from "axios";
+import { useAuth } from "./constants/AuthContext";
 
 const Navbar = ({ activeTab, toggleSidebar }) => {
+  const { authData } = useAuth();
   const [showTab, setShowTab] = useState("");
   const [isScrolled, setIsScrolled] = useState(false);
   const [isSmallScreen, setIsSmallScreen] = useState(window.innerWidth < 768);
@@ -18,7 +20,7 @@ const Navbar = ({ activeTab, toggleSidebar }) => {
   const [isCoPartner, setIsCoPartner] = useState(false);
   const [myCard, setMyCard] = useState(null);
 
-  const stackholderId = sessionStorage.getItem("stackholderId");
+  const stackholderId = authData.stackholderId;
 
   useEffect(() => {
     if (stackholderId) {

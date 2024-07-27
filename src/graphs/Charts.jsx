@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useAuth } from "../constants/AuthContext";
 import axios from "axios";
 import {
   LineChart,
@@ -29,10 +30,11 @@ import PropTypes from "prop-types";
 const Charts = ({ filter, customStartDate, customEndDate }) => {
   const [data, setData] = useState({ daily: [], weekly: [], monthly: [], custom: [] });
   const [totalEarnings, setTotalEarnings] = useState(0);
+  const { authData } = useAuth();
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(true);
 
-  const stackholderId = sessionStorage.getItem("stackholderId");
+  const stackholderId = authData.stackholderId;
 
   useEffect(() => {
     const fetchData = async () => {

@@ -3,7 +3,7 @@ import { closeIcon } from "../assets";
 import axios from "axios";
 import { toast } from "react-toastify";
 
-const AddBankDialog = ({ onClose, saveBankDetails, isOpen, fetchData }) => {
+const AddBankDialog = ({ onClose, saveBankDetails, isOpen, fetchData, stackholderId }) => {
   const [accountNumber, setAccountNumber] = useState("");
   const [confirmAccountNumber, setConfirmAccountNumber] = useState("");
   const [ifscCode, setIfscCode] = useState("");
@@ -14,9 +14,6 @@ const AddBankDialog = ({ onClose, saveBankDetails, isOpen, fetchData }) => {
   const [loading, setLoading] = useState(false);
   const [getBankID, setGetBankID] = useState("");
   const [accountError, setAccountError] = useState(false);
-
-
-  const stackholderId = sessionStorage.getItem("stackholderId"); 
 
   const handleAddBank = () => {
     toast.success("Successfully Added!", {

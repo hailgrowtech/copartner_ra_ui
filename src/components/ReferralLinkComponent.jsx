@@ -1,7 +1,9 @@
 import React, { useState, useRef } from "react";
 import { tick, clipboard } from "../assets";
+import { useAuth } from "../constants/AuthContext";
 
 const ReferralLinkComponent = () => {
+  const { authData } = useAuth();
   const [referralLink, setReferralLink] = useState("");
   const [paymentLink, setPaymentLink] = useState("")
   const [copiedReferralLink, setCopiedReferralLink] = useState(false);
@@ -10,7 +12,7 @@ const ReferralLinkComponent = () => {
   const referralLinkRef = useRef(null);
   const paymentLinkRef = useRef(null);
 
-  const stackholderId = sessionStorage.getItem("stackholderId");
+  const stackholderId = authData.stackholderId;
 
   const generateReferralLink = async () => {
     setLoading(true);

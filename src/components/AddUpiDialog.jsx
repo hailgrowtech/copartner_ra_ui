@@ -3,14 +3,12 @@ import { closeIcon } from "../assets";
 import axios from "axios";
 import { toast } from "react-toastify";
 
-const AddUpiDialog = ({ isOpen, onClose, saveUpiDetails, fetchData }) => {
+const AddUpiDialog = ({ isOpen, onClose, saveUpiDetails, fetchData, stackholderId }) => {
   const [myUpiId, setMyUpiId] = useState("");
   const [getUPIID, setGetUPIID] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [isCheckboxChecked, setIsCheckboxChecked] = useState(false);
-
-  const stackholderId = sessionStorage.getItem("stackholderId");
 
   const handleSubmit = async (e) => {
     e.preventDefault();

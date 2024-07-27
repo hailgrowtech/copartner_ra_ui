@@ -4,8 +4,10 @@ import { deleteIcon, edit } from "../assets";
 import axios from "axios";
 import { toast } from "react-toastify";
 import SubsciptionMiniOffer from "./SubsciptionMiniOffer";
+import { useAuth } from "../constants/AuthContext";
 
 const Subscription = () => {
+  const { authData } = useAuth();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const [smallScreen, setSmallScreen] = useState(false);
@@ -15,7 +17,7 @@ const Subscription = () => {
   const [planTypeCounts, setPlanTypeCounts] = useState({});
   const [showSubscriptionType, setShowSubscriptionType] = useState("1"); // Default to Commodity
 
-  const stackholderId = sessionStorage.getItem("stackholderId");
+  const stackholderId = authData.stackholderId;
   const SUB_TABLE = `https://copartners.in:5009/api/Subscription/GetByExpertsId/${stackholderId}`;
   const ACTIVE_USER = `https://copartners.in:5132/api/RADashboard/GetDashboardRAListingData/${stackholderId}?page=1&pageSize=100000`;
 
@@ -160,6 +162,7 @@ const Subscription = () => {
             isDialogOpen={isDialogOpen}
             closeDialog={closeDialog}
             subTable={subTable}
+            stackholderId={stackholderId}
           />
         )}
       </div>
@@ -334,7 +337,7 @@ const Subscription = () => {
           </table>
         )}
       </div>
-      <SubsciptionMiniOffer />
+      <SubsciptionMiniOffer stackholderId={stackholderId} />
       {/* <SubscriptionCourse /> */}
     </div>
   );

@@ -2,15 +2,17 @@ import React, { useState, useEffect } from "react";
 import StandardQuesDialog from "./StandardQuesDialog";
 import axios from "axios";
 import { toast } from "react-toastify";
+import { useAuth } from "../constants/AuthContext";
 
 const StandardQues = () => {
+  const { authData } = useAuth();
   const [standardQuesData, setStandardQuesData] = useState([]);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [editingIndex, setEditingIndex] = useState(null);
   const [editData, setEditData] = useState({ question: "", answer: "" });
   const [loading, setLoading] = useState(true); // Initialize loading as true
 
-  const stackholderId = sessionStorage.getItem("stackholderId");
+  const stackholderId = authData.stackholderId;
 
   const handleSuccessEdited = () => {
     toast.success("Successfully Edited!", {
@@ -120,6 +122,7 @@ const StandardQues = () => {
         {isDialogOpen && (
           <StandardQuesDialog
             isDialogOpen={isDialogOpen}
+            stackholderId={stackholderId}
             closeDialog={closeDialog}
             handleAddQuestion={handleAddQuestion}
           />

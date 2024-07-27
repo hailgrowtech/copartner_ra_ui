@@ -3,13 +3,11 @@ import axios from "axios";
 import { closeIcon } from "../assets";
 import { toast } from "react-toastify";
 
-const StandardQuesDialog = ({ closeDialog, handleAddQuestion }) => {
+const StandardQuesDialog = ({ closeDialog, handleAddQuestion, stackholderId }) => {
   const [addQues, setAddQues] = useState('');
   const [addAns, setAddAns] = useState('');
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-
-  const stackholderId = sessionStorage.getItem("stackholderId");
 
   const handleSuccess = () => {
     toast.success("Question added successfully!", {

@@ -1,34 +1,21 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { closeIcon, signup, eye, eyeClose } from "../assets";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { useAuth } from "../constants/AuthContext";
 
-const SignUp = ({ setIsSignedUp }) => {
+const SignUp = () => {
   const [emailId, setEmailId] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-  const [sessionDeleted, setSessionDeleted] = useState(false);
-  const [logoutTimeout, setLogoutTimeout] = useState(null);
   const navigate = useNavigate();
-  let timeoutId;
+  const { setAuthInfo } = useAuth();
 
   const STACKHOLDER_API = `https://copartners.in:5132/api/Experts`;
-  const handleLogout = () => {
-    localStorage.removeItem("stackholderId");
-    navigate("/signup");
-  };
-
-  useEffect(() => {
-    return () => {
-      if (logoutTimeout) {
-        clearTimeout(logoutTimeout);
-      }
-    };
-  }, [logoutTimeout]);
 
   const handleContinue = async (e) => {
     e.preventDefault();
@@ -54,40 +41,14 @@ const SignUp = ({ setIsSignedUp }) => {
       );
       const data = response.data;
       const stackholderId = data.data.stackholderId;
-      console.log(stackholderId, 'Session store')
-      sessionStorage.setItem("stackholderId", stackholderId);
-      // Schedule removal of sessionStorage item after 10 seconds
-      timeoutId = setTimeout(() => {
-        sessionStorage.removeItem("stackholderId");
-        sessionStorage.setItem("visitedSignUp", "false");
-        setSessionDeleted(true);
-        toast.info("Session expired. Please log in again.", {
-          position: "top-right",
-        });
-      }, 86400000);
-      const stackholderResponse = await axios.get(
-        `${STACKHOLDER_API}/${stackholderId}`
-      );
-      if (data.data.email.toLowerCase() === emailId.toLowerCase()) {
-        if (password === "Copartner@1234#") {
-          navigate("/reset", { state: { emailId, password } });
-        } else {
-          setIsSignedUp(true);
-          sessionStorage.setItem("visitedSignUp", "true");
-          toast.success("Login successful!", {
-            position: "top-right",
-          });
-          navigate("/");
-        }
-        const timeout = setTimeout(() => {
-          handleLogout();
-        }, 86400000);
-      } else {
-        setError("Email ID or Password does not match.");
-        toast.error("Email ID or Password does not match.", {
-          position: "top-right",
-        });
-      }
+
+      setAuthInfo({ stackholderId, emailId });
+
+      toast.success("Login successful!", {
+        position: "top-right",
+      });
+      navigate("/");
+
     } catch (error) {
       setError("EmailID or Password is incorrect");
       toast.error("EmailID or Password is incorrect", {
@@ -97,7 +58,7 @@ const SignUp = ({ setIsSignedUp }) => {
       setLoading(false);
     }
   };
-  
+
   return (
     <>
       <div
@@ -171,8 +132,9 @@ const SignUp = ({ setIsSignedUp }) => {
           </div>
         </div>
       </div>
-      <ToastContainer />
+      {/* <ToastContainer /> */}
     </>
   );
 };
+
 export default SignUp;

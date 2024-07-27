@@ -20,8 +20,10 @@ import AddUpiDialog from "./AddUpiDialog";
 import UpiEditDialog from "./UpiEditDialog";
 import axios from "axios";
 import DocumentEditPopup from "./DocumentEditPopup";
+import { useAuth } from "../constants/AuthContext";
 
 const Setting = () => {
+  const { authData } = useAuth();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isEditBankOpen, setIsEditBankOpen] = useState(false);
   const [isEditUpiOpen, setIsEditUpiOpen] = useState(false);
@@ -50,7 +52,9 @@ const Setting = () => {
     }
   };
 
-  const stackholderId = sessionStorage.getItem("stackholderId");
+  // const stackholderId = sessionStorage.getItem("stackholderId");
+  const stackholderId = authData.stackholderId;
+  // console.log(stackholderId, 'zhgsvcdgvc')
 
   const withdrawal_api = `https://copartners.in:5135/api/Withdrawal/BankUPIByUserId/${stackholderId}?userType=RA&page=1&pageSize=100000`;
 
@@ -523,6 +527,7 @@ const Setting = () => {
 
             {isAddBankOpen && (
               <AddBankDialog
+              stackholderId={stackholderId}
                 fetchData={fetchData}
                 isOpen={isAddBankOpen}
                 onClose={closeDialog}
@@ -589,6 +594,7 @@ const Setting = () => {
           {isAddUpiOpen && (
             <AddUpiDialog
               isOpen={isAddUpiOpen}
+              stackholderId={stackholderId}
               onClose={closeDialog}
               saveUpiDetails={saveUpiDetails}
               fetchData={fetchData}

@@ -6,7 +6,7 @@ import { toast } from "react-toastify";
 import SubsriptionDiscountOffer from "./SubsriptionDiscountOffer";
 import SubscriptionCourse from "./SubscriptionCourse";
 
-const SubsciptionMiniOffer = () => {
+const SubsciptionMiniOffer = ({ stackholderId }) => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const [smallScreen, setSmallScreen] = useState(false);
@@ -19,7 +19,6 @@ const SubsciptionMiniOffer = () => {
   const [hoveredRow, setHoveredRow] = useState(null);
   const [copiedRow, setCopiedRow] = useState(null);
 
-  const stackholderId = sessionStorage.getItem("stackholderId");
   const SUB_TABLE = `https://copartners.in:5009/api/Subscription/GetByExpertsId/${stackholderId}`;
   const ACTIVE_USER = `https://copartners.in:5132/api/RADashboard/GetDashboardRAListingData/${stackholderId}?page=1&pageSize=100000`;
 
@@ -189,6 +188,7 @@ const SubsciptionMiniOffer = () => {
             isDialogOpen={isDialogOpen}
             closeDialog={closeDialog}
             subTable={subTable}
+            stackholderId={stackholderId}
           />
         )}
       </div>
@@ -367,7 +367,7 @@ const SubsciptionMiniOffer = () => {
         )}
       </div>
       {copiedMessage && <p className="text-center text-green-500 mt-2">{copiedMessage}</p>}
-      <SubsriptionDiscountOffer />
+      <SubsriptionDiscountOffer stackholderId={stackholderId} />
     </div>
   );
 };

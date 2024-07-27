@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useAuth } from "../constants/AuthContext";
 import axios from "axios";
 import {
   BarChart,
@@ -18,8 +19,9 @@ const BarGraph = ({
   onDataUpdate,
 }) => {
   const [data, setData] = useState({ daily: [], weekly: [], monthly: [] });
+  const { authData } = useAuth();
   const [error, setError] = useState("");
-  const stackholderId = sessionStorage.getItem("stackholderId");
+  const stackholderId = authData.stackholderId;
 
   const formatDate = (date) => {
     const d = new Date(date);
